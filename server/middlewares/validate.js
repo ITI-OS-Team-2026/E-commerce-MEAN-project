@@ -5,7 +5,7 @@ module.exports = (schema) => {
     for (const key in schema) {
       const { error, value } = schema[key].validate(req[key], {
         abortEarly: true,
-        stripUnknown: true,
+        stripUnknown: false,
       });
 
       if (error) {
