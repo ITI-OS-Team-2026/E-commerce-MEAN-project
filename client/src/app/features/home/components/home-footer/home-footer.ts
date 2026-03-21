@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { Logo } from '../../../../shared/components/logo/logo';
 
 @Component({
   selector: 'app-home-footer',
-  imports: [],
+  imports: [Logo],
   templateUrl: './home-footer.html',
   styleUrl: './home-footer.css',
 })

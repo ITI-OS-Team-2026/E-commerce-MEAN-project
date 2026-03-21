@@ -1,1 +1,35 @@
-<p>home-navbar works!</p>
+<header class="sticky top-0 z-50 glass-nav border-b border-outline-variant/20 px-6 lg:px-20 py-4">
+  <div class="max-w-360 mx-auto flex items-center justify-between whitespace-nowrap">
+    <div class="flex items-center gap-12">
+      <app-logo></app-logo>
+
+      <!-- fetch the categories from the backend and loop through them here -->
+      <!-- <nav class="hidden md:flex items-center gap-8">
+        <a
+          class="text-on-surface-variant hover:text-primary text-sm font-semibold transition-colors"
+          href="#"
+          >Doorware</a
+        >
+        <a
+          class="text-on-surface-variant hover:text-primary text-sm font-semibold transition-colors"
+          href="#"
+          >Cabinetry</a
+        >
+        <a
+          class="text-on-surface-variant hover:text-primary text-sm font-semibold transition-colors"
+          href="#"
+          >Lighting</a
+        >
+        <a
+          class="text-on-surface-variant hover:text-primary text-sm font-semibold transition-colors"
+          href="#"
+          >Finishes</a
+        >
+      </nav> -->
+    </div>
+    <div class="flex items-center gap-6">
+      <app-button label="Sign Up" variant="outlined" route="/auth/register"></app-button>
+      <app-button label="Sign In" variant="primary" route="/auth/login"></app-button>
+    </div>
+  </div>
+</header>

@@ -1,1 +1,83 @@
-<p>featured-categories works!</p>
+<section class="featured-categories bg-surface-container-low px-6 lg:px-20 py-20">
+  <div class="max-w-360 mx-auto">
+    <div class="flex items-end justify-between mb-12">
+      <div class="flex flex-col gap-2">
+        <h2 class="text-3xl font-headline font-extrabold tracking-tight">Featured Categories</h2>
+        <p class="text-on-surface-variant font-medium">
+          Browse our curated architectural selections
+        </p>
+      </div>
+      <a class="text-primary font-bold flex items-center gap-2 hover:underline" href="/products">
+        All Categories <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+      </a>
+    </div>
+
+    <!-- fetch the categories from the backend and loop through them here -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+      <div
+        class="group relative overflow-hidden rounded-xl aspect-4/5 bg-surface-container-lowest transition-all hover:-translate-y-1"
+      >
+        <img
+          class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          data-alt="Designer door handles and hinges display"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUvVn8TvR88AtUjm07I94ww2Qxibxcno5jZ6B3Keaor-zKWICUpp3xC8r1Ly8XM1bvZB0O-0BrLcPB_VdM70KfcfC4xl42am9LaY1kq9_PGTFCYksYbFjbzmwupbp4i1U_zmt4eRpjeyL3LkfWwZW65iyQn7ah9uCGcD0KES2kRPwAbty0Dv89AJahwTpD_U53pnHy-K5mYl1gEbZsgH65HkPwKfqFSR-t_67p7i0jFtc6vP_by0u1MZa7clpzHA_OamcoV2hvVt2D"
+        />
+        <div
+          class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"
+        ></div>
+        <div class="absolute bottom-6 left-6">
+          <h3 class="text-white text-xl font-bold">Doorware</h3>
+          <p class="text-white/70 text-sm">Levers, locks &amp; hinges</p>
+        </div>
+      </div>
+      <div
+        class="group relative overflow-hidden rounded-xl aspect-4/5 bg-surface-container-lowest transition-all hover:-translate-y-1"
+      >
+        <img
+          class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          data-alt="Modern cabinet handles in matte black"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUoDmT_8VmXeY7yMPJ0EV9QH9kMApRh0mSzbD0vSapWhp5M_4YXJpVX-2yT3SuFtpChzjiNvd1zfS9rDiKoVzyS6X039ZUjPy4xp-Jb7qHv6EktM9tAucXjPO8CboWUCwBJN-DWyScSiJBvz-rmzSNnndFXNwS6n9Yt2VjgPbcfls3nRyI5F5mmbcmLnUyrYCImUGx9rovKKLfDc1UYOjXW4OoC8OVgSDaR2_sw6RLFTYk4u7qwpM69VnFaq2YwjTfn4bhEv9pi2Lq"
+        />
+        <div
+          class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"
+        ></div>
+        <div class="absolute bottom-6 left-6">
+          <h3 class="text-white text-xl font-bold">Cabinetry</h3>
+          <p class="text-white/70 text-sm">Pulls, knobs &amp; slides</p>
+        </div>
+      </div>
+      <div
+        class="group relative overflow-hidden rounded-xl aspect-4/5 bg-surface-container-lowest transition-all hover:-translate-y-1"
+      >
+        <img
+          class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          data-alt="Minimalist ceiling light fixture"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGd4JBZVBaMkMrG_Nbo0ZcFvZWhOp7F6-yb4sVh5m069yGANGSoYayWVPeFNDVjxNJEUtO_3wP3wIInWPTn9f8XDBIlkhqcmlex5yY2XNhh_snsnP73p-yVdzNCbjr9mdiq-Oh5cIeuxtuGEyMOOPujeAJCJQYWi5D4zdBxKxK2_wA4HSGbAGFKJyqSAcwY1w9RRyf2s9JDbhgJ8xPFx_1rAkU2HtYz6FDgcA2bEfbdcn0kDKR72l7F8lP_mnlAcrC0La1uslgJw7a"
+        />
+        <div
+          class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"
+        ></div>
+        <div class="absolute bottom-6 left-6">
+          <h3 class="text-white text-xl font-bold">Lighting</h3>
+          <p class="text-white/70 text-sm">Pendants &amp; architectural</p>
+        </div>
+      </div>
+      <div
+        class="group relative overflow-hidden rounded-xl aspect-4/5 bg-surface-container-lowest transition-all hover:-translate-y-1"
+      >
+        <img
+          class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          data-alt="Brushed metal surface textures"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCS39n-tZqfPHTmgSgXwuk_yKB5eRgYkCVhIXnizV3tnDbGf3qpiKwFKHwlUXIoEngkwhPXldIFG8kgBYe9FfZg2msaB_9L2KFHkTRPpN9JrCuMzbb7rlD_2yGdh-Ni3H8NxQHkXeaNUUET7AKrz5HF-il39nK5Yf08eSOVS_tMP43JD8MtrBzvyXPK1q-roZKOph8ecO1mbljC_19ZLV9G3ij9Rx8tWULmlCf7lCtKMowOSm_WYN0gqIBh6dE3MmmNPrLvYGidkIJv"
+        />
+        <div
+          class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"
+        ></div>
+        <div class="absolute bottom-6 left-6">
+          <h3 class="text-white text-xl font-bold">Finishes</h3>
+          <p class="text-white/70 text-sm">Metals, woods &amp; stones</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
