@@ -11,7 +11,7 @@ const startServer = async () => {
 
     const port = Number(process.env.PORT) || 8000;
     app.listen(port, () => {
-      console.log(`App running on port ${port}`);
+      console.log(`App running on this url http://localhost:${port}`);
     });
   } catch (err) {
     console.error("Db connection failed:", err);
