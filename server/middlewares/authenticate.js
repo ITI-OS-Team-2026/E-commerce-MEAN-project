@@ -1,7 +1,5 @@
-const jwt = require('jsonwebtoken');
-const util = require('util');
-const jwtVerify = util.promisify(jwt.verify);
 const APIError = require('../utils/APIError');
+const { isTokenValid } = require('../utils/jwt');
 
 const authenticate = async (req, res, next) => {
   const tokenData = req.headers.authorization;
@@ -14,11 +12,12 @@ const authenticate = async (req, res, next) => {
     throw new APIError('Invalid token format', 401);
   }
 
-  const decodedData = await jwtVerify(token, process.env.JWT_SECRET);
-
+  const payload = isTokenValid({ token });
   req.user = {
-    // userId: decodedData.userId,
-    // role: decodedData.role,
+    name: payload.name,
+    userId: payload.userId,
+    role: payload.role,
+    isVerified: payload.isVerified,
   };
 
   next();
