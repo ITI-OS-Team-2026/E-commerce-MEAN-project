@@ -6,6 +6,7 @@ const { xss } = require('express-xss-sanitizer');
 const { limiter } = require('./middlewares/rateLimiter');
 
 const errorHandler = require('./middlewares/errorHandler');
+const throwIfNotFound = require('./utils/throwIfNotFound');
 
 const app = express();
 
