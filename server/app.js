@@ -7,6 +7,7 @@ const { limiter } = require('./middlewares/rateLimiter');
 
 const errorHandler = require('./middlewares/errorHandler');
 const throwIfNotFound = require('./utils/throwIfNotFound');
+const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(limiter);
 
 // Route Mount
 
+app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
 
 // Handle wrong routes
