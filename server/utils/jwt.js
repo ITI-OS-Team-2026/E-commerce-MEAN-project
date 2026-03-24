@@ -3,7 +3,7 @@ const APIError = require('./APIError');
 
 const createJWT = ({ payload }) => {
   const token = jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_LIFE_TIME,
+    expiresIn: process.env.JWT_LIFE_TIME || '30d',
   });
   return token;
 };
