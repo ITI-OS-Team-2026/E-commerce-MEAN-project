@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticate } = require('../middlewares/authenticate.middleware');
+const authenticate = require('../middlewares/authenticate');
 const restrictTo = require('../middlewares/restrictTo');
 const validate = require('../middlewares/validate');
 const schemas = require('../schemas/User');
