@@ -5,72 +5,55 @@ const {
   updateProduct,
   deleteProduct,
 } = require('../services/productService');
-const APIError = require('../utils/APIError');
 
-const getAllProductsController = async (req, res) => {
+const getAllProductsController = async (req, res, next) => {
   try {
     const result = await getAllProducts(req.query);
     res.status(200).json(result);
   } catch (err) {
-    res.status(err.statusCode || 500).json({
-      status: 'fail',
-      message: err.message
-    });
+    next(err);
   }
 };
 
-const getProductByIdController = async (req, res) => {    
-    try {
-        const product = await getProductById(req.params.id);
-        res.status(200).json(product);
-    } catch (err) {
-        res.status(404).json({
-            message: err.message
-        });
-    }
+const getProductByIdController = async (req, res, next) => {
+  try {
+    const product = await getProductById(req.params.id);
+    res.status(200).json(product);
+  } catch (err) {
+    next(err);
+  }
 };
 
-const createProductController = async (req, res) => {
+const createProductController = async (req, res, next) => {
   try {
     const productData = {
       ...req.body,
-      seller: req.user._id
+      seller: req.user.userId,
     };
     const product = await createProduct(productData);
     res.status(201).json(product);
   } catch (err) {
-    res.status(400).json({
-      message: err.message
-    });
+    next(err);
   }
 };
 
-const updateProductController = async (req, res) => {
+const updateProductController = async (req, res, next) => {
   try {
     const product = await updateProduct(req.params.id, req.body);
     res.status(200).json(product);
   } catch (err) {
-    res.status(400).json({
-      message: err.message
-    });
+    next(err);
   }
 };
 
-const deleteProductController = async (req, res) => {
+const deleteProductController = async (req, res, next) => {
   try {
-    const product = await deleteProduct(req.params.id);
-    if (!product) {
-      return res.status(404).json({
-        message: 'Product not found'
-      });  
-    }
+    await deleteProduct(req.params.id);
     res.status(200).json({
-      message: 'Product deleted successfully'
+      message: 'Product deleted successfully',
     });
   } catch (err) {
-    res.status(400).json({
-      message: err.message
-    });
+    next(err);
   }
 };
 
@@ -79,5 +62,5 @@ module.exports = {
   getProductByIdController,
   createProductController,
   updateProductController,
-  deleteProductController
+  deleteProductController,
 };

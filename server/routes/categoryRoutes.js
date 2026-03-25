@@ -10,11 +10,12 @@ const {
 const { createCategorySchema, updateCategorySchema } = require('../schemas/categories');
 const validate = require('../middlewares/validate');
 const restrictTo = require("../middlewares/restrictTo");
+const authenticate = require("../middlewares/authenticate");
 
-router.post('/',restrictTo('admin'), validate(createCategorySchema), createCategoryController);
+router.post('/', authenticate, restrictTo('admin'), validate(createCategorySchema), createCategoryController);
 router.get('/', getAllCategoriesController);
 router.get('/:id', getCategoryByIdController);
-router.put('/:id', restrictTo('admin'), validate(updateCategorySchema), updateCategoryController);
-router.delete('/:id', restrictTo('admin'), deleteCategoryController);
+router.put('/:id', authenticate, restrictTo('admin'), validate(updateCategorySchema), updateCategoryController);
+router.delete('/:id', authenticate, restrictTo('admin'), deleteCategoryController);
 
 module.exports = router;

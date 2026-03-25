@@ -1,62 +1,53 @@
-const {createCategory,
+const {
+  createCategory,
   getAllCategories,
   getCategoryById,
   updateCategory,
-  deleteCategory} = require('../services/categoryService');
-const APIError = require('../utils/APIError');
+  deleteCategory,
+} = require('../services/categoryService');
 
-const createCategoryController = async (req, res) => {
+const createCategoryController = async (req, res, next) => {
   try {
     const category = await createCategory(req.body);
     res.status(201).json(category);
   } catch (err) {
-    res.status(400).json({
-      message: err.message
-    });
+    next(err);
   }
 };
 
-const getAllCategoriesController = async (req, res) => {
+const getAllCategoriesController = async (req, res, next) => {
   try {
     const categories = await getAllCategories();
     res.status(200).json(categories);
   } catch (err) {
-    res.status(500).json({
-      message: err.message
-    });
+    next(err);
   }
 };
 
-const getCategoryByIdController = async (req, res) => {
+const getCategoryByIdController = async (req, res, next) => {
   try {
     const category = await getCategoryById(req.params.id);
     res.status(200).json(category);
   } catch (err) {
-    res.status(404).json({
-      message: err.message
-    });
+    next(err);
   }
 };
 
-const updateCategoryController = async (req, res) => {
+const updateCategoryController = async (req, res, next) => {
   try {
     const category = await updateCategory(req.params.id, req.body);
     res.status(200).json(category);
   } catch (err) {
-    res.status(400).json({
-      message: err.message
-    });
+    next(err);
   }
 };
 
-const deleteCategoryController = async (req, res) => {
+const deleteCategoryController = async (req, res, next) => {
   try {
     await deleteCategory(req.params.id);
     res.status(204).send();
   } catch (err) {
-    res.status(404).json({
-      message: err.message
-    });
+    next(err);
   }
 };
 
@@ -65,5 +56,5 @@ module.exports = {
   getAllCategoriesController,
   getCategoryByIdController,
   updateCategoryController,
-  deleteCategoryController
+  deleteCategoryController,
 };
