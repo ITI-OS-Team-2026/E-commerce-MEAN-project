@@ -1,13 +1,13 @@
 @if (route) {
-  <a [routerLink]="route" [class]="variantClasses">
+  <a
+    [routerLink]="disabled ? null : route"
+    [attr.aria-disabled]="disabled"
+    [class]="variantClasses + (disabled ? ' pointer-events-none opacity-50' : '')"
+  >
     {{ label }}
   </a>
 } @else {
-  <button 
-    [type]="type" 
-    [disabled]="disabled" 
-    [class]="variantClasses"
-  >
+  <button [type]="type" [disabled]="disabled" [class]="variantClasses">
     {{ label }}
   </button>
 }
