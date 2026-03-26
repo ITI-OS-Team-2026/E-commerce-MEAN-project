@@ -1,4 +1,4 @@
-const Product = require('../models/product');
+const Product = require('../models/Product');
 const APIError = require('../utils/APIError');
 
 const getAllProducts = async (queryParams) => {
@@ -57,14 +57,10 @@ const createProduct = async (productData) => {
 };
 
 const updateProduct = async (productId, updateData) => {
-  const product = await Product.findOneAndUpdate(
-    { _id: productId, isdeleted: null },
-    updateData,
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
+  const product = await Product.findOneAndUpdate({ _id: productId, isdeleted: null }, updateData, {
+    new: true,
+    runValidators: true,
+  });
 
   if (!product) {
     throw new APIError('Product not found', 404);

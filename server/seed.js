@@ -21,14 +21,10 @@ const seedAdmin = async () => {
       return;
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash('admin123', 10);
-
-    // Create admin
     const admin = await User.create({
       name: 'Admin',
       email: 'admin@admin.com',
-      password: hashedPassword,
+      password: 'admin123', // plain text, hook handles hashing
       role: 'admin',
     });
 

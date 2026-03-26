@@ -10,7 +10,7 @@ const router = express.Router();
 const authenticate = require('../middlewares/authenticate');
 const restrictTo = require('../middlewares/restrictTo');
 const validate = require('../middlewares/validate');
-const schemas = require('../schemas/Product')
+const schemas = require('../schemas/Product');
 
 // ── Public routes ───────────────────────────────────────────
 router.get('/', getAllProductsController);
@@ -20,7 +20,7 @@ router.get('/:id', getProductByIdController);
 router.post(
   '/',
   authenticate,
-  restrictTo('seller'),
+  restrictTo('seller', 'admin'),
   validate(schemas.createProductSchema),
   createProductController,
 );
