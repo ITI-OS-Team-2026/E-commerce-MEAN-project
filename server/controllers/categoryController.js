@@ -45,7 +45,7 @@ const updateCategoryController = async (req, res, next) => {
 const deleteCategoryController = async (req, res, next) => {
   try {
     const category = await deleteCategory(req.params.id);
-    res.status(204).json({
+    res.status(200).json({
       message: 'Deleted successfully',
       category,
     });
