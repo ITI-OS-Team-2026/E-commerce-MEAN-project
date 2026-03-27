@@ -11,6 +11,8 @@ const authenticate = require('../middlewares/authenticate');
 const restrictTo = require('../middlewares/restrictTo');
 const validate = require('../middlewares/validate');
 const schemas = require('../schemas/Product');
+const { uploadProductImages } = require('../middlewares/upload');
+const attachImageUrls = require('../middlewares/attachImageUrl');
 
 // ── Public routes ───────────────────────────────────────────
 router.get('/', getAllProductsController);
@@ -20,7 +22,9 @@ router.get('/:id', getProductByIdController);
 router.post(
   '/',
   authenticate,
-  restrictTo('seller', 'admin'),
+  restrictTo('seller'),
+  uploadProductImages,
+  attachImageUrls,
   validate(schemas.createProductSchema),
   createProductController,
 );
@@ -28,6 +32,8 @@ router.patch(
   '/:id',
   authenticate,
   restrictTo('seller'),
+  uploadProductImages,
+  attachImageUrls,
   validate(schemas.updateProductSchema),
   updateProductController,
 );
