@@ -34,7 +34,7 @@ const placeOrder = async (req) => {
   try {
     await sendOrderConfirmationEmail(currentUser, order);
   } catch (emailError) {
-    console.error('Failed to send order confirmation email:', emailError);
+    throw new APIError('Failed to send order confirmation email', 500);
   }
 
   return order;
