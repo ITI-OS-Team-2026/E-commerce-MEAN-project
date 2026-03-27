@@ -32,6 +32,8 @@ router.patch(
   '/:id',
   authenticate,
   restrictTo('seller'),
+  uploadProductImages,
+  attachImageUrls,
   validate(schemas.updateProductSchema),
   updateProductController,
 );
