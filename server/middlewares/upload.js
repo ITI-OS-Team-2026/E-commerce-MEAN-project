@@ -36,7 +36,7 @@ const uploadProductImages = createUploader({
   folder: 'products',
   allowedTypes: ['jpeg', 'jpg', 'png', 'webp'],
   maxSize: 5 * 1024 * 1024, // 5MB
-  fieldName: 'image',
+  fieldName: 'images',
 });
 
 // const uploadProfilePicture = createUploader({
