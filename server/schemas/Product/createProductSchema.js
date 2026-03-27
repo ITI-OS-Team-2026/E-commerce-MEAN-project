@@ -28,9 +28,6 @@ const createProductSchema = {
       'number.base': 'Stock must be a number',
       'number.min': 'Stock cannot be negative',
     }),
-    seller: Joi.string().required().messages({
-      'string.empty': 'Seller ID is required',
-    }),
   })
     .required()
     .unknown(false),
