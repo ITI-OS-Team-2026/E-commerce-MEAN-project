@@ -15,6 +15,7 @@ const authenticate = async (req, res, next) => {
   const payload = isTokenValid({ token });
   req.user = {
     name: payload.name,
+    // email: payload.email,
     userId: payload.userId,
     role: payload.role,
     isVerified: payload.isVerified,
