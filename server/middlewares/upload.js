@@ -1,11 +1,19 @@
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const APIError = require('../utils/APIError');
 
 const createUploader = ({ folder, allowedTypes, maxSize, fieldName }) => {
+  const uploadPath = path.join(__dirname, `../public/uploads/${folder}`);
+
+  // 👇 Create folder if it doesn't exist
+  if (!fs.existsSync(uploadPath)) {
+    fs.mkdirSync(uploadPath, { recursive: true });
+  }
+
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, `public/uploads/${folder}`); // 👈 dynamic folder
+      cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
       const uniqueName = `${Date.now()}-${file.originalname}`;
