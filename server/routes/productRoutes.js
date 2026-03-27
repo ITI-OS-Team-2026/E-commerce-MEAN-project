@@ -22,7 +22,7 @@ router.get('/:id', getProductByIdController);
 router.post(
   '/',
   authenticate,
-  restrictTo('seller', 'admin'),
+  restrictTo('seller'),
   uploadProductImages,
   attachImageUrls,
   validate(schemas.createProductSchema),
