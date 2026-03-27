@@ -1,24 +1,31 @@
-// middlewares/attachImageUrls.js
 const cloudinary = require('../config/cloudinary');
-const fs = require('fs');
 
 const attachImageUrls = async (req, res, next) => {
   try {
     const imageUrls = [];
 
+    // ✅ Check if files exist
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
-        const result = await cloudinary.uploader.upload(file.path, {
-          folder: 'products',
+        // ❗ IMPORTANT: Using upload_stream because we use buffer
+        const result = await new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: 'products' }, // upload folder in Cloudinary
+            (error, result) => {
+              if (error) return reject(error);
+              resolve(result);
+            },
+          );
+
+          // ❗ THIS is the key: send file buffer (NOT file.path)
+          stream.end(file.buffer);
         });
 
         imageUrls.push(result.secure_url);
-
-        fs.unlinkSync(file.path);
       }
     }
 
-    // 👇 THIS IS THE MAGIC LINE
+    // ❗ Add images to request body so Joi + controller can use it
     req.body.images = imageUrls;
 
     next();
