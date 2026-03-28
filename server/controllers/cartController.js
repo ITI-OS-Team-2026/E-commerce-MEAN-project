@@ -43,4 +43,14 @@ const updateQuantity = async (req, res, next) => {
   }
 };
 
-module.exports = { addToCart, removeFromCart, updateQuantity };
+const getCart = async (req, res, next) => {
+  try {
+    const userId = req.user.userId;
+    const cart = await cartService.getCart(userId);
+    res.status(200).json({ status: 'success', data: cart });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { addToCart, removeFromCart, updateQuantity, getCart };
