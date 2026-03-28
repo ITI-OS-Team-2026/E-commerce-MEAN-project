@@ -11,4 +11,15 @@ const addToCart = async (req, res, next) => {
   }
 };
 
-module.exports = { addToCart };
+const removeFromCart = async (req, res, next) => {
+  try {
+    const { productId } = req.params;
+    const userId = req.user.userId;
+    const cart = await cartService.removeFromCart(userId, productId);
+    res.status(200).json({ status: 'success', data: cart });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { addToCart, removeFromCart };

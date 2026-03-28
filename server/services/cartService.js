@@ -64,4 +64,21 @@ const addToCart = async (userId, productId, quantity) => {
   return cart;
 };
 
-module.exports = { addToCart };
+const removeFromCart = async (userId, productId) => {
+  const cart = await Cart.findOne({ user: userId });
+
+  if (!cart) {
+    throw new APIError('Cart not found', 404);
+  }
+
+  cart.items = cart.items.filter((item) => item.product.toString() !== productId.toString());
+
+  cart.totalPrice = cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  await cart.save();
+
+  await cart.populate('items.product', 'name price images');
+  return cart;
+};
+
+module.exports = { addToCart, removeFromCart };
