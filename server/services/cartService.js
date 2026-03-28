@@ -81,4 +81,41 @@ const removeFromCart = async (userId, productId) => {
   return cart;
 };
 
-module.exports = { addToCart, removeFromCart };
+const updateQuantity = async (userId, productId, quantity) => {
+  const cart = await Cart.findOne({ user: userId });
+
+  if (!cart) {
+    throw new APIError('Cart not found', 404);
+  }
+
+  const item = cart.items.find((item) => item.product.toString() === productId.toString());
+
+  if (!item) {
+    throw new APIError('Item not found in cart', 404);
+  }
+
+  if (quantity == null || quantity < 1) {
+    throw new APIError('Quantity must be at least 1', 400);
+  }
+
+  const product = await Product.findOne({ _id: productId, isdeleted: null });
+
+  if (!product) {
+    throw new APIError('Product not found', 404);
+  }
+
+  if (product.stock < quantity) {
+    throw new APIError('Insufficient stock', 400);
+  }
+
+  item.quantity = quantity;
+
+  cart.totalPrice = cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  await cart.save();
+
+  await cart.populate('items.product', 'name price images');
+  return cart;
+};
+
+module.exports = { addToCart, removeFromCart, updateQuantity };
