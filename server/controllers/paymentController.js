@@ -1,0 +1,24 @@
+const paymentService = require('../services/paymentservice');
+const APIError = require('../utils/APIError');
+
+exports.createPaymentIntent = async (req, res, next) => {
+  try {
+    const { amount, currency, orderId } = req.body;
+    const userId = req.user._id; // from your authenticate middleware
+
+    const result = await paymentService.createPaymentIntent({ amount, currency, userId, orderId });
+    res.status(200).json({ status: 'success', data: result });
+  } catch (err) {
+    next(new APIError(err.message, 400));
+  }
+};
+
+exports.confirmPayment = async (req, res, next) => {
+  try {
+    const { paymentIntentId } = req.body;
+    const payment = await paymentService.confirmPayment(paymentIntentId);
+    res.status(200).json({ status: 'success', data: payment });
+  } catch (err) {
+    next(new APIError(err.message, 400));
+  }
+};
