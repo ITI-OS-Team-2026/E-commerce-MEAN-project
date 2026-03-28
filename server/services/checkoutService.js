@@ -3,8 +3,9 @@ const Product = require('../models/Product');
 const Cart = require('../models/Cart');
 const APIError = require('../utils/APIError');
 const cartService = require('./cartService');
+const paymentService = require('./paymentservice');
 
-const checkout = async (userId, shippingAddress, paymentMethod) => {
+const checkout = async (userId, shippingAddress, paymentMethod, paymentIntentId) => {
   const cart = await Cart.findOne({ user: userId });
 
   if (!cart || cart.items.length === 0) {
@@ -19,8 +20,20 @@ const checkout = async (userId, shippingAddress, paymentMethod) => {
     throw new APIError('Payment method is required', 400);
   }
 
-  if (paymentMethod !== 'cash_on_delivery') {
+  if (paymentMethod !== 'cash_on_delivery' && paymentMethod !== 'credit_card') {
     throw new APIError('Invalid payment method', 400);
+  }
+
+  if (paymentMethod === 'credit_card') {
+    if (!paymentIntentId) {
+      throw new APIError('Payment intent ID is required', 400);
+    }
+
+    const payment = await paymentService.confirmPayment(paymentIntentId);
+
+    if (!payment || payment.status !== 'succeeded') {
+      throw new APIError('Payment not confirmed', 400);
+    }
   }
 
   for (const item of cart.items) {
@@ -34,6 +47,7 @@ const checkout = async (userId, shippingAddress, paymentMethod) => {
     shippingAddress,
     totalAmount: cart.totalPrice,
     status: 'pending',
+    paymentMethod,
     trackingHistory: [{ status: 'pending', comment: 'Order created' }],
   });
 
