@@ -9,7 +9,7 @@ exports.createPaymentIntent = async (req, res, next) => {
     const result = await paymentService.createPaymentIntent({ amount, currency, userId, orderId });
     res.status(200).json({ status: 'success', data: result });
   } catch (err) {
-    next(new APIError(err.message, 400));
+    next(err);
   }
 };
 
@@ -19,6 +19,6 @@ exports.confirmPayment = async (req, res, next) => {
     const payment = await paymentService.confirmPayment(paymentIntentId);
     res.status(200).json({ status: 'success', data: payment });
   } catch (err) {
-    next(new APIError(err.message, 400));
+    next(err);
   }
 };
