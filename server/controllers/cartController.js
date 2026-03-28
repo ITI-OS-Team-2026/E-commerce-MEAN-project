@@ -3,6 +3,10 @@ const APIError = require('../utils/APIError');
 
 const addToCart = async (req, res, next) => {
   try {
+    if (!req.body || !req.body.productId || !req.body.quantity) {
+      throw new APIError('Product ID and quantity are required', 400);
+    }
+
     const { productId, quantity } = req.body;
     const userId = req.user.userId;
     const cart = await cartService.addToCart(userId, productId, quantity);
