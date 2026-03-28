@@ -27,14 +27,14 @@ const placeOrder = async (req) => {
     trackingHistory: [{ status: 'pending', comment: 'Order created' }],
   });
 
-
   const currentUser = await User.findById(user.userId);
   if (!currentUser) throw new APIError('User not found', 404);
 
   try {
     await sendOrderConfirmationEmail(currentUser, order);
   } catch (emailError) {
-    throw new APIError('Failed to send order confirmation email', 500);
+    console.error('EMAIL ERROR:', emailError);
+    throw new APIError(emailError.message || 'Failed to send email', 500);
   }
 
   return order;
