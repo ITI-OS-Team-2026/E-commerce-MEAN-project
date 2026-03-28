@@ -144,4 +144,18 @@ const getCart = async (userId) => {
   };
 };
 
-module.exports = { addToCart, removeFromCart, updateQuantity, getCart };
+const clearCart = async (userId) => {
+  const cart = await Cart.findOne({ user: userId });
+
+  if (!cart) {
+    throw new APIError('Cart not found', 404);
+  }
+
+  cart.items = [];
+  cart.totalPrice = 0;
+
+  await cart.save();
+  return cart;
+};
+
+module.exports = { addToCart, removeFromCart, updateQuantity, getCart, clearCart };
