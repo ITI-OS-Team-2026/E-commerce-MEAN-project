@@ -13,6 +13,7 @@ const productRouter = require('./routes/productRoutes');
 const categoryRouter = require('./routes/categoryRoutes');
 const orderRouter = require('./routes/orderRoutes');
 const cartRouter = require('./routes/cartRoutes');
+const paymentRoutes = require('./routes/paymentRoutes.js');
 const checkoutRouter = require('./routes/checkoutRoutes');
 
 const app = express();
@@ -25,13 +26,13 @@ app.use(xss());
 app.use(limiter);
 
 // Route Mount
-
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/products', productRouter);
 app.use('/api/v1/categories', categoryRouter);
 app.use('/api/v1/orders', orderRouter);
 app.use('/api/v1/cart', cartRouter);
+app.use('/api/payments', paymentRoutes);
 app.use('/api/v1/checkout', checkoutRouter);
 
 // Handle wrong routes
