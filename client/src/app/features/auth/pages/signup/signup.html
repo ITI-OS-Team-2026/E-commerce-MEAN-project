@@ -1,6 +1,4 @@
-<div
-  class="min-h-screen bg-background text-on-background font-body antialiased"
->
+<div class="min-h-screen bg-background text-on-background font-body antialiased">
   <header
     class="sticky top-0 z-50 flex h-16 sm:h-20 w-full items-center justify-between border-b border-outline-variant/15 bg-surface-container-lowest/90 px-4 backdrop-blur-md sm:px-6 lg:px-10"
   >
@@ -13,9 +11,7 @@
       routerLink="/"
       class="inline-flex items-center gap-1.5 text-xs font-semibold text-primary sm:text-sm"
     >
-      <span class="material-symbols-outlined text-lg leading-none"
-        >arrow_back</span
-      >
+      <span class="material-symbols-outlined text-lg leading-none">arrow_back</span>
       <span>Back</span>
     </a>
   </header>
@@ -58,8 +54,7 @@
             list your catalog.
           </h1>
           <p class="mt-4 max-w-md text-sm leading-relaxed text-on-primary-container sm:text-base">
-            One signup for buyers and sellers. Pick your role below — stay on
-            this page.
+            One signup for buyers and sellers. Pick your role below — stay on this page.
           </p>
         </div>
       </div>
@@ -69,9 +64,7 @@
         class="flex flex-col justify-center bg-surface-container-lowest px-5 py-10 sm:px-8 sm:py-12 lg:px-12 xl:px-14"
       >
         <div class="mb-8 text-center lg:text-left">
-          <h2 class="font-headline text-2xl font-bold text-on-surface sm:text-3xl">
-            Sign up
-          </h2>
+          <h2 class="font-headline text-2xl font-bold text-on-surface sm:text-3xl">Sign up</h2>
           <p class="mt-2 text-sm text-on-surface-variant sm:text-base">
             Enter your details and choose how you will use the platform.
           </p>
@@ -113,11 +106,15 @@
               [class.focus:ring-error/20]="fullName?.invalid && fullName?.touched"
               [attr.aria-invalid]="fullName?.invalid && fullName?.touched"
             />
-            @if (fullName?.touched && fullName?.errors?.["required"]) {
-              <span class="text-xs font-medium text-error" role="alert">Full name is required.</span>
+            @if (fullName?.touched && fullName?.errors?.['required']) {
+              <span class="text-xs font-medium text-error" role="alert"
+                >Full name is required.</span
+              >
             }
-            @if (fullName?.touched && fullName?.errors?.["whitespace"]) {
-              <span class="text-xs font-medium text-error" role="alert">Full name cannot be only spaces.</span>
+            @if (fullName?.touched && fullName?.errors?.['whitespace']) {
+              <span class="text-xs font-medium text-error" role="alert"
+                >Full name cannot be only spaces.</span
+              >
             }
           </div>
 
@@ -143,11 +140,13 @@
               [class.focus:ring-error/20]="email?.invalid && email?.touched"
               [attr.aria-invalid]="email?.invalid && email?.touched"
             />
-            @if (email?.touched && email?.errors?.["required"]) {
+            @if (email?.touched && email?.errors?.['required']) {
               <span class="text-xs font-medium text-error" role="alert">Email is required.</span>
             }
-            @if (email?.touched && email?.errors?.["email"]) {
-              <span class="text-xs font-medium text-error" role="alert">Enter a valid email address.</span>
+            @if (email?.touched && email?.errors?.['email']) {
+              <span class="text-xs font-medium text-error" role="alert"
+                >Enter a valid email address.</span
+              >
             }
           </div>
 
@@ -188,11 +187,13 @@
                 }
               </button>
             </div>
-            @if (password?.touched && password?.errors?.["required"]) {
+            @if (password?.touched && password?.errors?.['required']) {
               <span class="text-xs font-medium text-error" role="alert">Password is required.</span>
             }
-            @if (password?.touched && password?.errors?.["minlength"]) {
-              <span class="text-xs font-medium text-error" role="alert">Use at least 6 characters.</span>
+            @if (password?.touched && password?.errors?.['minlength']) {
+              <span class="text-xs font-medium text-error" role="alert"
+                >Use at least 6 characters.</span
+              >
             }
           </div>
 
@@ -218,11 +219,15 @@
               [class.focus:ring-error/20]="confirmPasswordHasError"
               [attr.aria-invalid]="confirmPasswordHasError"
             />
-            @if (confirmPassword?.touched && confirmPassword?.errors?.["required"]) {
-              <span class="text-xs font-medium text-error" role="alert">Please confirm your password.</span>
+            @if (confirmPassword?.touched && confirmPassword?.errors?.['required']) {
+              <span class="text-xs font-medium text-error" role="alert"
+                >Please confirm your password.</span
+              >
             }
             @if (passwordMismatchError) {
-              <span class="text-xs font-medium text-error" role="alert">Passwords do not match.</span>
+              <span class="text-xs font-medium text-error" role="alert"
+                >Passwords do not match.</span
+              >
             }
           </div>
 
@@ -245,9 +250,7 @@
               <span
                 class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
               >
-                <span class="material-symbols-outlined text-xl leading-none"
-                  >expand_more</span
-                >
+                <span class="material-symbols-outlined text-xl leading-none">expand_more</span>
               </span>
             </div>
           </div>
@@ -257,7 +260,16 @@
             type="submit"
             class="mt-2 w-full rounded-lg bg-linear-to-br from-primary to-primary-container py-4 font-headline text-base font-bold text-on-primary shadow-lg shadow-primary/25 transition-[transform,box-shadow] hover:shadow-xl hover:shadow-primary/20 active:scale-[0.99] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
           >
-            Create account
+            @if (isSubmitting) {
+              <span class="flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined animate-spin text-lg leading-none">
+                  progress_activity
+                </span>
+                <span>Creating account...</span>
+              </span>
+            } @else {
+              <span>Create account</span>
+            }
           </button>
         </form>
 
@@ -274,9 +286,7 @@
     </div>
   </main>
 
-  <footer
-    class="border-t border-outline-variant/15 px-4 py-6 text-center sm:px-6"
-  >
+  <footer class="border-t border-outline-variant/15 px-4 py-6 text-center sm:px-6">
     <p class="text-[10px] uppercase tracking-[0.35em] text-outline">
       © {{ currentYear }} Architectural Hardware
     </p>
