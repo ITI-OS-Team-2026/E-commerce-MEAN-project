@@ -8,8 +8,13 @@ const checkout = async (req, res, next) => {
     }
 
     const userId = req.user.userId;
-    const { shippingAddress, paymentMethod } = req.body;
-    const order = await checkoutService.checkout(userId, shippingAddress, paymentMethod);
+    const { shippingAddress, paymentMethod, paymentIntentId } = req.body;
+    const order = await checkoutService.checkout(
+      userId,
+      shippingAddress,
+      paymentMethod,
+      paymentIntentId,
+    );
     res.status(201).json({ status: 'success', data: order });
   } catch (err) {
     next(err);

@@ -55,6 +55,11 @@ const orderSchema = new mongoose.Schema(
       enum: ['pending', 'confirmed', 'packed', 'shipped', 'delivered', 'cancelled'],
       default: 'pending',
     },
+    paymentMethod: {
+      type: String,
+      enum: ['cash_on_delivery', 'credit_card'],
+      default: 'cash_on_delivery',
+    },
     trackingHistory: [
       {
         status: {
