@@ -78,10 +78,19 @@
         </div>
 
         <form
+          [formGroup]="userSignupForm"
           (ngSubmit)="onSubmit()"
           class="flex flex-col gap-5 sm:gap-6"
           novalidate
         >
+          @if (serverError) {
+            <div
+              class="rounded-lg border border-error/40 bg-error-container/30 px-4 py-3 text-sm text-on-error-container"
+              role="alert"
+            >
+              {{ serverError }}
+            </div>
+          }
           <div class="space-y-2">
             <label
               class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant"
@@ -91,13 +100,25 @@
             </label>
             <input
               id="signup-name"
-              name="name"
+              formControlName="fullName"
               type="text"
               autocomplete="name"
-              [(ngModel)]="signupPayload.name"
               placeholder="Your name"
-              class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3.5 text-on-surface shadow-sm outline-none transition-[box-shadow,border-color] placeholder:text-outline focus:border-primary focus:ring-2 focus:ring-primary/20"
+              class="w-full rounded-lg border bg-surface-container-high px-4 py-3.5 text-on-surface shadow-sm outline-none transition-[box-shadow,border-color] placeholder:text-outline focus:ring-2"
+              [class.border-error]="fullName?.invalid && fullName?.touched"
+              [class.border-outline-variant/30]="!fullName?.invalid || !fullName?.touched"
+              [class.focus:border-primary]="!fullName?.invalid || !fullName?.touched"
+              [class.focus:ring-primary/20]="!fullName?.invalid || !fullName?.touched"
+              [class.focus:border-error]="fullName?.invalid && fullName?.touched"
+              [class.focus:ring-error/20]="fullName?.invalid && fullName?.touched"
+              [attr.aria-invalid]="fullName?.invalid && fullName?.touched"
             />
+            @if (fullName?.touched && fullName?.errors?.["required"]) {
+              <span class="text-xs font-medium text-error" role="alert">Full name is required.</span>
+            }
+            @if (fullName?.touched && fullName?.errors?.["whitespace"]) {
+              <span class="text-xs font-medium text-error" role="alert">Full name cannot be only spaces.</span>
+            }
           </div>
 
           <div class="space-y-2">
@@ -109,13 +130,25 @@
             </label>
             <input
               id="signup-email"
-              name="email"
-              type="text"
+              formControlName="email"
+              type="email"
               autocomplete="email"
-              [(ngModel)]="signupPayload.email"
               placeholder="you@example.com"
-              class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3.5 text-on-surface shadow-sm outline-none transition-[box-shadow,border-color] placeholder:text-outline focus:border-primary focus:ring-2 focus:ring-primary/20"
+              class="w-full rounded-lg border bg-surface-container-high px-4 py-3.5 text-on-surface shadow-sm outline-none transition-[box-shadow,border-color] placeholder:text-outline focus:ring-2"
+              [class.border-error]="email?.invalid && email?.touched"
+              [class.border-outline-variant/30]="!email?.invalid || !email?.touched"
+              [class.focus:border-primary]="!email?.invalid || !email?.touched"
+              [class.focus:ring-primary/20]="!email?.invalid || !email?.touched"
+              [class.focus:border-error]="email?.invalid && email?.touched"
+              [class.focus:ring-error/20]="email?.invalid && email?.touched"
+              [attr.aria-invalid]="email?.invalid && email?.touched"
             />
+            @if (email?.touched && email?.errors?.["required"]) {
+              <span class="text-xs font-medium text-error" role="alert">Email is required.</span>
+            }
+            @if (email?.touched && email?.errors?.["email"]) {
+              <span class="text-xs font-medium text-error" role="alert">Enter a valid email address.</span>
+            }
           </div>
 
           <div class="space-y-2">
@@ -128,12 +161,18 @@
             <div class="relative">
               <input
                 id="signup-password"
-                name="password"
+                formControlName="password"
                 [type]="showPassword ? 'text' : 'password'"
                 autocomplete="new-password"
-                [(ngModel)]="signupPayload.password"
                 placeholder="Choose a password"
-                class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high py-3.5 pl-4 pr-12 text-on-surface shadow-sm outline-none transition-[box-shadow,border-color] placeholder:text-outline focus:border-primary focus:ring-2 focus:ring-primary/20"
+                class="w-full rounded-lg border bg-surface-container-high py-3.5 pl-4 pr-12 text-on-surface shadow-sm outline-none transition-[box-shadow,border-color] placeholder:text-outline focus:ring-2"
+                [class.border-error]="password?.invalid && password?.touched"
+                [class.border-outline-variant/30]="!password?.invalid || !password?.touched"
+                [class.focus:border-primary]="!password?.invalid || !password?.touched"
+                [class.focus:ring-primary/20]="!password?.invalid || !password?.touched"
+                [class.focus:border-error]="password?.invalid && password?.touched"
+                [class.focus:ring-error/20]="password?.invalid && password?.touched"
+                [attr.aria-invalid]="password?.invalid && password?.touched"
               />
               <button
                 type="button"
@@ -149,6 +188,42 @@
                 }
               </button>
             </div>
+            @if (password?.touched && password?.errors?.["required"]) {
+              <span class="text-xs font-medium text-error" role="alert">Password is required.</span>
+            }
+            @if (password?.touched && password?.errors?.["minlength"]) {
+              <span class="text-xs font-medium text-error" role="alert">Use at least 6 characters.</span>
+            }
+          </div>
+
+          <div class="space-y-2">
+            <label
+              class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant"
+              for="signup-confirm-password"
+            >
+              Confirm password
+            </label>
+            <input
+              id="signup-confirm-password"
+              formControlName="confirmPassword"
+              [type]="showPassword ? 'text' : 'password'"
+              autocomplete="new-password"
+              placeholder="Re-enter your password"
+              class="w-full rounded-lg border bg-surface-container-high px-4 py-3.5 text-on-surface shadow-sm outline-none transition-[box-shadow,border-color] placeholder:text-outline focus:ring-2"
+              [class.border-error]="confirmPasswordHasError"
+              [class.border-outline-variant/30]="!confirmPasswordHasError"
+              [class.focus:border-primary]="!confirmPasswordHasError"
+              [class.focus:ring-primary/20]="!confirmPasswordHasError"
+              [class.focus:border-error]="confirmPasswordHasError"
+              [class.focus:ring-error/20]="confirmPasswordHasError"
+              [attr.aria-invalid]="confirmPasswordHasError"
+            />
+            @if (confirmPassword?.touched && confirmPassword?.errors?.["required"]) {
+              <span class="text-xs font-medium text-error" role="alert">Please confirm your password.</span>
+            }
+            @if (passwordMismatchError) {
+              <span class="text-xs font-medium text-error" role="alert">Passwords do not match.</span>
+            }
           </div>
 
           <div class="space-y-2">
@@ -161,8 +236,7 @@
             <div class="relative">
               <select
                 id="signup-role"
-                name="role"
-                [(ngModel)]="signupPayload.role"
+                formControlName="role"
                 class="w-full appearance-none rounded-lg border border-outline-variant/30 bg-surface-container-high py-3.5 pl-4 pr-11 text-on-surface shadow-sm outline-none transition-[box-shadow,border-color] focus:border-primary focus:ring-2 focus:ring-primary/20"
               >
                 <option value="customer">Customer — browse and purchase</option>
@@ -179,8 +253,9 @@
           </div>
 
           <button
+            [disabled]="userSignupForm.invalid || isSubmitting"
             type="submit"
-            class="mt-2 w-full rounded-lg bg-linear-to-br from-primary to-primary-container py-4 font-headline text-base font-bold text-on-primary shadow-lg shadow-primary/25 transition-[transform,box-shadow] hover:shadow-xl hover:shadow-primary/20 active:scale-[0.99]"
+            class="mt-2 w-full rounded-lg bg-linear-to-br from-primary to-primary-container py-4 font-headline text-base font-bold text-on-primary shadow-lg shadow-primary/25 transition-[transform,box-shadow] hover:shadow-xl hover:shadow-primary/20 active:scale-[0.99] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
           >
             Create account
           </button>
