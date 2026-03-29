@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -88,6 +88,8 @@ export class Signup {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
+    // Check this component NOW and update the UI if anything changed.
+    private cdr: ChangeDetectorRef,
   ) {
     this.userSignupForm = this.fb.group(
       {
@@ -122,10 +124,7 @@ export class Signup {
   }
 
   get passwordMismatchError(): boolean {
-    return (
-      !!this.confirmPassword?.touched &&
-      this.userSignupForm.hasError('passwordMismatch')
-    );
+    return !!this.confirmPassword?.touched && this.userSignupForm.hasError('passwordMismatch');
   }
 
   get confirmPasswordHasError(): boolean {
@@ -142,44 +141,48 @@ export class Signup {
   }
 
   onSubmit(): void {
-  if (this.userSignupForm.invalid) {
-    this.userSignupForm.markAllAsTouched();
-    return;
+    if (this.userSignupForm.invalid) {
+      this.userSignupForm.markAllAsTouched();
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.serverError = null;
+    this.isSubmitting = true;
+
+    const v = this.userSignupForm.getRawValue();
+    const payload: SignupPayload = {
+      name: v.fullName.trim(),
+      email: v.email.trim(),
+      password: v.password,
+      role: v.role as SignupRole,
+    };
+
+    try {
+      this.authService
+        .createUser(payload)
+        // reset the loading state after the request finishes
+        .pipe(finalize(() => (this.isSubmitting = false)))
+        .subscribe({
+          next: () => {
+            // Handle the Promise so rejections surface to the user
+            // todo correct the forward as needed
+            this.router.navigate(['/auth/login']).catch((navErr: unknown) => {
+              this.serverError = extractApiErrorMessage(navErr);
+              this.cdr.detectChanges();
+            });
+          },
+          error: (err: unknown) => {
+            // console.log('touched');
+            this.serverError = extractApiErrorMessage(err);
+            this.cdr.detectChanges();
+          },
+        });
+    } catch (err: unknown) {
+      // Catches synchronous throws before the stream starts
+      this.isSubmitting = false;
+      this.serverError = extractApiErrorMessage(err);
+      this.cdr.detectChanges();
+    }
   }
-
-  this.serverError = null;
-  this.isSubmitting = true;
-
-  const v = this.userSignupForm.getRawValue();
-  const payload: SignupPayload = {
-    name: v.fullName.trim(),
-    email: v.email.trim(),
-    password: v.password,
-    role: v.role as SignupRole,
-  };
-
-  try {
-    this.authService
-      .createUser(payload)
-      .pipe(finalize(() => (this.isSubmitting = false)))
-      .subscribe({
-        next: () => {
-          // Handle the Promise so rejections surface to the user
-          this.router.navigate(['/auth/register']).catch((navErr: unknown) => {
-            this.serverError = extractApiErrorMessage(navErr);
-          });
-
-          // todo correct the forward as needed
-          this.router.navigate(['auth/login']);
-        },
-        error: (err: unknown) => {
-          this.serverError = extractApiErrorMessage(err);
-        },
-      });
-  } catch (err: unknown) {
-    // Catches synchronous throws before the stream starts
-    this.isSubmitting = false;
-    this.serverError = extractApiErrorMessage(err);
-  }
-}
 }
