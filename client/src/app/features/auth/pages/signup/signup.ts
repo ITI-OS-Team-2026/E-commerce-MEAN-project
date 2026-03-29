@@ -10,7 +10,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { finalize } from 'rxjs';
+// import { finalize } from 'rxjs';
 import { SignupPayload, SignupRole } from '../../models/auth.models';
 import { AuthService } from '../../services/auth-service';
 
@@ -162,11 +162,12 @@ export class Signup {
       this.authService
         .createUser(payload)
         // reset the loading state after the request finishes
-        .pipe(finalize(() => (this.isSubmitting = false)))
+        // .pipe(finalize(() => (this.isSubmitting = false)))
         .subscribe({
           next: () => {
             // Handle the Promise so rejections surface to the user
             // todo correct the forward as needed
+            this.isSubmitting = false;
             this.router.navigate(['/auth/login']).catch((navErr: unknown) => {
               this.serverError = extractApiErrorMessage(navErr);
               this.cdr.detectChanges();
@@ -174,6 +175,7 @@ export class Signup {
           },
           error: (err: unknown) => {
             // console.log('touched');
+            this.isSubmitting = false;
             this.serverError = extractApiErrorMessage(err);
             this.cdr.detectChanges();
           },
