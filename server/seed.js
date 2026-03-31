@@ -26,6 +26,8 @@ const seedAdmin = async () => {
       email: 'admin@admin.com',
       password: 'admin123', // plain text, hook handles hashing
       role: 'admin',
+      isVerified: true,
+      isActive: true,
     });
 
     console.log('✅ Admin created successfully:', admin);
