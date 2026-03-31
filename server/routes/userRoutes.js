@@ -20,6 +20,8 @@ const {
 // ── Admin ──────────────────────────────────────────────────
 router.get('/', authenticate, restrictTo('admin'), getAllUsers);
 router.delete('/:id', authenticate, restrictTo('admin'), deleteUser);
+
+// Approve Seller
 router.patch('/:id/approve', authenticate, restrictTo('admin'), approveSeller);
 
 // ── Current user ───────────────────────────────────────────
