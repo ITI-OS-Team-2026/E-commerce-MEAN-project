@@ -3,7 +3,7 @@ const User = require('../models/User');
 const Product = require('../models/Product');
 const APIError = require('../utils/APIError');
 const { showCurrentUser } = require('./userServices');
-const { sendOrderConfirmationEmail } = require('./email');
+const emailService = require('../services/emailService'); // ✅ correct import
 
 const placeOrder = async (req) => {
   const user = showCurrentUser(req);
@@ -31,7 +31,19 @@ const placeOrder = async (req) => {
   if (!currentUser) throw new APIError('User not found', 404);
 
   try {
-    await sendOrderConfirmationEmail(currentUser, order);
+    await emailService.sendEmail({
+      to: currentUser.email,
+      subject: `Order Confirmation - Order #${order._id}`,
+      template: 'orderPlaced.html',
+      variables: {
+        userName: currentUser.name,
+        userEmail: currentUser.email,
+        orderId: order._id,
+        totalAmount: order.totalAmount,
+        itemsCount: order.items.length,
+        frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
+      },
+    });
   } catch (emailError) {
     console.error('EMAIL ERROR:', emailError);
     throw new APIError(emailError.message || 'Failed to send email', 500);
@@ -45,7 +57,10 @@ const getOrderById = async (req) => {
   if (!user) throw new APIError('Authentication required', 401);
 
   const order = await Order.findById(req.params.id).populate('items.product', 'name price');
-  if (!order) throw new APIError(`Order not found with ID: ${req.params.id}`, 404);
+
+  if (!order) {
+    throw new APIError(`Order not found with ID: ${req.params.id}`, 404);
+  }
 
   if (user.role === 'customer' && order.user.toString() !== user.userId) {
     throw new APIError('Not authorized to access this order', 403);
@@ -59,6 +74,7 @@ const getMyOrders = async (req) => {
   if (!user) throw new APIError('Authentication required', 401);
 
   const orders = await Order.find({ user: user.userId }).populate('items.product', 'name price');
+
   return orders;
 };
 
@@ -73,13 +89,38 @@ const updateOrderStatus = async (req) => {
   const { status } = req.body;
 
   const order = await Order.findById(req.params.id);
-  if (!order) throw new APIError(`Order not found with ID: ${req.params.id}`, 404);
+  if (!order) {
+    throw new APIError(`Order not found with ID: ${req.params.id}`, 404);
+  }
 
   order.status = status;
-  order.trackingHistory.push({ status, comment: `Status changed to ${status}` });
+  order.trackingHistory.push({
+    status,
+    comment: `Status changed to ${status}`,
+  });
+
   await order.save();
 
-  //  send status update email
+  // ✅ Send status update email (optional but recommended)
+  const userData = await User.findById(order.user);
+
+  if (userData) {
+    try {
+      await emailService.sendEmail({
+        to: userData.email,
+        subject: `Order Status Updated - #${order._id}`,
+        template: 'orderStatus.html', // create this template
+        variables: {
+          userName: userData.name,
+          orderId: order._id,
+          status: order.status,
+        },
+      });
+    } catch (err) {
+      console.error('EMAIL ERROR:', err);
+      // don't block the request for email failure
+    }
+  }
 
   return order;
 };
