@@ -1,1 +1,306 @@
-<p>product-details works!</p>
+
+    <!-- TopNavBar -->
+    <app-navbar></app-navbar>
+    
+    <main class="pt-24 pb-20 max-w-screen-2xl mx-auto px-8">
+      <!-- Breadcrumb -->
+      <nav
+        class="mb-12 flex items-center space-x-2 text-xs font-medium uppercase tracking-widest text-outline"
+      >
+        <span class="hover:text-primary cursor-pointer transition-colors">Catalog</span>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span class="hover:text-primary cursor-pointer transition-colors">Hardware</span>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span class="text-on-surface">Linear Hinge Pro</span>
+      </nav>
+      <!-- Product Hero Section (Asymmetric Layout) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+        <!-- Gallery Column -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="relative aspect-[4/3] bg-surface-container overflow-hidden rounded-xl group">
+            <img
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              data-alt="Close up shot of heavy duty industrial linear hinge"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuClQTmsBGfntaQHbmRmymLTRvGAUBtVt50AsgS1EM3guGJmhwChY8hXGTRHhNPE9lZt-QjQ_N-FVqPxR8yV0iI0qY_mWIgk_KJu-FctjUFHxYM76gf7UWomL856gCfJUhrcaMImKQ92ryggvDF0tcxoP4XbKF7vHheGnJMruBV4L0aGV3j_bGyNb0Ks0OuLe9EXG-g2VFB1ohSlpTy5VzJCcu0srOCnR7DXwFw586zjX9ghpyW2VFJeMm4vZRnz4ZYdbIdK4p1ovpSd"
+            />
+            <div
+              class="absolute top-6 left-6 bg-surface-container-lowest/90 backdrop-blur px-4 py-2 rounded-full shadow-sm"
+            >
+              <span class="text-xs font-bold uppercase tracking-tighter text-primary"
+                >In Stock</span
+              >
+            </div>
+          </div>
+          <div class="grid grid-cols-4 gap-4">
+            <div
+              class="aspect-square bg-surface-container rounded-lg overflow-hidden border-2 border-primary cursor-pointer"
+            >
+              <img
+                class="w-full h-full object-cover"
+                data-alt="Hinge macro detail view"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgo5fB9xlVMR_B_FZTYWH_irOsOUx7myoMTXvXT8Ec46qcQnAGxahdLPqNnNIfPAjoHCTDerz_nX_sn8hwytDs80z2yCp9swO1o4hYauV0OZnEH-rlTbnY9pF3gS30jB-QfOT_tiuYUo3jD5ONv78HoIsrmAYSPq5UNOWv558puOhMfGquWcngRJvRa8GkughRqswxKyo0zu4tY0e2phLPQM3v2b80BOLLYDib66afOPezRLL24ikc-Bo36C1crZcclNiOd3n7KKz_"
+              />
+            </div>
+            <div
+              class="aspect-square bg-surface-container rounded-lg overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              <img
+                class="w-full h-full object-cover"
+                data-alt="Hinge technical side profile"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDupuHW13NgttfJeKC6XzlpiD84ZB_O78SyAQDWjYMEPzlO3huHeLE54dr1YkEyD7ugly3Shr5IEQy3S6vwUsJtm7GTrONw2ZAnw8XMb2SxaL-2gGgUlhKuAdVS0WVIjPFbzkNXAimhDJOhFl8xBelSozOOvVk-AsbmpAZWFf5k6sofW1AB-V2YGsevqsqvavOihAWZpsQ0q77VaKYcgGFG9YKmPzJR7ratF1W9ZGgIf70iD753WgfswtpQlpdqtrYRhZLyMGY1m6zP"
+              />
+            </div>
+            <div
+              class="aspect-square bg-surface-container rounded-lg overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              <img
+                class="w-full h-full object-cover"
+                data-alt="Installation blueprint rendering"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXeKRegcUHHKPa2dAEp781AkzbUp1kIpjjqFWi-b1p_vigTQdDu9VEfLeeDWayASsrb8mDYdnaSowcQFiKH8TAvp1UwhLGyL58xrwF7jgzkBoI472gB6QuBpRRfrgQKQExM7VGlI34Flb0Bb0IIIOGbiW8zCIQbxnuZKr0W1SiuM8vArNkkw-uGQyy2MJaxQyB8oaYmKQ0MwZ_TnwhiPsBje4-PoyCEX62tvmjJdBp0Ddgt-p5zbIFfOyDN-z3QVvJc4-f7jNkUQD8"
+              />
+            </div>
+            <div
+              class="aspect-square bg-surface-container-low rounded-lg flex items-center justify-center cursor-pointer hover:bg-surface-container-high transition-colors"
+            >
+              <span class="material-symbols-outlined text-outline">play_circle</span>
+            </div>
+          </div>
+        </div>
+        <!-- Detail Column -->
+        <div class="lg:col-span-5 space-y-10">
+          <div class="space-y-4">
+            <p class="text-sm font-bold text-primary tracking-widest uppercase">
+              Precision Hardware Series
+            </p>
+            <h1 class="text-5xl font-extrabold tracking-tight leading-none text-on-surface">
+              Linear Hinge Pro
+            </h1>
+            <p class="text-lg text-on-surface-variant font-body leading-relaxed max-w-md">
+              The ultimate concealed movement solution for heavy architectural panels. Engineered
+              with a proprietary self-centering mechanism for frictionless operation.
+            </p>
+          </div>
+          <div class="space-y-6">
+            <div class="flex items-baseline space-x-3">
+              <span class="text-4xl font-black text-on-surface">$249.00</span>
+              <span class="text-sm text-outline font-medium line-through">$310.00</span>
+            </div>
+            <div class="p-6 bg-surface-container-low rounded-xl border-l-4 border-primary">
+              <div class="flex items-center space-x-3 text-primary mb-2">
+                <span
+                  class="material-symbols-outlined fill"
+                  style="font-variation-settings: 'FILL' 1"
+                  >info</span
+                >
+                <span class="text-sm font-bold uppercase tracking-wider">Stock Alert</span>
+              </div>
+              <p class="text-sm text-on-secondary-fixed-variant">
+                Only 14 units remaining in Brushed Obsidian finish. Restock expected in 3 weeks.
+              </p>
+            </div>
+            <div class="space-y-4">
+              <label class="text-xs font-bold uppercase tracking-widest text-outline"
+                >Select Finish</label
+              >
+              <div class="flex space-x-4">
+                <button
+                  class="w-12 h-12 rounded-full bg-slate-900 border-2 border-primary ring-offset-2 ring-1 ring-primary"
+                ></button>
+                <button
+                  class="w-12 h-12 rounded-full bg-slate-300 border-2 border-transparent hover:border-outline-variant transition-all"
+                ></button>
+                <button
+                  class="w-12 h-12 rounded-full bg-orange-900/40 border-2 border-transparent hover:border-outline-variant transition-all"
+                ></button>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <button
+              class="flex-1 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold py-4 px-8 rounded-lg shadow-sm hover:shadow-lg transition-all active:scale-95 flex items-center justify-center space-x-3"
+            >
+              <span class="material-symbols-outlined">add_shopping_cart</span>
+              <span>Add to Cart</span>
+            </button>
+            <button
+              class="bg-surface-container-high text-on-surface font-bold py-4 px-6 rounded-lg hover:bg-surface-variant transition-all active:scale-95"
+            >
+              <span class="material-symbols-outlined">favorite</span>
+            </button>
+          </div>
+          <!-- Technical Teaser -->
+          <div class="pt-6 grid grid-cols-2 gap-8 border-t border-outline-variant/20">
+            <div class="space-y-1">
+              <p class="text-[10px] font-bold uppercase tracking-widest text-outline">
+                Load Capacity
+              </p>
+              <p class="text-sm font-bold text-on-surface">120kg / Pair</p>
+            </div>
+            <div class="space-y-1">
+              <p class="text-[10px] font-bold uppercase tracking-widest text-outline">Material</p>
+              <p class="text-sm font-bold text-on-surface">T6-Aluminum</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Bento Grid Specs Section -->
+      <section class="mt-32 space-y-12">
+        <div class="flex items-end justify-between">
+          <div class="space-y-2">
+            <h2 class="text-3xl font-extrabold tracking-tight">Technical Specifications</h2>
+            <div class="h-1 w-24 bg-primary rounded-full"></div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <!-- Large Spec Card -->
+          <div class="md:col-span-2 bg-surface-container-low p-10 rounded-xl space-y-8">
+            <h3 class="text-xl font-bold">Dimensional Precision</h3>
+            <div class="space-y-4">
+              <div
+                class="flex justify-between items-center py-3 border-b border-outline-variant/10"
+              >
+                <span class="text-sm text-on-surface-variant">Overall Length</span>
+                <span class="font-mono text-sm font-bold">180mm</span>
+              </div>
+              <div
+                class="flex justify-between items-center py-3 border-b border-outline-variant/10"
+              >
+                <span class="text-sm text-on-surface-variant">Pivot Diameter</span>
+                <span class="font-mono text-sm font-bold">12mm</span>
+              </div>
+              <div
+                class="flex justify-between items-center py-3 border-b border-outline-variant/10"
+              >
+                <span class="text-sm text-on-surface-variant">Max Opening Angle</span>
+                <span class="font-mono text-sm font-bold">115°</span>
+              </div>
+              <div class="flex justify-between items-center py-3">
+                <span class="text-sm text-on-surface-variant">Adjustability</span>
+                <span class="font-mono text-sm font-bold">3-Way (X, Y, Z)</span>
+              </div>
+            </div>
+          </div>
+          <!-- Status Cards -->
+          <div
+            class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10 flex flex-col justify-between"
+          >
+            <div>
+              <span class="material-symbols-outlined text-primary text-4xl mb-4">architecture</span>
+              <h3 class="font-bold text-lg mb-2">CAD Certified</h3>
+              <p class="text-sm text-on-surface-variant">
+                BIM ready models available for Revit and Archicad workflows.
+              </p>
+            </div>
+            <button
+              class="text-sm font-bold text-primary flex items-center space-x-2 mt-4 hover:underline"
+            >
+              <span>Download .rfa</span>
+              <span class="material-symbols-outlined text-sm">download</span>
+            </button>
+          </div>
+          <div class="bg-primary text-on-primary p-8 rounded-xl flex flex-col justify-between">
+            <div>
+              <span class="material-symbols-outlined text-4xl mb-4">verified</span>
+              <h3 class="font-bold text-lg mb-2">Cycle Tested</h3>
+              <p class="text-sm opacity-80">
+                Tested for 200,000 opening cycles without failure or acoustic degradation.
+              </p>
+            </div>
+            <div class="text-xs uppercase font-bold tracking-widest mt-4">
+              ASTM E283-04 Standard
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Related Products (Gallery Style) -->
+      <section class="mt-32 space-y-12">
+        <div class="flex items-center justify-between">
+          <h2 class="text-3xl font-extrabold tracking-tight">Related Components</h2>
+          <a
+            class="text-sm font-bold text-primary uppercase tracking-widest flex items-center space-x-2"
+            href="#"
+          >
+            <span>View All</span>
+            <span class="material-symbols-outlined">arrow_right_alt</span>
+          </a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Related Item 1 -->
+          <div class="group cursor-pointer">
+            <div
+              class="aspect-[3/4] bg-surface-container-low rounded-xl overflow-hidden mb-4 transition-all duration-300 group-hover:shadow-xl"
+            >
+              <img
+                class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                data-alt="Pivot Hinge System"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxdVWQuxsPca29IZEzKnnY1PMUVf4TwgWz3CKuO6jDT_xKuIbGrbbdYtNFqhf7W__gl3tN2FnNC87DBhtktRkJBPjL3ht0NCdiTP-MhJeaNROFIIgaCfr5XhmF7KNaqZmjsSc2NGQ6Agv9kpmVxfmDp8MeyTH2EeDVaEIrSuS3b_gvAoh7tFvpHEY8s7LqTqhSmyAS4uwVBsshxOk9NQPzjcBAPQ8KJgPc3coMwbE7zcCJWO59NfZk1WiXVZMPFoLDaksZp1gqXjTz"
+              />
+            </div>
+            <div class="space-y-1">
+              <p class="text-[10px] font-bold text-outline uppercase tracking-widest">
+                Pivot Series
+              </p>
+              <h4 class="font-bold text-on-surface">Vertical Axis Pivot V2</h4>
+              <p class="text-sm font-bold text-primary">$185.00</p>
+            </div>
+          </div>
+          <!-- Related Item 2 -->
+          <div class="group cursor-pointer">
+            <div
+              class="aspect-[3/4] bg-surface-container-low rounded-xl overflow-hidden mb-4 transition-all duration-300 group-hover:shadow-xl"
+            >
+              <img
+                class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                data-alt="Brushed Steel Door Handle"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1lArjjVCD1fDGkB7ddONLE1801k1EpfG3UdrKiZqPqlUEbN0-_FGfv15j1YQKOb7ADnkHDWJNGt8kuA0e_B7NvbI1Pt3N9RLS7TXsjUiAoAGIWWCdQGYm9lFKsv1jujVTmxPm0GOEQxHv0AqggGfDY67EECel99Lrtniv3zmyR7yE-5dDH-2z3X66g8dRNvS9HkwpBbfjchMONK2TQX7jBw8SbMeG-9wm9RiIPSFuzWAUNekIsGDM19Bli8sqSbsWDXU-vxvAxBqA"
+              />
+            </div>
+            <div class="space-y-1">
+              <p class="text-[10px] font-bold text-outline uppercase tracking-widest">
+                Entry Systems
+              </p>
+              <h4 class="font-bold text-on-surface">Slender Grip Handle</h4>
+              <p class="text-sm font-bold text-primary">$120.00</p>
+            </div>
+          </div>
+          <!-- Related Item 3 -->
+          <div class="group cursor-pointer">
+            <div
+              class="aspect-[3/4] bg-surface-container-low rounded-xl overflow-hidden mb-4 transition-all duration-300 group-hover:shadow-xl"
+            >
+              <img
+                class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                data-alt="Magnetic door latch"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8eZmS5bFCIyFAWquVeF9Ygoc9Abo8JFLsCBV2553cR3ufYF7Rd20_-eUbhVrgeQ2L0yAeWH0Ml-Gp0IWhRP2XAE4raGU5h1TRKXErtu87HQh3gkhjHw687uG7rHAzPMwb6G7ns9-IntUAU2_Sbl7f5XOaoKOXUyCc2IzMfEzp1A7u1tMZla5VRfD29tiNCeUil-ZQMt62JcqBB0kxkvCaqypJ1PD0a4P90tTe0DFncgx7WH-OO_Hh62saE019MRQg5gUgFv3U0pRf"
+              />
+            </div>
+            <div class="space-y-1">
+              <p class="text-[10px] font-bold text-outline uppercase tracking-widest">
+                Silent Systems
+              </p>
+              <h4 class="font-bold text-on-surface">Magnetic Soft-Close Latch</h4>
+              <p class="text-sm font-bold text-primary">$55.00</p>
+            </div>
+          </div>
+          <!-- Related Item 4 -->
+          <div class="group cursor-pointer">
+            <div
+              class="aspect-[3/4] bg-surface-container-low rounded-xl overflow-hidden mb-4 transition-all duration-300 group-hover:shadow-xl"
+            >
+              <img
+                class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                data-alt="Heavy duty hinge"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDL2hIfzVSzUGpW_zJdC6JAgKXIWHN2A7M6iid_4EjxqamgarHAUT_3crQsb0s2BNoEGjlDNf7KPZKosn0sb6nYXVayjkgoZeZ9E9W_bcJjADc3Hz4SQhnbUBiRbKVPpZj1BUoFUfUUzSFDYjw8dXNvbv60ZtssUIer-m7BwcfsVc88gbE_IpzYHWUueWIrNmntQY6JfBtRPCukNJD9JNNrxu5SwLyk8ppIrJXT1ZyuZt8Rqc3fA6b5iAIV56GVgGQxvfNI6CISXHRG"
+              />
+            </div>
+            <div class="space-y-1">
+              <p class="text-[10px] font-bold text-outline uppercase tracking-widest">Industrial</p>
+              <h4 class="font-bold text-on-surface">Heavy Load Butt Hinge</h4>
+              <p class="text-sm font-bold text-primary">$89.00</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- Footer -->
+    <app-footer></app-footer>
