@@ -8,8 +8,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-// import { LoginPayload } from '../../models/auth.models';
 import { AuthService } from '../../services/auth-service';
+import { StorageService } from '../../../../core/services/storage.service';
 
 function extractApiErrorMessage(error: unknown): string {
   if (error instanceof HttpErrorResponse) {
@@ -42,6 +42,7 @@ export class Login {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private storageService: StorageService, // ← inject storage
     private router: Router,
     private cdr: ChangeDetectorRef,
   ) {
@@ -72,21 +73,25 @@ export class Login {
     this.serverError = null;
     this.isSubmitting = true;
 
-    // const payload: LoginPayload = this.loginForm.getRawValue();
+    this.authService.login(this.loginForm.getRawValue()).subscribe({
+      next: (res) => {
+        this.isSubmitting = false;
 
-    // this.authService.login(payload).subscribe({
-    //   next: () => {
-    //     this.isSubmitting = false;
-    //     this.router.navigate(['/']).catch((err: unknown) => {
-    //       this.serverError = extractApiErrorMessage(err);
-    //       this.cdr.detectChanges();
-    //     });
-    //   },
-    //   error: (err: unknown) => {
-    //     this.isSubmitting = false;
-    //     this.serverError = extractApiErrorMessage(err);
-    //     this.cdr.detectChanges();
-    //   },
-    // });
+        // ← save token + user to localStorage
+        this.storageService.saveSession(res);
+
+        // ← redirect based on role
+        const role = res.tokenUser.role;
+        //todo create the dashboards and navigate to them
+        if (role === 'admin') this.router.navigate(['/admin']);
+        else if (role === 'seller') this.router.navigate(['/seller']);
+        else this.router.navigate(['/']);
+      },
+      error: (err: unknown) => {
+        this.isSubmitting = false;
+        this.serverError = extractApiErrorMessage(err);
+        this.cdr.detectChanges();
+      },
+    });
   }
 }
