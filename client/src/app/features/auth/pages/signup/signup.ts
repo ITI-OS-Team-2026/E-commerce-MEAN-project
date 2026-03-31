@@ -81,6 +81,7 @@ export class Signup {
   userSignupForm: FormGroup;
 
   serverError: string | null = null;
+  successMessage: string | null = null;
 
   isSubmitting = false;
 
@@ -164,17 +165,14 @@ export class Signup {
         // reset the loading state after the request finishes
         // .pipe(finalize(() => (this.isSubmitting = false)))
         .subscribe({
-          next: () => {
-            // Handle the Promise so rejections surface to the user
-            // todo correct the forward as needed
+          next: (res) => {
             this.isSubmitting = false;
-            this.router.navigate(['/auth/login']).catch((navErr: unknown) => {
-              this.serverError = extractApiErrorMessage(navErr);
-              this.cdr.detectChanges();
-            });
+            // ← no router.navigate — user must verify email first
+            // store the message and show it in the template
+            this.successMessage = res.message;
+            this.cdr.detectChanges();
           },
           error: (err: unknown) => {
-            // console.log('touched');
             this.isSubmitting = false;
             this.serverError = extractApiErrorMessage(err);
             this.cdr.detectChanges();

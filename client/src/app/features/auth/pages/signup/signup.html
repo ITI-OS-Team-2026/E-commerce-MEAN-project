@@ -271,6 +271,10 @@
               <span>Create account</span>
             }
           </button>
+
+          @if (successMessage) {
+            <p style="color: green">{{ successMessage }}</p>
+          }
         </form>
 
         <p class="mt-8 text-center text-sm text-on-surface-variant lg:text-left">

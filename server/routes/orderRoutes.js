@@ -12,10 +12,21 @@ const {
   updateOrderStatus,
 } = require('../controllers/orderController');
 
-
-router.post('/', authenticate, restrictTo('customer'), validate(schemas.createOrderSchema), placeOrder);
-router.get('/me', authenticate, restrictTo('customer'), getMyOrders);
+router.post(
+  '/',
+  authenticate,
+  restrictTo('customer'),
+  validate(schemas.createOrderSchema),
+  placeOrder,
+);
+router.get('/', authenticate, restrictTo('customer'), getMyOrders);
 router.get('/:id', authenticate, restrictTo('admin', 'customer', 'seller'), getOrderById);
-router.patch('/:id/status', authenticate, restrictTo('admin', 'seller'), validate(schemas.updateOrderStatusSchema), updateOrderStatus);
+router.patch(
+  '/:id',
+  authenticate,
+  restrictTo('admin', 'seller', 'customer'),
+  validate(schemas.updateOrderStatusSchema),
+  updateOrderStatus,
+);
 
 module.exports = router;

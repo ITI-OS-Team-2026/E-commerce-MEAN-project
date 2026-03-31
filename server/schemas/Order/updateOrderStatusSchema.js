@@ -6,9 +6,11 @@ const updateOrderStatusSchema = {
       .valid('pending', 'confirmed', 'packed', 'shipped', 'delivered', 'cancelled')
       .required()
       .messages({
-        'any.only': 'Invalid status value',
-        'any.required': 'Status is required'})
-  }).required(),
+        'any.only':
+          'Status must be one of: pending, confirmed, packed, shipped, delivered, cancelled',
+        'any.required': 'Status is required',
+      }),
+  }),
 };
 
 module.exports = updateOrderStatusSchema;

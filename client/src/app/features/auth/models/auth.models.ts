@@ -11,3 +11,20 @@ export interface SignupPayload {
   password: string;
   role: SignupRole;
 }
+
+export interface RegisterResponse {
+  message: string;
+}
+
+export interface VerifyEmailResponse {
+  message: string;
+}
+
+export interface LoginResponse {
+  token: string;
+  tokenUser: {
+    name: string;
+    email: string;
+    role: string;
+  };
+}
