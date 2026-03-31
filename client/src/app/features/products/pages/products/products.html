@@ -17,317 +17,121 @@
       </header>
       <div class="flex flex-col lg:flex-row gap-12">
         <!-- Sidebar Filters -->
-        <app-products-page-aside class="w-full lg:w-1/4"></app-products-page-aside>
+        <app-products-page-aside 
+          class="w-full lg:w-1/4"
+          [categories]="categories"
+          [selectedCategory]="selectedCategory"
+          (categoryChange)="onCategoryChange($event)"
+          (priceChange)="onPriceChange($event.min, $event.max)"
+        ></app-products-page-aside>
         <!-- Product Grid -->
         <div class="flex-1">
           <div
             class="flex justify-between items-center mb-8 bg-surface-container-low p-4 rounded-xl"
           >
             <span class="text-sm font-medium text-on-surface-variant"
-              >Showing 48 results in <strong class="text-on-surface">Materials</strong></span
+              >Showing {{ products.length }} results</span
             >
             <div class="flex items-center gap-2">
               <span class="text-xs font-bold uppercase text-on-surface-variant">Sort By</span>
               <select
+                [(ngModel)]="sortBy"
+                (change)="onSortChange(sortBy)"
                 class="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 cursor-pointer"
               >
-                <option>Newest First</option>
-                <option>Price: Low to High</option>
-                <option>Popularity</option>
+                <option value="newest">Newest First</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
               </select>
             </div>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
-            <!-- Product Card 1 -->
-            <div
-              class="group relative bg-surface-container-lowest rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300"
-            >
-              <div class="aspect-4/5 overflow-hidden bg-surface-container-low relative">
-                <img
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  data-alt="Brushed steel heavy duty hinge set"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuASyZkBPqr9_od-LBYcGBv3pQKne1VqOvZs3GFaITEp3yvk-9Z-dx_EaYerw3Mxpkag54-Z08Nt_19Pna1nGyDI6BUy7s1OgTlip_DtqGXUv9fG7z3WXIf33t_c-T-HZ8vXJ2iTsa4phRqil5EBME8KkxgktRgOb56StlqD8CICjwLdI82Wws7yrRv97uoW9an5phAcKYS725BHk8mlloKrPI7OgUpY7veL_YBvvYXe3uIy0sZJ0eA45UsSiQocnCPqEqHjsNDLhVh4"
-                />
-                <div class="absolute top-4 left-4">
-                  <span
-                    class="bg-white/90 backdrop-blur-sm px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full"
-                    >In Stock</span
-                  >
-                </div>
-              </div>
-              <div class="p-6">
-                <div class="flex justify-between items-start mb-2">
-                  <h3 class="font-headline font-extrabold text-lg text-on-surface">
-                    Precision Steel Hinge
-                  </h3>
-                  <span class="flex items-center text-tertiary text-xs font-bold">
-                    <span
-                      class="material-symbols-outlined text-sm mr-1"
-                      data-weight="fill"
-                      style="font-variation-settings: 'FILL' 1"
-                      >star</span
-                    >
-                    4.9
-                  </span>
-                </div>
-                <p class="text-sm text-on-surface-variant mb-6">
-                  Marine-grade 316 stainless steel with dual-axis pivot point.
-                </p>
-                <div class="flex items-center justify-between">
-                  <span class="text-2xl font-headline font-black text-on-surface">$84.00</span>
-                  <button
-                    class="gradient-primary text-on-primary px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-bold active:scale-95 transition-all"
-                  >
-                    <span class="material-symbols-outlined text-lg">add_shopping_cart</span>
-                    Add
-                  </button>
-                </div>
-              </div>
-            </div>
-            <!-- Product Card 2 -->
-            <div
-              class="group relative bg-surface-container-lowest rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300"
-            >
-              <div class="aspect-4/5 overflow-hidden bg-surface-container-low relative">
-                <img
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  data-alt="Modern architectural linear light fixture"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCazooPjtbtilReb4U1ZdqGo0F5ub5-rfObSNBf524iQ41pcGHUq5nIWHBWYPeHucnw8q6NF1RRnYArmy3euXMXsdCy9LJumZvE5rfSuetcUWrphlBd2kUlNvWE8SYGBVnAxtcNqdoxorpwHFT2JlmI2-M-ch9JrNoloEMl7fqPuGEImDESd9SuHRDYkwC3pU-S18sjnyfzgyczh6jGXHwr--INCj51nDyrJUTdsjPJkOXRBLsKvr6vQ8y0kZj-GR3Iaw3ZcrUqdPuU"
-                />
-                <div class="absolute top-4 left-4">
-                  <span
-                    class="bg-primary text-on-primary px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full"
-                    >New Arrival</span
-                  >
-                </div>
-              </div>
-              <div class="p-6">
-                <div class="flex justify-between items-start mb-2">
-                  <h3 class="font-headline font-extrabold text-lg text-on-surface">
-                    Linear Beam XL
-                  </h3>
-                  <span class="flex items-center text-tertiary text-xs font-bold">
-                    <span
-                      class="material-symbols-outlined text-sm mr-1"
-                      data-weight="fill"
-                      style="font-variation-settings: 'FILL' 1"
-                      >star</span
-                    >
-                    5.0
-                  </span>
-                </div>
-                <p class="text-sm text-on-surface-variant mb-6">
-                  Recessed COB LED lighting system with monolithic extrusion.
-                </p>
-                <div class="flex items-center justify-between">
-                  <span class="text-2xl font-headline font-black text-on-surface">$412.00</span>
-                  <button
-                    class="gradient-primary text-on-primary px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-bold active:scale-95 transition-all"
-                  >
-                    <span class="material-symbols-outlined text-lg">add_shopping_cart</span>
-                    Add
-                  </button>
-                </div>
-              </div>
-            </div>
-            <!-- Product Card 3 -->
-            <div
-              class="group relative bg-surface-container-lowest rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300"
-            >
-              <div class="aspect-4/5 overflow-hidden bg-surface-container-low relative">
-                <img
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  data-alt="Industrial concrete finish sample board"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVh3sVOivk9XtuO4XaaASP8mpT_lecGz3mlf-4ITzlHUXD2uIik1OxzKcgBPMA966PwzTi0-46-q7PGTfFyq9-uiFUqJvXkitqqfxF6ZpNOtsvELpi6lZhyqge8c4vYnlx-TKyeTKtJfTHguTjlJ0Ca3MKSNDzxDt_Mat-iJdqlSYnBN8U3Og4xCdbzQyhbPd7_u3xMaDSDDKQb2ecRipS9VBnltoQUdcSysHwtZYguN43fYMO7toNlLsptOUXDzTdatPvaNt2ylfb"
-                />
-              </div>
-              <div class="p-6">
-                <div class="flex justify-between items-start mb-2">
-                  <h3 class="font-headline font-extrabold text-lg text-on-surface">
-                    Raw Concrete Panel
-                  </h3>
-                  <span class="flex items-center text-tertiary text-xs font-bold">
-                    <span
-                      class="material-symbols-outlined text-sm mr-1"
-                      data-weight="fill"
-                      style="font-variation-settings: 'FILL' 1"
-                      >star</span
-                    >
-                    4.7
-                  </span>
-                </div>
-                <p class="text-sm text-on-surface-variant mb-6">
-                  Ultra-light GFRC panels with authentic Brutalist texture.
-                </p>
-                <div class="flex items-center justify-between">
-                  <span class="text-2xl font-headline font-black text-on-surface">$125.00</span>
-                  <button
-                    class="gradient-primary text-on-primary px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-bold active:scale-95 transition-all"
-                  >
-                    <span class="material-symbols-outlined text-lg">add_shopping_cart</span>
-                    Add
-                  </button>
-                </div>
-              </div>
-            </div>
-            <!-- Product Card 4 -->
-            <div
-              class="group relative bg-surface-container-lowest rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300"
-            >
-              <div class="aspect-4/5 overflow-hidden bg-surface-container-low relative">
-                <img
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  data-alt="Aged brass cabinet pull handles"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAl_4uzedIEHJ_-mpN63-LcFMfTImk2tYLyE2b6F8PpW2ZMzrhgAP5eETAgVMcHCpCoYjzCET2J5KwIzAw10IwjpSLZf36GtgggLq0xYsGflv8kPgTsk37OT6QmVbZIeZzJ02Vwukfhk10T6pZkzIto3m3yYvUikV-wCk3ips_hKuaMenBrQI2_02uvr8WVzijk0Zlsr7IUZFPS_hpJryKpvVZxFeFJQyNhEkvBQx_Pi0OvBTTLpesXRk0KglFScut_QqFoGDIrqy3X"
-                />
-              </div>
-              <div class="p-6">
-                <div class="flex justify-between items-start mb-2">
-                  <h3 class="font-headline font-extrabold text-lg text-on-surface">
-                    Oxidized Brass Pull
-                  </h3>
-                  <span class="flex items-center text-tertiary text-xs font-bold">
-                    <span
-                      class="material-symbols-outlined text-sm mr-1"
-                      data-weight="fill"
-                      style="font-variation-settings: 'FILL' 1"
-                      >star</span
-                    >
-                    4.8
-                  </span>
-                </div>
-                <p class="text-sm text-on-surface-variant mb-6">
-                  Hand-patinated solid brass. Living finish develops over time.
-                </p>
-                <div class="flex items-center justify-between">
-                  <span class="text-2xl font-headline font-black text-on-surface">$38.00</span>
-                  <button
-                    class="gradient-primary text-on-primary px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-bold active:scale-95 transition-all"
-                  >
-                    <span class="material-symbols-outlined text-lg">add_shopping_cart</span>
-                    Add
-                  </button>
-                </div>
-              </div>
-            </div>
-            <!-- Product Card 5 -->
-            <div
-              class="group relative bg-surface-container-lowest rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300"
-            >
-              <div class="aspect-4/5 overflow-hidden bg-surface-container-low relative">
-                <img
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  data-alt="High precision laser measuring tool"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBBUh_1f1e2IR2PN00rBt0B2oQfO_fkZRMaYyGRcqmYxXYe1sbLibxWgSBtvxRICx5h0m_mxi82dB7hcb8-djul3tGlOCw4V6ALZ0QSvbFBWhhzUlOSTa8iOMIJylxlTnKopY_93LGgfG2KvAhzoO3d_jEBUWHNGWNQSJ7tkxbgm8P6OXTfa7t7wKtbtG7CN4trJFJhL4QlUD9f-o2QZGa-98taLlU1kysiyXNZnXBtFsVYJFcMSpv92fsM1F5rj2B7i0P3ESqatD0"
-                />
-                <div class="absolute top-4 left-4">
-                  <span
-                    class="bg-tertiary text-on-tertiary px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full"
-                    >Pro Only</span
-                  >
-                </div>
-              </div>
-              <div class="p-6">
-                <div class="flex justify-between items-start mb-2">
-                  <h3 class="font-headline font-extrabold text-lg text-on-surface">
-                    Laser Metric Pro
-                  </h3>
-                  <span class="flex items-center text-tertiary text-xs font-bold">
-                    <span
-                      class="material-symbols-outlined text-sm mr-1"
-                      data-weight="fill"
-                      style="font-variation-settings: 'FILL' 1"
-                      >star</span
-                    >
-                    4.9
-                  </span>
-                </div>
-                <p class="text-sm text-on-surface-variant mb-6">
-                  Bluetooth enabled distance measuring with 0.1mm accuracy.
-                </p>
-                <div class="flex items-center justify-between">
-                  <span class="text-2xl font-headline font-black text-on-surface">$599.00</span>
-                  <button
-                    class="gradient-primary text-on-primary px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-bold active:scale-95 transition-all"
-                  >
-                    <span class="material-symbols-outlined text-lg">add_shopping_cart</span>
-                    Add
-                  </button>
-                </div>
-              </div>
-            </div>
-            <!-- Product Card 6 -->
-            <div
-              class="group relative bg-surface-container-lowest rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300"
-            >
-              <div class="aspect-4/5 overflow-hidden bg-surface-container-low relative">
-                <img
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  data-alt="Premium oak wood flooring plank"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaxUY275STmNmIrgGMI4kH7EhVfT3kchCuiSUEl1J5POR7n5lr8TuFLHT0_n-gxUZL6bQCLOT61eYwha0aXSus-nR-Balm_aEFGJOllF8Nmcg73XR1ggHUcBkFA07hSEoN1wwBbgCBxT0CoYvuz2avusDUklFQK8QwRO6AZE0tXQfXdyBLBg-TSWuLGTeEIxZ0eF-GoYxms67lvkm4cgji5rqlbYg-81lh4NEpEt_JhiJ_OrwVA1pRvbp_9aMqG8GeyrNFZcdQ2oaT"
-                />
-              </div>
-              <div class="p-6">
-                <div class="flex justify-between items-start mb-2">
-                  <h3 class="font-headline font-extrabold text-lg text-on-surface">
-                    Nordic Oak Plank
-                  </h3>
-                  <span class="flex items-center text-tertiary text-xs font-bold">
-                    <span
-                      class="material-symbols-outlined text-sm mr-1"
-                      data-weight="fill"
-                      style="font-variation-settings: 'FILL' 1"
-                      >star</span
-                    >
-                    4.6
-                  </span>
-                </div>
-                <p class="text-sm text-on-surface-variant mb-6">
-                  Sustainable wide-plank oak with matte UV-oil finish.
-                </p>
-                <div class="flex items-center justify-between">
-                  <span class="text-2xl font-headline font-black text-on-surface"
-                    >$18.50
-                    <span class="text-xs font-normal text-on-surface-variant">/sqft</span></span
-                  >
-                  <button
-                    class="gradient-primary text-on-primary px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-bold active:scale-95 transition-all"
-                  >
-                    <span class="material-symbols-outlined text-lg">add_shopping_cart</span>
-                    Add
-                  </button>
-                </div>
-              </div>
+          <!-- Loading State -->
+          <div *ngIf="loading" class="flex justify-center items-center min-h-96">
+            <div class="text-center">
+              <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+              <p class="text-on-surface-variant">Loading products...</p>
             </div>
           </div>
-          <!-- Pagination -->
-          <div class="mt-16 flex items-center justify-center gap-2">
-            <button
-              class="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-primary text-primary font-bold"
+
+          <!-- Error State -->
+          <div *ngIf="error && !loading" class="p-6 bg-error/10 rounded-xl border border-error mb-8">
+            <p class="text-error font-medium">{{ error }}</p>
+            <button 
+              (click)="fetchProducts()"
+              class="mt-4 px-4 py-2 bg-error text-on-error rounded-lg font-bold"
             >
-              1
+              Try Again
             </button>
-            <button
-              class="w-10 h-10 flex items-center justify-center rounded-lg text-on-surface-variant font-bold hover:bg-surface-container-low"
+          </div>
+
+          <!-- No Products State -->
+          <div *ngIf="!loading && products.length === 0 && !error" class="p-12 text-center">
+            <p class="text-on-surface-variant text-lg mb-4">No products found</p>
+            <button 
+              (click)="fetchProducts()"
+              class="px-6 py-2 bg-primary text-on-primary rounded-lg font-bold"
             >
-              2
+              Refresh
             </button>
-            <button
-              class="w-10 h-10 flex items-center justify-center rounded-lg text-on-surface-variant font-bold hover:bg-surface-container-low"
-            >
-              3
-            </button>
-            <span class="px-2 text-on-surface-variant">...</span>
-            <button
-              class="w-10 h-10 flex items-center justify-center rounded-lg text-on-surface-variant font-bold hover:bg-surface-container-low"
-            >
-              12
-            </button>
-            <button
-              class="w-10 h-10 flex items-center justify-center rounded-lg text-on-surface-variant font-bold hover:bg-surface-container-low"
-            >
-              <span class="material-symbols-outlined">chevron_right</span>
-            </button>
+          </div>
+
+          <!-- Products Grid -->
+          <div *ngIf="!loading && products.length > 0">
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
+              <!-- Product Card -->
+              <div
+                *ngFor="let product of products"
+                class="group relative bg-surface-container-lowest rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300"
+              >
+                <div 
+                  class="aspect-4/5 overflow-hidden bg-surface-container-low relative cursor-pointer"
+                  [routerLink]="['/products', product._id]"
+                >
+                  <img
+                    *ngIf="product.images && product.images[0]"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    [src]="product.images[0]"
+                    [alt]="product.name"
+                  />
+                  <div *ngIf="!product.images || product.images.length === 0" class="w-full h-full bg-surface-container flex items-center justify-center">
+                    <span class="material-symbols-outlined text-on-surface-variant/40 text-4xl">image_not_supported</span>
+                  </div>
+                  <div class="absolute top-4 left-4">
+                    <span
+                      *ngIf="product.stock > 0"
+                      class="bg-white/90 backdrop-blur-sm px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full"
+                    >In Stock</span>
+                    <span
+                      *ngIf="product.stock === 0"
+                      class="bg-error/90 backdrop-blur-sm text-on-error px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full"
+                    >Out of Stock</span>
+                  </div>
+                </div>
+                <div class="p-6">
+                  <div class="flex justify-between items-start mb-2">
+                    <h3 
+                      class="font-headline font-extrabold text-lg text-on-surface cursor-pointer hover:text-primary transition-colors"
+                      [routerLink]="['/products', product._id]"
+                    >
+                      {{ product.name }}
+                    </h3>
+                  </div>
+                  <p class="text-sm text-on-surface-variant mb-6 line-clamp-2">
+                    {{ product.description }}
+                  </p>
+                  <div class="flex items-center justify-between">
+                    <span class="text-2xl font-headline font-black text-on-surface">${{ product.price.toFixed(2) }}</span>
+                    <button
+                      [disabled]="product.stock === 0"
+                      class="gradient-primary text-on-primary px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-bold active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <span class="material-symbols-outlined text-lg">add_shopping_cart</span>
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
