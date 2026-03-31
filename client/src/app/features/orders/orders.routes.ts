@@ -7,4 +7,5 @@ export const ORDER_ROUTES: Routes = [
   { path: 'checkout', component: Checkout },
   { path: 'history', component: OrderHistory },
   { path: 'track/:id', component: OrderTrack },
+  { path: 'placement', component: Placement },
 ];
