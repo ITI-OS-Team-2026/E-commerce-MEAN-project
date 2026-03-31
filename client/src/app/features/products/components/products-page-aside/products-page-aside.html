@@ -1,0 +1,87 @@
+<aside class="w-full lg:w-72 shrink-0">
+  <div class="sticky top-24 space-y-10">
+    <!-- Categories -->
+    <section>
+      <h3 class="text-xs font-medium uppercase tracking-widest text-on-surface-variant mb-4">
+        Categories
+      </h3>
+      <div class="space-y-2">
+        <!-- All Products -->
+        <button
+          (click)="onCategorySelect('')"
+          [class.bg-primary/10]="selectedCategory === ''"
+          class="w-full flex items-center justify-between group cursor-pointer p-2 rounded-lg hover:bg-surface-container-low transition-colors"
+        >
+          <span
+            [class]="
+              selectedCategory === ''
+                ? 'text-sm font-medium text-primary'
+                : 'text-sm font-medium text-on-surface-variant'
+            "
+          >
+            All Products
+          </span>
+        </button>
+
+        <!-- Dynamic Categories -->
+        <button
+          *ngFor="let category of categories"
+          (click)="onCategorySelect(category._id)"
+          [class.bg-primary/10]="selectedCategory === category._id"
+          class="w-full flex items-center justify-between group cursor-pointer p-2 rounded-lg hover:bg-surface-container-low transition-colors"
+        >
+          <span
+            [class]="
+              selectedCategory === category._id
+                ? 'text-sm font-medium text-primary'
+                : 'text-sm font-medium text-on-surface-variant'
+            "
+          >
+            {{ category.name }}
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Price Range -->
+    <section>
+      <h3 class="text-xs font-medium uppercase tracking-widest text-on-surface-variant mb-6">
+        Price Range
+      </h3>
+      <div class="space-y-4">
+        <div class="flex gap-2">
+          <div class="flex-1">
+            <label class="text-xs text-on-surface-variant mb-1 block">Min</label>
+            <input
+              type="number"
+              [(ngModel)]="priceMin"
+              (change)="onPriceChange()"
+              min="0"
+              max="2500"
+              class="w-full px-2 py-2 border border-outline-variant rounded-lg text-sm bg-surface-container text-on-surface focus:outline-none focus:border-primary"
+              placeholder="$0"
+            />
+          </div>
+          <div class="flex-1">
+            <label class="text-xs text-on-surface-variant mb-1 block">Max</label>
+            <input
+              type="number"
+              [(ngModel)]="priceMax"
+              (change)="onPriceChange()"
+              min="0"
+              max="2500"
+              class="w-full px-2 py-2 border border-outline-variant rounded-lg text-sm bg-surface-container text-on-surface focus:outline-none focus:border-primary"
+              placeholder="$2500"
+            />
+          </div>
+        </div>
+        <div class="px-2 py-3 bg-surface-container-low rounded-lg">
+          <div class="flex justify-between text-xs font-bold text-on-surface">
+            <span>${{ priceMin }}</span>
+            <span>${{ priceMax }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</aside>
