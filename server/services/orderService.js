@@ -82,7 +82,7 @@ const updateOrderStatus = async (req) => {
   const user = showCurrentUser(req);
   if (!user) throw new APIError('Authentication required', 401);
 
-  if (!['admin', 'seller'].includes(user.role)) {
+  if (!['admin', 'seller', 'customer'].includes(user.role)) {
     throw new APIError('Not authorized to update order status', 403);
   }
 

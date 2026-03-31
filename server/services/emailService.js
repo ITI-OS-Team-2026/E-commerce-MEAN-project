@@ -30,7 +30,7 @@ class EmailService {
     const html = this.loadTemplate(template, variables);
 
     await this.transporter.sendMail({
-      from: process.env.EMAIL_FROM || 'noreply@yourblog.com',
+      from: process.env.EMAIL_FROM || `"ITI Orders" <${process.env.SMTP_USER}>`,
       to,
       subject,
       html,

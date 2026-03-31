@@ -9,4 +9,8 @@ export const AUTH_ROUTES: Routes = [
   { path: 'register', component: Signup },
   { path: 'profile', component: Profile },
   { path: 'wishlist', component: Wishlist },
+  {
+    path: 'verify-email',
+    loadComponent: () => import('./pages/verify-email/verify-email').then((m) => m.VerifyEmail),
+  },
 ];
