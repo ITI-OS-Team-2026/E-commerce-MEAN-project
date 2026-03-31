@@ -3,6 +3,7 @@ const APIError = require('../utils/APIError');
 const createTokenUser = require('../utils/createTokenUser');
 const { createJWT } = require('../utils/jwt');
 const checkPermissions = require('../utils/checkPermissions');
+const emailService = require('../services/emailService'); // ✅ correct import
 
 // ── Admin ──────────────────────────────────────────────────
 
@@ -22,6 +23,17 @@ const approveSeller = async (sellerId) => {
   if (!seller) throw new APIError(`No seller found with ID: ${sellerId}`, 404);
   seller.isApproved = true;
   await seller.save();
+
+  // send email to the seller to inform him that the account approved
+  await emailService.sendEmail({
+    to: seller.email,
+    subject: 'Your seller account has been approved',
+    template: 'sellerApproved.html',
+    variables: {
+      name: seller.name,
+      loginUrl: `${process.env.CLIENT_URL}/auth/login`,
+    },
+  });
 };
 
 // ── Any authenticated user ─────────────────────────────────
