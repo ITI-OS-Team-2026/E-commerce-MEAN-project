@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpHeaders ,HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -13,11 +13,11 @@ import { environment } from "../../../../../environments/environment.development
 })
 export class Placement implements OnInit {
   orderForm: FormGroup;
-  cartItems: { product: string; quantity: number; price: number }[] = [];
+  cartItems: { product: string; quantity: number; price: number; name?: string }[] = [];
   token : string | null = '';
   
 
-  constructor(private fb: FormBuilder, private http: HttpClient , private storageService : StorageService) {
+  constructor(private fb: FormBuilder, private http: HttpClient , private storageService : StorageService , private cdr: ChangeDetectorRef) {
     this.orderForm = this.fb.group({
       shippingAddress: this.fb.group({
         street: ['', Validators.required],
@@ -32,10 +32,42 @@ export class Placement implements OnInit {
   }
   
   ngOnInit() {
-    const cart = localStorage.getItem('cart');
-    if (cart) {
-      this.cartItems = JSON.parse(cart);
+    if (!this.token) {
+      console.error('No token found, cannot fetch cart');
+      return;
     }
+    const backendUrl = environment.apiUrl + "/cart";
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    this.http.get<{
+      status: string;
+      data: {
+        items: {
+        product: {
+        _id: string;
+        name: string;
+        price: number;
+        images: string[];
+      };
+      quantity: number;
+      price: number;
+    }[];
+  };
+}>(backendUrl, { headers }).subscribe({
+  next: (response) => {
+    this.cartItems = response.data.items.map(item => ({
+      product: item.product._id,
+      quantity: item.quantity,
+      price: item.price,
+      name: item.product.name
+    }));
+    this.cdr.detectChanges();
+  },
+  error: (error) => {
+    console.error('Error fetching cart', error);
+  }
+});
   }
 
   submit() {
@@ -65,7 +97,9 @@ export class Placement implements OnInit {
   }
 
   calculateSubtotal(): number {
-    return this.cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const subtotal = this.cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    console.log('Subtotal:', subtotal, 'Items:', this.cartItems);
+    return subtotal;
   }
 
   // calculateTax(): number {
