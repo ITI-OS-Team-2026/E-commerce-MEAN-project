@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { StorageService } from '../../../core/services/storage.service';
 import {
@@ -12,6 +12,8 @@ import {
 @Injectable({ providedIn: 'root' })
 export class CartService {
   private api = environment.apiUrl;
+  private cartCount$ = new BehaviorSubject<number>(0);
+  cartCount = this.cartCount$.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -44,5 +46,9 @@ export class CartService {
 
   clearCart(): Observable<CartResponse> {
     return this.http.delete<CartResponse>(`${this.api}/cart`, this.headers);
+  }
+
+  updateCartCount(count: number): void {
+    this.cartCount$.next(count);
   }
 }

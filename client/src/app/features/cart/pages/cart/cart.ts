@@ -40,6 +40,7 @@ export class Cart implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.cart = response.data;
+          this.cartService.updateCartCount(response.data.itemsCount);
           this.isLoading = false;
           this.cdr.detectChanges();
         },
@@ -63,10 +64,8 @@ export class Cart implements OnInit, OnDestroy {
       .removeFromCart(productId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response) => {
-          this.cart = response.data;
-          this.isLoading = false;
-          this.cdr.detectChanges();
+        next: () => {
+          this.getCart();
         },
         error: (err) => {
           this.error = 'Failed to remove item.';
@@ -84,10 +83,8 @@ export class Cart implements OnInit, OnDestroy {
       .updateQuantity(productId, { quantity })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response) => {
-          this.cart = response.data;
-          this.isLoading = false;
-          this.cdr.detectChanges();
+        next: () => {
+          this.getCart();
         },
         error: (err) => {
           this.error = 'Failed to update quantity.';
