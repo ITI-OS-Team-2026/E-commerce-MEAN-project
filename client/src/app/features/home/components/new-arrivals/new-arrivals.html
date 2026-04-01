@@ -4,88 +4,82 @@
       <h2 class="text-4xl font-headline font-extrabold tracking-tight">New Arrivals</h2>
       <div class="h-0.5 grow bg-outline-variant/30"></div>
     </div>
-    <!-- fetch the new arrivals from the backend and loop through them here -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      <div class="flex flex-col gap-4">
-        <div class="aspect-square bg-surface-container rounded-xl overflow-hidden relative group">
-          <img
-            class="w-full h-full object-cover transition-transform group-hover:scale-105"
-            data-alt="High-end door hinge detail"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5IoHfFdILD0GSf9XHfc57JihRq3bycNYIhIaIo7zjx7s9y_0sfDWiY628l6vDL-kFAPVuhvnmSfffYEtBl8ji45mduK_Ie804vMEonPAivnrp6_1fhGJAAXA3mppPx0z4TykHFwk71n7MuQiaPmp-kmN_ElM3z-Ijaw9Ne_fJChYj-eLeZHUJukIQTfqCpEZkka73PNyClG8ZZeT7CL-2_3yApaQvk0XsBkxI3tHf703hc--DyIHsv8IZouJgaHwXruIyUaVYNNkR"
-          />
-          <span
-            class="absolute top-4 left-4 bg-tertiary text-on-tertiary text-[10px] font-bold px-2 py-1 rounded uppercase"
-            >New</span
-          >
-          <button
-            class="absolute bottom-4 right-4 size-10 rounded-full bg-white shadow-lg flex items-center justify-center text-primary opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all"
-          >
-            <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
-          </button>
-        </div>
-        <div class="flex flex-col gap-1">
-          <h4 class="font-bold text-on-surface">Axis Heavy-Duty Hinge</h4>
-          <p class="text-on-surface-variant text-sm">Brushed Stainless Steel</p>
-          <p class="text-primary font-extrabold mt-2">$85.00</p>
-        </div>
+
+    <!-- Loading State -->
+    @if (loading()) {
+      <div class="flex flex-col items-center justify-center py-16">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+        <p class="text-on-surface-variant">Loading new arrivals...</p>
       </div>
-      <div class="flex flex-col gap-4">
-        <div class="aspect-square bg-surface-container rounded-xl overflow-hidden relative group">
-          <img
-            class="w-full h-full object-cover transition-transform group-hover:scale-105"
-            data-alt="Minimalist matte black door handle"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcB2x4u9GPttJWGLCu3rYRN3ITabxrqI4J2TbYr2orrUP3PPZs3KoBk0hne9F4M1N8y4GhEO8drVS7_koHc36x8hOs9yve7MpIPFpBrr25_VrS3SwXrwo0bVt3aQCrJAg6W5qoRXeAy6_Y89qDSjlfUIduSjeEtUTLikeXLIpbrkeSUhDvIVNGucCiYkEOL5rqEW9DmSShs8ADZ85PI_fqg--hdUUmAbtiDVs8Egf2ew6E_jZcELxCDgC2CdUzF6AsWNoXVmBoB9xQ"
-          />
-          <button
-            class="absolute bottom-4 right-4 size-10 rounded-full bg-white shadow-lg flex items-center justify-center text-primary opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all"
-          >
-            <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
-          </button>
-        </div>
-        <div class="flex flex-col gap-1">
-          <h4 class="font-bold text-on-surface">Linear Lever Set</h4>
-          <p class="text-on-surface-variant text-sm">Matte Black Collection</p>
-          <p class="text-primary font-extrabold mt-2">$210.00</p>
-        </div>
+    }
+
+    <!-- Error State -->
+    @if (error() && !loading()) {
+      <div class="bg-error/10 border border-error rounded-lg p-6 text-center">
+        <p class="text-error font-medium">{{ error() }}</p>
+        <button
+          (click)="retry()"
+          class="mt-4 px-4 py-2 bg-error text-on-error rounded-lg font-bold hover:opacity-90 transition-opacity"
+        >
+          Try Again
+        </button>
       </div>
-      <div class="flex flex-col gap-4">
-        <div class="aspect-square bg-surface-container rounded-xl overflow-hidden relative group">
-          <img
-            class="w-full h-full object-cover transition-transform group-hover:scale-105"
-            data-alt="Brass cabinet pull handle"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDY51wLHLpXLXwan64APvYyly7RmA0XECIPJQZwzq2A7m5E-mUwDnEDihAw8a4190huQu2uYpY_gxeZA7oUGmWb66oStW66drRIeKhL4eU_CvzPG7KnCsrDYlq49UhtUbQInSbb0miURkt_D6SZZynO8nnhFZSqNsthOoIh9XN1jnGfym30yzhJRCzE6mnyazboh5ZfkL-W4gVpqRI0QIhMKSIDDAT0SqZdadOkDdCpZCaRKrcPl-wsBat1-5Nyl8EhCmyildHSmF2N"
-          />
-          <button
-            class="absolute bottom-4 right-4 size-10 rounded-full bg-white shadow-lg flex items-center justify-center text-primary opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all"
-          >
-            <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
-          </button>
-        </div>
-        <div class="flex flex-col gap-1">
-          <h4 class="font-bold text-on-surface">Solid Brass Pull</h4>
-          <p class="text-on-surface-variant text-sm">Aged Brass Finish</p>
-          <p class="text-primary font-extrabold mt-2">$45.00</p>
-        </div>
+    }
+
+    <!-- Products Grid -->
+    @if (!loading() && products().length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        @for (product of products(); track product._id) {
+          <div class="flex flex-col gap-4">
+            <div
+              class="aspect-square bg-surface-container rounded-xl overflow-hidden relative group"
+            >
+              @if (product.images && product.images[0]) {
+                <img
+                  class="w-full h-full object-cover transition-transform group-hover:scale-105"
+                  [src]="product.images[0]"
+                  [alt]="product.name"
+                />
+              }
+              @if (!product.images || product.images.length === 0) {
+                <div class="w-full h-full bg-surface-container flex items-center justify-center">
+                  <span class="material-symbols-outlined text-on-surface-variant/50 text-5xl"
+                    >image_not_supported</span
+                  >
+                </div>
+              }
+              <span
+                class="absolute top-4 left-4 bg-tertiary text-on-tertiary text-[10px] font-bold px-2 py-1 rounded uppercase"
+                >New</span
+              >
+              <button
+                class="absolute bottom-4 right-4 size-10 rounded-full bg-white shadow-lg flex items-center justify-center text-primary opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all hover:shadow-xl active:scale-95"
+                [routerLink]="['/products', product._id]"
+                title="View product details"
+              >
+                <span class="material-symbols-outlined">shopping_cart</span>
+              </button>
+            </div>
+            <div class="flex flex-col gap-1">
+              <h4
+                class="font-bold text-on-surface line-clamp-2 cursor-pointer hover:text-primary transition-colors"
+                [routerLink]="['/products', product._id]"
+              >
+                {{ product.name }}
+              </h4>
+              <p class="text-on-surface-variant text-sm line-clamp-2">{{ product.description }}</p>
+              <p class="text-primary font-extrabold mt-2">${{ product.price.toFixed(2) }}</p>
+            </div>
+          </div>
+        }
       </div>
-      <div class="flex flex-col gap-4">
-        <div class="aspect-square bg-surface-container rounded-xl overflow-hidden relative group">
-          <img
-            class="w-full h-full object-cover transition-transform group-hover:scale-105"
-            data-alt="Modern architectural wall light"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDn6pTvicFiKmJOsCBz2eAAzCC5FQYJpRQysVbf6xRrjTfbvOC-S7Sm0C0HZ5GAGc1c0jl3ZkInFE1PlphPJRN2dlaaIXBGtQtHKIzQ-W6z8ym45g_D0xbsbXAIUEibIbMaTR20QdEH-cTnEN9l5MOpKSAPVwJfKYBwgcNP3jVybMfNEhgODmf5uaoMoHc3qpoZ4jCS5zewIjmOFfZYJA5MF6plCf4SB5qzBxYYrXB7VV0YiabuRG2RFPMWAwOi9UAho-UtE3tnFc3X"
-          />
-          <button
-            class="absolute bottom-4 right-4 size-10 rounded-full bg-white shadow-lg flex items-center justify-center text-primary opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all"
-          >
-            <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
-          </button>
-        </div>
-        <div class="flex flex-col gap-1">
-          <h4 class="font-bold text-on-surface">Titan Wall Sconce</h4>
-          <p class="text-on-surface-variant text-sm">Industrial Architectural</p>
-          <p class="text-primary font-extrabold mt-2">$340.00</p>
-        </div>
+    }
+
+    <!-- No Products State -->
+    @if (!loading() && products().length === 0 && !error()) {
+      <div class="p-12 text-center">
+        <p class="text-on-surface-variant text-lg mb-4">No new arrivals at the moment</p>
       </div>
-    </div>
+    }
   </div>
 </section>
