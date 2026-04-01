@@ -24,22 +24,23 @@
         </button>
 
         <!-- Dynamic Categories -->
-        <button
-          *ngFor="let category of categories"
-          (click)="onCategorySelect(category._id)"
-          [class.bg-primary/10]="selectedCategory === category._id"
-          class="w-full flex items-center justify-between group cursor-pointer p-2 rounded-lg hover:bg-surface-container-low transition-colors"
-        >
-          <span
-            [class]="
-              selectedCategory === category._id
-                ? 'text-sm font-medium text-primary'
-                : 'text-sm font-medium text-on-surface-variant'
-            "
+        @for (category of categories; track category._id) {
+          <button
+            (click)="onCategorySelect(category._id)"
+            [class.bg-primary/10]="selectedCategory === category._id"
+            class="w-full flex items-center justify-between group cursor-pointer p-2 rounded-lg hover:bg-surface-container-low transition-colors"
           >
-            {{ category.name }}
-          </span>
-        </button>
+            <span
+              [class]="
+                selectedCategory === category._id
+                  ? 'text-sm font-medium text-primary'
+                  : 'text-sm font-medium text-on-surface-variant'
+              "
+            >
+              {{ category.name }}
+            </span>
+          </button>
+        }
       </div>
     </section>
 
@@ -54,7 +55,8 @@
             <label class="text-xs text-on-surface-variant mb-1 block">Min</label>
             <input
               type="number"
-              [(ngModel)]="priceMin"
+              [ngModel]="priceMin()"
+              (ngModelChange)="priceMin.set($event)"
               (change)="onPriceChange()"
               min="0"
               max="2500"
@@ -66,7 +68,8 @@
             <label class="text-xs text-on-surface-variant mb-1 block">Max</label>
             <input
               type="number"
-              [(ngModel)]="priceMax"
+              [ngModel]="priceMax()"
+              (ngModelChange)="priceMax.set($event)"
               (change)="onPriceChange()"
               min="0"
               max="2500"
@@ -77,8 +80,8 @@
         </div>
         <div class="px-2 py-3 bg-surface-container-low rounded-lg">
           <div class="flex justify-between text-xs font-bold text-on-surface">
-            <span>${{ priceMin }}</span>
-            <span>${{ priceMax }}</span>
+            <span>${{ priceMin() }}</span>
+            <span>${{ priceMax() }}</span>
           </div>
         </div>
       </div>

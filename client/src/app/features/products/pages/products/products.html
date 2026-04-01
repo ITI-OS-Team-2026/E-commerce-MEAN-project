@@ -19,8 +19,9 @@
         <!-- Sidebar Filters -->
         <app-products-page-aside 
           class="w-full lg:w-1/4"
-          [categories]="categories"
-          [selectedCategory]="selectedCategory"
+          [categories]="categories()"
+          [selectedCategory]="selectedCategory()"
+          [priceRange]="priceRange()"
           (categoryChange)="onCategoryChange($event)"
           (priceChange)="onPriceChange($event.min, $event.max)"
         ></app-products-page-aside>
@@ -30,13 +31,13 @@
             class="flex justify-between items-center mb-8 bg-surface-container-low p-4 rounded-xl"
           >
             <span class="text-sm font-medium text-on-surface-variant"
-              >Showing {{ products.length }} results</span
+              >Showing {{ filteredProducts().length }} results</span
             >
             <div class="flex items-center gap-2">
               <span class="text-xs font-bold uppercase text-on-surface-variant">Sort By</span>
               <select
-                [(ngModel)]="sortBy"
-                (change)="onSortChange(sortBy)"
+                [ngModel]="sortBy()"
+                (ngModelChange)="onSortChange($event)"
                 class="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 cursor-pointer"
               >
                 <option value="newest">Newest First</option>
@@ -46,16 +47,19 @@
             </div>
           </div>
           <!-- Loading State -->
-          <div *ngIf="loading" class="flex justify-center items-center min-h-96">
+          @if (loading()) {
+          <div class="flex justify-center items-center min-h-96">
             <div class="text-center">
               <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
               <p class="text-on-surface-variant">Loading products...</p>
             </div>
           </div>
+          }
 
           <!-- Error State -->
-          <div *ngIf="error && !loading" class="p-6 bg-error/10 rounded-xl border border-error mb-8">
-            <p class="text-error font-medium">{{ error }}</p>
+          @if (error() && !loading()) {
+          <div class="p-6 bg-error/10 rounded-xl border border-error mb-8">
+            <p class="text-error font-medium">{{ error() }}</p>
             <button 
               (click)="fetchProducts()"
               class="mt-4 px-4 py-2 bg-error text-on-error rounded-lg font-bold"
@@ -63,9 +67,11 @@
               Try Again
             </button>
           </div>
+          }
 
           <!-- No Products State -->
-          <div *ngIf="!loading && products.length === 0 && !error" class="p-12 text-center">
+          @if (!loading() && filteredProducts().length === 0 && !error()) {
+          <div class="p-12 text-center">
             <p class="text-on-surface-variant text-lg mb-4">No products found</p>
             <button 
               (click)="fetchProducts()"
@@ -74,37 +80,43 @@
               Refresh
             </button>
           </div>
+          }
 
           <!-- Products Grid -->
-          <div *ngIf="!loading && products.length > 0">
-            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
+          @if (!loading() && filteredProducts().length > 0) {
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
               <!-- Product Card -->
+              @for (product of filteredProducts(); track product._id) {
               <div
-                *ngFor="let product of products"
                 class="group relative bg-surface-container-lowest rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300"
               >
                 <div 
                   class="aspect-4/5 overflow-hidden bg-surface-container-low relative cursor-pointer"
                   [routerLink]="['/products', product._id]"
                 >
+                  @if (product.images && product.images[0]) {
                   <img
-                    *ngIf="product.images && product.images[0]"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     [src]="product.images[0]"
                     [alt]="product.name"
                   />
-                  <div *ngIf="!product.images || product.images.length === 0" class="w-full h-full bg-surface-container flex items-center justify-center">
+                  }
+                  @if (!product.images || product.images.length === 0) {
+                  <div class="w-full h-full bg-surface-container flex items-center justify-center">
                     <span class="material-symbols-outlined text-on-surface-variant/40 text-4xl">image_not_supported</span>
                   </div>
+                  }
                   <div class="absolute top-4 left-4">
+                    @if (product.stock > 0) {
                     <span
-                      *ngIf="product.stock > 0"
                       class="bg-white/90 backdrop-blur-sm px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full"
                     >In Stock</span>
+                    }
+                    @if (product.stock === 0) {
                     <span
-                      *ngIf="product.stock === 0"
                       class="bg-error/90 backdrop-blur-sm text-on-error px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full"
                     >Out of Stock</span>
+                    }
                   </div>
                 </div>
                 <div class="p-6">
@@ -131,8 +143,9 @@
                   </div>
                 </div>
               </div>
+              }
             </div>
-          </div>
+          }
         </div>
       </div>
     </main>
