@@ -6,30 +6,18 @@
             class="flex justify-between items-center h-16 px-8 w-full max-w-screen-2xl mx-auto">
             <div
                 class="text-xl font-black tracking-tighter text-slate-900 uppercase">
-                ARCHITECTURAL HARDWARE
+                <app-logo></app-logo>
             </div>
-            <nav class="hidden md:flex items-center gap-8">
-                <a
-                    class="text-slate-600 font-['Manrope'] tracking-tight font-bold hover:text-slate-900 transition-colors"
-                    href="#">Catalog</a>
-                <a
-                    class="text-slate-600 font-['Manrope'] tracking-tight font-bold hover:text-slate-900 transition-colors"
-                    href="#">Projects</a>
-                <a
-                    class="text-slate-600 font-['Manrope'] tracking-tight font-bold hover:text-slate-900 transition-colors"
-                    href="#">Solutions</a>
-            </nav>
             <div class="flex items-center gap-6">
-                <button
+                <button routerLink="/cart"
                     class="text-slate-600 hover:text-primary transition-all">
                     <span class="material-symbols-outlined"
                         data-icon="shopping_cart">shopping_cart</span>
                 </button>
-                <button
-                    class="text-slate-600 hover:text-primary transition-all">
-                    <span class="material-symbols-outlined"
-                        data-icon="account_circle">account_circle</span>
-                </button>
+                <div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden">
+                    <img alt="User profile" data-alt="Close up of professional man's face"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYfetKMe_haJuBlWU-iOjp7RbRF9M2rGcBSWHajjE_aiWeW2WkoLfoIxY-bRXsySqX0h7hvXQ9lE6bOhiarilm98Ky_Ttz9z-gdeAlrFK3qniwtbGRRlVqa6tLe7jgt2ZTyhBymnN59tSD9SRW7d8dqV5LqdLUaNZ6zjoJwQKoHRH4LjIxzeym19txI8V14RMlYBEAmYefPr7SulxtVqN3SNHysIJqkLP73ep741hWrxdK92g-ugomiEptXBQ_ywZTibrKF66oHagz" />
+                </div>
             </div>
         </div>
     </header>
@@ -237,14 +225,6 @@
                                     class="text-2xl font-black text-primary font-headline tracking-tighter">{{calculateTotal()
                                     | currency}}</span>
                             </div>
-                        </div>
-
-                        <div class="flex gap-2">
-                            <input
-                                class="flex-1 bg-surface-container-low border-b-2 border-outline-variant/30 px-4 py-2 text-xs font-bold uppercase tracking-widest focus:border-primary outline-none transition-all"
-                                placeholder="DISCOUNT CODE" type="text" />
-                            <button type="button"
-                                class="px-4 py-2 bg-on-surface text-surface text-[10px] font-bold uppercase tracking-widest rounded-lg hover:bg-primary transition-colors">Apply</button>
                         </div>
                     </div>
  

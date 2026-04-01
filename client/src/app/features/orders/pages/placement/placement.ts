@@ -4,10 +4,13 @@ import { HttpHeaders ,HttpClient, HttpClientModule } from '@angular/common/http'
 import { CommonModule } from '@angular/common';
 import { StorageService } from '../../../../core/services/storage.service'
 import { environment } from "../../../../../environments/environment.development"
+import { Logo } from '../../../../shared/components/logo/logo';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-placement',
-  imports: [ReactiveFormsModule, HttpClientModule, CommonModule ],
+  standalone: true,
+  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, Logo, RouterModule],
   templateUrl: './placement.html',
   styleUrl: './placement.css',
 })
@@ -17,7 +20,7 @@ export class Placement implements OnInit {
   token : string | null = '';
   
 
-  constructor(private fb: FormBuilder, private http: HttpClient , private storageService : StorageService , private cdr: ChangeDetectorRef) {
+  constructor(private fb: FormBuilder, private http: HttpClient , private storageService : StorageService , private cdr: ChangeDetectorRef, private router: Router) {
     this.orderForm = this.fb.group({
       shippingAddress: this.fb.group({
         street: ['', Validators.required],
