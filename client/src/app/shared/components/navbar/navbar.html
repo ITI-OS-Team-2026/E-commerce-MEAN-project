@@ -57,14 +57,22 @@
         </div>
       </div>
       <div class="flex items-center gap-2 sm:gap-4">
-        <button
-          routerLink="/cart"
-          class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-200 rounded-full shrink-0"
-        >
-          <span class="material-symbols-outlined text-sm sm:text-base" data-icon="shopping_cart"
-            >shopping_cart</span
+        <div class="relative flex">
+          <button
+            routerLink="/cart"
+            class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-200 rounded-full shrink-0"
           >
-        </button>
+            <span class="material-symbols-outlined text-sm sm:text-base" data-icon="shopping_cart"
+              >shopping_cart</span
+            >
+          </button>
+          <span
+            *ngIf="cartItemsCount > 0"
+            class="absolute top-0 right-0 bg-blue-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full z-10"
+          >
+            {{ cartItemsCount }}
+          </span>
+        </div>
         <button
           routerLink="/profile"
           class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-200 rounded-full shrink-0"

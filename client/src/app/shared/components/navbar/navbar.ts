@@ -5,6 +5,8 @@ import { RouterLink, Router } from '@angular/router';
 import { Logo } from '../logo/logo';
 import { ProductService } from '../../../features/products/services/product.service';
 import { Product } from '../../../features/products/models/product.models';
+import { CartService } from '../../../features/cart/services/cart.service';
+import { StorageService } from '../../../core/services/storage.service';
 import { Subject } from 'rxjs';
 import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
@@ -20,13 +22,21 @@ export class Navbar implements OnInit, OnDestroy {
   showResults: boolean = false;
   private destroy$ = new Subject<void>();
   private searchSubject = new Subject<string>();
+  cartItemsCount: number = 0;
 
   constructor(
     private productService: ProductService,
     private router: Router,
+    private cartService: CartService,
+    private storageService: StorageService
   ) {}
 
   ngOnInit(): void {
+    if (this.storageService.isLoggedIn()) {
+      this.initCartCount();
+      this.loadCartCount();
+    }
+
     this.searchSubject
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$))
       .subscribe((query) => {
@@ -75,6 +85,29 @@ export class Navbar implements OnInit, OnDestroy {
     setTimeout(() => {
       this.showResults = false;
     }, 200);
+  }
+
+  initCartCount(): void {
+    this.cartService
+      .getCart()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.cartService.updateCartCount(response.data.itemsCount);
+        },
+        error: (err) => {}
+      });
+  }
+
+  loadCartCount(): void {
+    this.cartService.cartCount
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (count) => {
+          this.cartItemsCount = count;
+        },
+        error: (err) => {}
+      });
   }
 
   ngOnDestroy(): void {
