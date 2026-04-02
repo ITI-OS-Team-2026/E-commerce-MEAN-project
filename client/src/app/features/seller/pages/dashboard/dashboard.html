@@ -1,0 +1,105 @@
+<div class="bg-surface text-on-surface min-h-screen flex">
+    <aside
+        class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-slate-50 dark:bg-slate-950 flex flex-col gap-2 p-4 border-r border-slate-200/20 z-50">
+        <div class="flex items-center gap-3 px-2 mb-8">
+            <div>
+                <app-logo></app-logo>
+            </div>
+        </div>
+        <nav class="flex-1 flex flex-col gap-1">
+            <a class="flex items-center gap-3 px-3 py-2.5 bg-white text-blue-700 shadow-sm rounded-lg transition-all duration-300 font-semibold text-sm"
+                routerLink="/seller/dashboard">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:text-blue-600 hover:bg-slate-200/50 transition-all duration-300 rounded-lg font-medium text-sm"
+                routerLink="/seller/productEntry">
+                <span class="material-symbols-outlined">inventory_2</span>
+                <span>Product Entry</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:text-blue-600 hover:bg-slate-200/50 transition-all duration-300 rounded-lg font-medium text-sm"
+                routerLink="/seller/inventory">
+                <span class="material-symbols-outlined">group</span>
+                <span>Inventory</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:text-blue-600 hover:bg-slate-200/50 transition-all duration-300 rounded-lg font-medium text-sm"
+                routerLink="/cart">
+                <span class="material-symbols-outlined">shopping_cart</span>
+                <span>Cart</span>
+            </a>
+        </nav>
+        <div class="mt-auto pt-4 flex flex-col gap-1 border-t border-slate-200/20">
+            <a (click)="logout()" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:text-blue-600 hover:bg-slate-200/50 transition-all duration-300 rounded-lg font-medium text-sm"
+                href="#">
+                <span class="material-symbols-outlined">logout</span>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+    <main class="ml-64 flex-1 min-h-screen">
+        <header
+            class="w-full sticky top-0 z-40 bg-white/80 backdrop-blur-xl flex justify-between items-center px-8 py-4 shadow-sm">
+            <div class="flex items-center gap-6 flex-1">
+                <h1 class="text-xl font-bold tracking-tight text-blue-900 font-headline">Seller Dashboard</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="h-8 w-px bg-slate-200 mx-2"></div>
+                <div class="flex items-center gap-4">
+                    <div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden cursor-pointer"
+                        routerLink="/auth/profile">
+                        <img alt="User profile" data-alt="Close up of professional man's face"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYfetKMe_haJuBlWU-iOjp7RbRF9M2rGcBSWHajjE_aiWeW2WkoLfoIxY-bRXsySqX0h7hvXQ9lE6bOhiarilm98Ky_Ttz9z-gdeAlrFK3qniwtbGRRlVqa6tLe7jgt2ZTyhBymnN59tSD9SRW7d8dqV5LqdLUaNZ6zjoJwQKoHRH4LjIxzeym19txI8V14RMlYBEAmYefPr7SulxtVqN3SNHysIJqkLP73ep741hWrxdK92g-ugomiEptXBQ_ywZTibrKF66oHagz" />
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="p-8">
+            <section class="max-w-3xl mx-auto">
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">Seller Dashboard</h1>
+                <p class="text-gray-600 mb-8">Overview of your products and sales performance.</p>
+
+                <div class="bg-white rounded-lg shadow-sm p-5 mb-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-3">Seller Info</h2>
+                    <p class="text-gray-700">
+                        <span class="font-medium">Name:</span> {{ sellerUser?.name || 'Seller User' }}
+                    </p>
+                    <p class="text-gray-700">
+                        <span class="font-medium">Role:</span> {{ sellerUser?.role || 'Seller' }}
+                    </p>
+                    <p class="text-gray-700">
+                        <span class="font-medium">Approved:</span> {{ sellerUser?.isApproved ? 'Yes' : 'No' }}
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white rounded-lg shadow-sm p-5">
+                        <h3 class="text-base font-semibold text-gray-900 mb-2">Total Products</h3>
+                        <div class="text-3xl font-bold text-blue-600">{{ totalProducts }}</div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-sm p-5">
+                        <h3 class="text-base font-semibold text-gray-900 mb-2">Total Revenue</h3>
+                        <div class="text-3xl font-bold text-green-600">${{ totalRevenue }}</div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-sm p-5">
+                        <h3 class="text-base font-semibold text-gray-900 mb-2">Active Orders</h3>
+                        <div class="text-3xl font-bold text-yellow-600">{{ activeOrders }}</div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-sm p-5">
+                        <h3 class="text-base font-semibold text-gray-900 mb-2">Recent Products</h3>
+                        <div class="text-3xl font-bold text-purple-600">{{ products.slice(0, 5).length }}</div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm p-5 mt-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-3">Recent Products</h2>
+                    <ul class="space-y-2">
+                        <li *ngFor="let product of products.slice(0, 5)" class="flex justify-between">
+                            <span>{{ product.name }}</span>
+                            <span class="font-medium">${{ product.price }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </main>
+</div>
