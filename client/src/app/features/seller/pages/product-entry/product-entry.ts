@@ -110,4 +110,9 @@ export class ProductEntry implements OnInit {
       }
     });
   }
+
+  logout(): void {
+    this.storageService.clearSession();
+    this.router.navigate(['/auth/login']);
+  }
 }
