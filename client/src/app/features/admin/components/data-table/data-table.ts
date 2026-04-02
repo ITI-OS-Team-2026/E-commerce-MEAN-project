@@ -15,40 +15,40 @@ import { CommonModule } from '@angular/common';
         <table class="w-full">
           <thead class="bg-gray-100 border-b border-gray-200">
             <tr>
-              <th
-                *ngFor="let column of columns"
-                class="px-6 py-3 text-left text-sm font-semibold text-gray-700"
-              >
-                {{ column }}
-              </th>
+              @for (column of columns; track column) {
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                  {{ column }}
+                </th>
+              }
               <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr
-              *ngFor="let row of data; let i = index"
-              class="border-b border-gray-200 hover:bg-gray-50 transition"
-            >
-              <td *ngFor="let column of columns" class="px-6 py-4 text-sm text-gray-700">
-                {{ row[column.toLowerCase()] }}
-              </td>
-              <td class="px-6 py-4 text-sm">
-                <div class="flex gap-2">
-                  <button
-                    class="text-blue-600 hover:text-blue-900 font-medium"
-                    (click)="edit.emit(row)"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    class="text-red-600 hover:text-red-900 font-medium"
-                    (click)="delete.emit(row.id)"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
+            @for (row of data; track row._id || row.id) {
+              <tr class="border-b border-gray-200 hover:bg-gray-50 transition">
+                @for (column of columns; track column) {
+                  <td class="px-6 py-4 text-sm text-gray-700">
+                    {{ row[column.toLowerCase()] }}
+                  </td>
+                }
+                <td class="px-6 py-4 text-sm">
+                  <div class="flex gap-2">
+                    <button
+                      class="text-blue-600 hover:text-blue-900 font-medium"
+                      (click)="edit.emit(row)"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      class="text-red-600 hover:text-red-900 font-medium"
+                      (click)="delete.emit(row._id || row.id)"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
           </tbody>
         </table>
       </div>
