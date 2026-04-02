@@ -7,7 +7,9 @@ const User = require('./models/User');
 const seedAdmin = async () => {
   try {
     // Connect to MongoDB (no options needed for Mongoose 7+)
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(process.env.MONGO_URL, {
+      dbName: process.env.DB_NAME, // ensures correct DB
+    });
 
     console.log('✅ Connected to DB:', mongoose.connection.name);
 
