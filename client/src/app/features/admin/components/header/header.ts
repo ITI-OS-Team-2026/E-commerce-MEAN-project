@@ -1,0 +1,66 @@
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-admin-header',
+  standalone: true,
+  imports: [CommonModule],
+  template: `<header class="bg-white shadow-md sticky top-0 z-30 border-b border-gray-200">
+    <div class="px-6 py-4 flex items-center justify-between lg:pl-8">
+      <!-- Left Section -->
+      <div class="flex items-center gap-4">
+        <h1 class="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+        <span class="text-sm text-gray-500">{{ currentDate }}</span>
+      </div>
+
+      <!-- Right Section -->
+      <div class="flex items-center gap-6">
+        <!-- Search Bar -->
+        <div class="hidden md:flex items-center bg-gray-100 rounded-lg px-4 py-2">
+          <span class="text-gray-400 mr-2">🔍</span>
+          <input
+            type="text"
+            placeholder="Search..."
+            class="bg-gray-100 outline-none text-sm w-48"
+          />
+        </div>
+
+        <!-- Notifications -->
+        <div class="relative cursor-pointer">
+          <span class="text-xl">🔔</span>
+          <span
+            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+            >3</span
+          >
+        </div>
+
+        <!-- User Profile -->
+        <div class="flex items-center gap-3 pl-6 border-l border-gray-200">
+          <div
+            class="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold"
+          >
+            {{ currentUser.charAt(0) }}
+          </div>
+          <div class="hidden sm:block">
+            <p class="text-sm font-medium text-gray-900">{{ currentUser }}</p>
+            <p class="text-xs text-gray-500">Administrator</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>`,
+  styles: [
+    `
+      /* Header custom styles */
+    `,
+  ],
+})
+export class AdminHeader {
+  currentUser = 'Admin User';
+  currentDate = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}

@@ -1,1 +1,141 @@
-<p>order-monitor works!</p>
+<app-sidebar></app-sidebar>
+
+<main class="min-h-screen bg-gray-50 lg:ml-64 transition-all duration-300">
+  <app-admin-header></app-admin-header>
+
+  <div class="p-6 max-w-7xl mx-auto">
+    <!-- Header Section -->
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold text-gray-900">Order Monitor</h1>
+      <p class="text-gray-500 mt-1">Track and manage all orders in real-time</p>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Filter by Status</h3>
+      <div class="flex flex-wrap gap-3">
+        <button
+          (click)="selectedStatus.set('all')"
+          [ngClass]="
+            selectedStatus() === 'all'
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          "
+          class="px-4 py-2 rounded-lg font-medium transition"
+        >
+          All Orders
+        </button>
+        <button
+          (click)="selectedStatus.set('pending')"
+          [ngClass]="
+            selectedStatus() === 'pending'
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          "
+          class="px-4 py-2 rounded-lg font-medium transition"
+        >
+          Pending
+        </button>
+        <button
+          (click)="selectedStatus.set('processing')"
+          [ngClass]="
+            selectedStatus() === 'processing'
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          "
+          class="px-4 py-2 rounded-lg font-medium transition"
+        >
+          Processing
+        </button>
+        <button
+          (click)="selectedStatus.set('shipped')"
+          [ngClass]="
+            selectedStatus() === 'shipped'
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          "
+          class="px-4 py-2 rounded-lg font-medium transition"
+        >
+          Shipped
+        </button>
+        <button
+          (click)="selectedStatus.set('delivered')"
+          [ngClass]="
+            selectedStatus() === 'delivered'
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          "
+          class="px-4 py-2 rounded-lg font-medium transition"
+        >
+          Delivered
+        </button>
+        <button
+          (click)="selectedStatus.set('cancelled')"
+          [ngClass]="
+            selectedStatus() === 'cancelled'
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          "
+          class="px-4 py-2 rounded-lg font-medium transition"
+        >
+          Cancelled
+        </button>
+      </div>
+    </div>
+
+    <!-- Orders Table -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-900">Orders ({{ filteredOrders.length }})</h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-100 border-b border-gray-200">
+            <tr>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Order ID</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Customer</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Amount</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Items</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let order of filteredOrders"
+              class="border-b border-gray-200 hover:bg-gray-50 transition"
+            >
+              <td class="px-6 py-4 text-sm text-gray-900 font-medium">{{ order.id }}</td>
+              <td class="px-6 py-4 text-sm text-gray-700">{{ order.customer }}</td>
+              <td class="px-6 py-4 text-sm text-gray-700 font-semibold">{{ order.amount }}</td>
+              <td class="px-6 py-4 text-sm text-gray-700">{{ order.items }}</td>
+              <td class="px-6 py-4 text-sm">
+                <select
+                  #statusSelect
+                  [value]="order.status"
+                  (change)="updateStatus(order.id, statusSelect.value)"
+                  [ngClass]="getStatusColor(order.status)"
+                  class="px-3 py-1 rounded-full text-sm font-medium border-0 cursor-pointer"
+                >
+                  <option value="Pending">Pending</option>
+                  <option value="Processing">Processing</option>
+                  <option value="Shipped">Shipped</option>
+                  <option value="Delivered">Delivered</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-700">{{ order.date }}</td>
+              <td class="px-6 py-4 text-sm">
+                <div class="flex gap-2">
+                  <button class="text-blue-600 hover:text-blue-900 font-medium">View</button>
+                  <button class="text-red-600 hover:text-red-900 font-medium">Delete</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
