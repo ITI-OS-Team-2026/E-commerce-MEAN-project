@@ -59,17 +59,33 @@ export class Products {
     this.loading.set(true);
     this.error.set(null);
 
-    const query = {
+    // Build query object with only defined properties
+    const query: any = {
       sort: this.sortParam(),
       page: 1,
       limit: 12,
-      category: this.selectedCategory() || undefined,
-      minPrice: this.priceRange().min > 0 ? this.priceRange().min : undefined,
-      maxPrice: this.priceRange().max < 2500 ? this.priceRange().max : undefined,
     };
+
+    // Only add category if selected
+    if (this.selectedCategory() && this.selectedCategory() !== '') {
+      query.category = this.selectedCategory();
+    }
+
+    // Only add minPrice if greater than 0
+    if (this.priceRange().min > 0) {
+      query.minPrice = this.priceRange().min;
+    }
+
+    // Only add maxPrice if less than 2500
+    if (this.priceRange().max < 2500) {
+      query.maxPrice = this.priceRange().max;
+    }
+
+    console.log('Fetching products with query:', query);
 
     this.productService.getProducts(query).subscribe({
       next: (response) => {
+        console.log('Products fetched successfully:', response.data.products.length);
         this.products.set(response.data.products);
         this.loading.set(false);
       },
