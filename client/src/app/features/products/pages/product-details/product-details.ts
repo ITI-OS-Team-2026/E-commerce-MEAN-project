@@ -6,6 +6,8 @@ import { Footer } from '../../../../shared/components/footer/footer';
 import { Navbar } from '../../../../shared/components/navbar/navbar';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product.models';
+import { CartService } from '../../../cart/services/cart.service';
+import { StorageService } from '../../../../core/services/storage.service';
 
 @Component({
   selector: 'app-product-details',
@@ -17,6 +19,8 @@ export class ProductDetails {
   private productService = inject(ProductService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private cartService = inject(CartService);
+  private storageService = inject(StorageService);
 
   // Signals for state management
   product = signal<Product | null>(null);
@@ -27,6 +31,9 @@ export class ProductDetails {
   selectedImageIndex = signal(0);
   quantity = signal(1);
   currentSlideIndex = signal(0);
+  addingToCart = signal(false);
+  addToCartError = signal<string | null>(null);
+  itemInCartQty = signal(0);
 
   // Computed values
   currentImage = computed(() => this.product()?.images?.[this.selectedImageIndex()] || '');
@@ -133,15 +140,78 @@ export class ProductDetails {
   addToCart(): void {
     const product = this.product();
     if (!product) return;
-    // TODO: Implement add to cart logic
-    console.log(`Added ${this.quantity()} of ${product.name} to cart`);
+    
+    if (!this.storageService.isLoggedIn()) {
+      this.router.navigate(['/auth/login']);
+      return;
+    }
+
+    this.addingToCart.set(true);
+    this.addToCartError.set(null);
+
+    this.cartService.addToCart({ productId: product._id, quantity: this.quantity() }).subscribe({
+      next: () => {
+        this.cartService.getCart().subscribe({
+          next: (response) => {
+            this.cartService.updateCartCount(response.data.itemsCount);
+            const cartItem = response.data.items.find((item: any) => 
+              (typeof item.product === 'string' ? item.product === product._id : item.product?._id === product._id)
+            );
+            if (cartItem) {
+              this.itemInCartQty.set(cartItem.quantity);
+            }
+            this.addingToCart.set(false);
+          },
+          error: (err) => {
+            this.addToCartError.set('Failed to add to cart');
+            this.addingToCart.set(false);
+          }
+        });
+      },
+      error: (err) => {
+        this.addToCartError.set('Failed to add to cart');
+        this.addingToCart.set(false);
+      }
+    });
   }
 
   buyNow(): void {
     const product = this.product();
     if (!product) return;
-    // TODO: Implement buy now logic - redirect to checkout
-    console.log(`Buying ${this.quantity()} of ${product.name}`);
+
+    if (!this.storageService.isLoggedIn()) {
+      this.router.navigate(['/auth/login']);
+      return;
+    }
+
+    this.addingToCart.set(true);
+    this.addToCartError.set(null);
+
+    this.cartService.addToCart({ productId: product._id, quantity: this.quantity() }).subscribe({
+      next: () => {
+        this.cartService.getCart().subscribe({
+          next: (response) => {
+            this.cartService.updateCartCount(response.data.itemsCount);
+            const cartItem = response.data.items.find((item: any) => 
+              (typeof item.product === 'string' ? item.product === product._id : item.product?._id === product._id)
+            );
+            if (cartItem) {
+              this.itemInCartQty.set(cartItem.quantity);
+            }
+            this.addingToCart.set(false);
+            this.router.navigate(['/orders/checkout']);
+          },
+          error: (err) => {
+            this.addToCartError.set('Failed to add to cart');
+            this.addingToCart.set(false);
+          }
+        });
+      },
+      error: (err) => {
+        this.addToCartError.set('Failed to add to cart');
+        this.addingToCart.set(false);
+      }
+    });
   }
 
   goBack(): void {
