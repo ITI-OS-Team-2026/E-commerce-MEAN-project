@@ -4,6 +4,8 @@ import { RouterLink } from "@angular/router";
 import { InventoryService } from '../../services/inventory.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { StorageService } from '../../../../core/services/storage.service';
 
 @Component({
   selector: 'app-inventory',
@@ -30,7 +32,9 @@ export class Inventory implements OnInit {
 
   constructor(
     private inventoryService: InventoryService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router,
+    private storageService: StorageService
   ) {}
 
   ngOnInit(): void {
@@ -117,5 +121,10 @@ export class Inventory implements OnInit {
   onSearchChange(): void {
     this.currentPage = 1;
     this.updatePageNumbers();
+  }
+
+  logout(): void {
+    this.storageService.clearSession();
+    this.router.navigate(['/auth/login']);
   }
 }
