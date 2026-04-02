@@ -27,6 +27,15 @@ const getMyOrders = async (req, res, next) => {
   }
 };
 
+const getAllOrders = async (req, res, next) => {
+  try {
+    const orders = await orderService.getAllOrders(req);
+    return res.status(200).json({ results: orders.length, orders });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const updateOrderStatus = async (req, res, next) => {
   try {
     const order = await orderService.updateOrderStatus(req);
@@ -40,5 +49,6 @@ module.exports = {
   placeOrder,
   getOrderById,
   getMyOrders,
+  getAllOrders,
   updateOrderStatus,
 };
