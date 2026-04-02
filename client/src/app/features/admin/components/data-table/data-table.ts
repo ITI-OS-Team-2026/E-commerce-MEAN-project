@@ -33,18 +33,22 @@ import { CommonModule } from '@angular/common';
                 }
                 <td class="px-6 py-4 text-sm">
                   <div class="flex gap-2">
-                    <button
-                      class="text-blue-600 hover:text-blue-900 font-medium"
-                      (click)="edit.emit(row)"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      class="text-red-600 hover:text-red-900 font-medium"
-                      (click)="delete.emit(row._id || row.id)"
-                    >
-                      Delete
-                    </button>
+                    @if (showEdit) {
+                      <button
+                        class="text-blue-600 hover:text-blue-900 font-medium"
+                        (click)="edit.emit(row)"
+                      >
+                        Edit
+                      </button>
+                    }
+                    @if (row.role !== 'admin') {
+                      <button
+                        class="text-red-600 hover:text-red-900 font-medium"
+                        (click)="delete.emit(row._id || row.id)"
+                      >
+                        Delete
+                      </button>
+                    }
                   </div>
                 </td>
               </tr>
@@ -80,6 +84,8 @@ export class DataTable {
   @Input() title: string = 'Data Table';
   @Input() columns: string[] = ['Name', 'Email', 'Status'];
   @Input() data: any[] = [];
+  @Input() showEdit: boolean = true;
+  @Input() role: string = '';
 
   @Output() edit = new EventEmitter<any>();
   @Output() delete = new EventEmitter<string>();

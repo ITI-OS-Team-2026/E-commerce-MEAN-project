@@ -1,111 +1,129 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Sidebar } from '../../components/sidebar/sidebar';
 import { AdminHeader } from '../../components/header/header';
 import { DataTable } from '../../components/data-table/data-table';
+import { User, UsersResponse } from '../../models/user.model';
+import { UserService } from '../../services/user-service';
 
 @Component({
   selector: 'app-users-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, Sidebar, AdminHeader, DataTable],
+  imports: [CommonModule, Sidebar, AdminHeader, DataTable],
   templateUrl: './users-management.html',
   styleUrl: './users-management.css',
 })
-export class UsersManagement {
-  showModal = signal(false);
-  isEditing = signal(false);
+export class UsersManagement implements OnInit {
+  showDeleteModal = signal(false);
+  errorMessage = signal('');
+  successMessage = signal('');
+  isLoading = signal(false);
+  deleteId = signal('');
 
-  formData = signal({
-    id: '',
-    name: '',
-    email: '',
-    role: 'customer',
-    status: 'active',
-    phone: '',
-    joinDate: '',
-  });
+  users = signal<User[]>([]);
 
-  users = [
-    {
-      id: 'USR-001',
-      name: 'Marcus Sterling',
-      email: 'marcus@email.com',
-      role: 'Seller',
-      status: 'Active',
-      phone: '+1-555-0001',
-      joindate: 'Oct 15, 2023',
-    },
-    {
-      id: 'USR-002',
-      name: 'Elena Rodriguez',
-      email: 'elena@email.com',
-      role: 'Customer',
-      status: 'Restricted',
-      phone: '+1-555-0002',
-      joindate: 'Oct 14, 2023',
-    },
-    {
-      id: 'USR-003',
-      name: 'Julian Draxler',
-      email: 'julian@email.com',
-      role: 'Admin',
-      status: 'Active',
-      phone: '+1-555-0003',
-      joindate: 'Sep 28, 2023',
-    },
-    {
-      id: 'USR-004',
-      name: 'Sarah Loft',
-      email: 'sarah@email.com',
-      role: 'Seller',
-      status: 'Active',
-      phone: '+1-555-0004',
-      joindate: 'Oct 01, 2023',
-    },
-    {
-      id: 'USR-005',
-      name: 'David Wu',
-      email: 'david@email.com',
-      role: 'Customer',
-      status: 'Active',
-      phone: '+1-555-0005',
-      joindate: 'Sep 19, 2023',
-    },
-  ];
+  constructor(private userService: UserService) {}
 
-  openModal() {
-    this.showModal.set(true);
-    this.formData.set({
-      id: '',
-      name: '',
-      email: '',
-      role: 'customer',
-      status: 'active',
-      phone: '',
-      joinDate: '',
+  ngOnInit(): void {
+    this.loadUsers();
+  }
+
+  // ✅ Load users from API
+  loadUsers() {
+    this.isLoading.set(true);
+    this.userService.getUsersList().subscribe({
+      next: (res: UsersResponse) => {
+        // console.log(res.users.filter((u) => u.name !== 'Admin'));
+        this.users.set(res.users);
+        this.isLoading.set(false);
+      },
+      error: (err: any) => {
+        console.log(err);
+        this.errorMessage.set('Failed to load users. Please try again.');
+        this.isLoading.set(false);
+        setTimeout(() => this.errorMessage.set(''), 5000);
+      },
     });
-    this.isEditing.set(false);
   }
 
-  closeModal() {
-    this.showModal.set(false);
+  // ✅ Open delete confirmation modal
+  openDeleteModal(id: string) {
+    this.showDeleteModal.set(true);
+    this.deleteId.set(id);
   }
 
-  submitForm() {
-    if (this.isEditing()) {
-      const index = this.users.findIndex((u) => u.id === this.formData().id);
-      if (index > -1) {
-        this.users[index] = { ...this.users[index], ...this.formData() };
-      }
-    } else {
-      const newUser = { ...this.formData(), joindate: new Date().toLocaleDateString() };
-      this.users.push(newUser as any);
-    }
-    this.closeModal();
+  closeDeleteModal() {
+    this.showDeleteModal.set(false);
+    this.deleteId.set('');
   }
 
+  // ✅ Confirm and delete user
+  confirmDelete() {
+    this.deleteUser(this.deleteId());
+    this.closeDeleteModal();
+  }
+
+  // ✅ Delete user
   deleteUser(id: string) {
-    this.users = this.users.filter((u) => u.id !== id);
+    this.userService.deleteUser(id).subscribe({
+      next: () => {
+        this.users.update((users) => users.filter((u) => u._id !== id));
+        setTimeout(() => this.successMessage.set(''), 3000);
+      },
+      error: (err) => {
+        const errMsg = err?.error?.message || 'Failed to delete user. Please try again.';
+        this.errorMessage.set(errMsg);
+        setTimeout(() => this.errorMessage.set(''), 5000);
+      },
+    });
+  }
+
+  // ✅ Approve seller
+  approveSeller(id: string) {
+    // 🔴 set loading state for THIS user only
+    this.users.update((users) =>
+      users.map((u) => (u._id === id ? { ...u, isApproving: true } : u)),
+    );
+
+    this.userService.approveSeller(id).subscribe({
+      next: () => {
+        this.users.update((users) =>
+          users.map((u) => (u._id === id ? { ...u, isApproved: true, isApproving: false } : u)),
+        );
+
+        this.successMessage.set('Seller approved successfully!');
+        setTimeout(() => this.successMessage.set(''), 3000);
+      },
+      error: (err) => {
+        const errMsg = err?.error?.message || 'Failed to approve seller. Please try again.';
+
+        this.errorMessage.set(errMsg);
+
+        // 🔴 remove loading on error
+        this.users.update((users) =>
+          users.map((u) => (u._id === id ? { ...u, isApproving: false } : u)),
+        );
+
+        setTimeout(() => this.errorMessage.set(''), 5000);
+      },
+    });
+  }
+
+  // ✅ Format date for display
+  formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString();
+  }
+
+  // ✅ Map users to table format
+  mapUsersForTable() {
+    return this.users().map((user) => ({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone || '-',
+      role: user.role,
+      Created: this.formatDate(user.createdAt),
+      Updated: this.formatDate(user.updatedAt),
+    }));
   }
 }

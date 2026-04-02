@@ -73,7 +73,7 @@
     <!-- Categories Table -->
     <app-data-table
       title="All Categories"
-      [columns]="['Name', 'Slug', 'Created', 'Updated']"
+      [columns]="['Name', 'Slug']"
       [data]="mapCategoriesForTable()"
       (edit)="editCategory($event)"
       (delete)="openDeleteModal($event)"
