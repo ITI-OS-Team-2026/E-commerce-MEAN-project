@@ -3,13 +3,14 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } fr
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../../../environments/environment.development';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { StorageService } from '../../../../core/services/storage.service';
+import { Logo } from '../../../../shared/components/logo/logo';
 
 @Component({
   selector: 'app-product-entry',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule, CommonModule],
+  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, Logo , RouterLink],
   templateUrl: './product-entry.html',
   styleUrl: './product-entry.css',
 })
