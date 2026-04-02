@@ -6,6 +6,7 @@ import { StorageService } from '../../../../core/services/storage.service'
 import { environment } from "../../../../../environments/environment.development"
 import { Logo } from '../../../../shared/components/logo/logo';
 import { Router, RouterModule } from '@angular/router';
+import { Order} from '../../models/placement.models'
 
 @Component({
   selector: 'app-placement',
@@ -114,17 +115,3 @@ export class Placement implements OnInit {
   }
 }
 
-interface Order {
-  items: {
-    product: string;
-    quantity: number;
-    price: number;
-  }[];
-  shippingAddress: {
-    street: string;
-    city: string;
-    state: string;
-    country: string;
-    zip: string;
-  };
-}

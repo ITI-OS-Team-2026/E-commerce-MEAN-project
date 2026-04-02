@@ -6,6 +6,7 @@ import { StorageService } from '../../../../core/services/storage.service';
 import { environment } from "../../../../../environments/environment.development";
 import { Logo } from '../../../../shared/components/logo/logo';
 import { RouterModule } from '@angular/router';
+import { Order, OrderHistoryResponse} from '../../models/order-history-models'
 
 @Component({
   selector: 'app-order-history',
@@ -72,41 +73,4 @@ export class OrderHistory implements OnInit {
   getActiveShipments(): number {
     return this.filteredOrders.filter(order => ['processing', 'pending', 'shipped'].includes(order.status)).length;
   }
-}
-
-interface OrderHistoryResponse {
-  results: number;
-  orders: Order[];
-}
-
-interface Order {
-  shippingAddress: {
-      street: string;
-      city: string;
-      state: string;
-      country: string;
-      zip: string;
-  };
-  _id: string;
-  user: string;
-  items: OrderItem[];
-  totalAmount: number;
-  status: string;
-  paymentMethod: string;
-  trackingHistory: any[];
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
-
-interface OrderItem {
-  product: {
-      _id: string;
-      name: string;
-      price: number;
-      id: string;
-  };
-  quantity: number;
-  price: number;
 }
