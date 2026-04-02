@@ -1,0 +1,133 @@
+<div class="order-detail-container">
+  <!-- Header -->
+  <div class="detail-header">
+    <div class="header-info">
+      <h2>Order Details</h2>
+      <p class="order-id-text">Order ID: <code>{{ order._id }}</code></p>
+    </div>
+    <button class="btn-close" (click)="closeModal()" aria-label="Close">✕</button>
+  </div>
+
+  <!-- Order Overview -->
+  <div class="section order-overview">
+    <div class="overview-grid">
+      <div class="overview-item">
+        <label>Status</label>
+        <span class="status-badge" [ngClass]="getStatusColor(order.status)">
+          {{ order.status | titlecase }}
+        </span>
+      </div>
+      <div class="overview-item">
+        <label>Total Amount</label>
+        <span class="amount">{{ formatCurrency(order.totalAmount) }}</span>
+      </div>
+      <div class="overview-item">
+        <label>Payment Method</label>
+        <span class="payment-method">{{ order.paymentMethod | titlecase }}</span>
+      </div>
+      <div class="overview-item">
+        <label>Order Date</label>
+        <span class="date">{{ formatDate(order.createdAt) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Customer Information -->
+  <div class="section customer-info">
+    <h3 class="section-title">Customer Information</h3>
+    <div class="info-grid">
+      <div class="info-item">
+        <label>Name</label>
+        <p>{{ order.user.name }}</p>
+      </div>
+      <div class="info-item">
+        <label>Email</label>
+        <p>{{ order.user.email }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shipping Address -->
+  <div class="section shipping-address">
+    <h3 class="section-title">Shipping Address</h3>
+    <div class="address-text">
+      <p>{{ order.shippingAddress.street }}</p>
+      <p>{{ order.shippingAddress.city }}, {{ order.shippingAddress.state }} {{ order.shippingAddress.zip }}</p>
+      <p>{{ order.shippingAddress.country }}</p>
+    </div>
+  </div>
+
+  <!-- Order Items -->
+  <div class="section order-items">
+    <h3 class="section-title">Order Items</h3>
+    <div class="items-list">
+      <div *ngFor="let item of order.items" class="item-row">
+        <div class="item-details">
+          <h4 class="item-name">{{ item.product.name }}</h4>
+          <p class="item-meta">Quantity: <strong>{{ item.quantity }}</strong></p>
+        </div>
+        <div class="item-price">
+          <p class="unit-price">{{ formatCurrency(item.price) }}</p>
+          <p class="total-price">
+            <small>x{{ item.quantity }}</small>
+            {{ formatCurrency(item.price * item.quantity) }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tracking History -->
+  <div class="section tracking-history">
+    <h3 class="section-title">Tracking History</h3>
+    <div class="timeline">
+      <div *ngFor="let history of order.trackingHistory; let last = last" class="timeline-item" [class.last]="last">
+        <div class="timeline-marker" [ngClass]="getStatusColor(history.status)"></div>
+        <div class="timeline-content">
+          <h4 class="timeline-status">{{ history.status | titlecase }}</h4>
+          <p class="timeline-comment">{{ history.comment }}</p>
+          <p class="timeline-date">{{ formatDate(history.updatedAt) }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Update Status Form -->
+  <div class="section update-status">
+    <h3 class="section-title">Update Order Status</h3>
+
+    <!-- Success Message -->
+    <div *ngIf="updateSuccess()" class="success-message">
+      <span class="success-icon">✓</span>
+      <span>Order status updated successfully!</span>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="updateError()" class="error-message">
+      <span class="error-icon">⚠️</span>
+      <span>{{ updateError() }}</span>
+    </div>
+
+    <form [formGroup]="statusForm" (ngSubmit)="onSubmitStatusUpdate()">
+      <div class="form-group">
+        <label for="status">New Status</label>
+        <select id="status" formControlName="status" class="form-control">
+          <option *ngFor="let status of orderStatuses" [value]="status" [disabled]="!canChangeToStatus(status)">
+            {{ status | titlecase }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary"
+          [disabled]="statusForm.invalid || isUpdating() || order.status === 'cancelled'">
+          <span *ngIf="!isUpdating()">Update Status</span>
+          <span *ngIf="isUpdating()">Updating...</span>
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">
+          Close
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
