@@ -217,45 +217,7 @@
         </div>
       </div>
 
-      <!-- Related Products Section -->
-      @if (relatedProducts().length > 0) {
-        <section class="mt-20 space-y-8">
-          <div class="flex items-center justify-between">
-            <div>
-              <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-on-surface">
-                Related Products
-              </h2>
-              <p class="text-sm text-on-surface-variant mt-2">
-                More items from
-                {{
-                  product()
-                    ? $any(product()!.category) && typeof $any(product()!.category) !== 'string'
-                      ? $any(product()!.category).name
-                      : 'this category'
-                    : 'this category'
-                }}
-              </p>
-            </div>
-            <div class="flex gap-2">
-              <button
-                (click)="prevSlide()"
-                [disabled]="!canPrevSlide()"
-                class="p-2 hover:bg-surface-container transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
-              >
-                <span class="material-symbols-outlined">chevron_left</span>
-              </button>
-              <button
-                (click)="nextSlide()"
-                [disabled]="!canNextSlide()"
-                class="p-2 hover:bg-surface-container transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
-              >
-                <span class="material-symbols-outlined">chevron_right</span>
-              </button>
-            </div>
-          </div>
-
-        </section>
-      }
+     
     </div>
   }
 </main>
