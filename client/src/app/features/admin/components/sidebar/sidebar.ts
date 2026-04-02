@@ -93,6 +93,5 @@ export class Sidebar {
     { label: 'Users', icon: '👥', path: '/admin/users' },
     { label: 'Categories', icon: '📂', path: '/admin/categories' },
     { label: 'Orders', icon: '📦', path: '/admin/all-orders' },
-    { label: 'Settings', icon: '⚙️', path: '/admin/settings' },
   ];
 }

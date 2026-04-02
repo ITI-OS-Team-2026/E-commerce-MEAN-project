@@ -1,7 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Sidebar } from '../../components/sidebar/sidebar';
 import { AdminHeader } from '../../components/header/header';
+import { Order, OrdersResponse } from '../../models/order.model';
+import { OrderService } from '../../services/order-service';
 
 @Component({
   selector: 'app-order-monitor',
@@ -10,63 +12,37 @@ import { AdminHeader } from '../../components/header/header';
   templateUrl: './order-monitor.html',
   styleUrl: './order-monitor.css',
 })
-export class OrderMonitor {
+export class OrderMonitor implements OnInit {
   selectedStatus = signal('all');
+  orders = signal<Order[]>([]);
+  isLoading = signal(false);
+  errorMessage = signal('');
 
-  orders = [
-    {
-      id: 'ORD-10001',
-      customer: 'John Doe',
-      amount: '$299.99',
-      status: 'Delivered',
-      date: '2026-03-28',
-      items: 3,
-    },
-    {
-      id: 'ORD-10002',
-      customer: 'Jane Smith',
-      amount: '$159.99',
-      status: 'Processing',
-      date: '2026-03-27',
-      items: 2,
-    },
-    {
-      id: 'ORD-10003',
-      customer: 'Mike Johnson',
-      amount: '$450.50',
-      status: 'Shipped',
-      date: '2026-03-26',
-      items: 5,
-    },
-    {
-      id: 'ORD-10004',
-      customer: 'Sarah Lee',
-      amount: '$120.00',
-      status: 'Pending',
-      date: '2026-03-25',
-      items: 1,
-    },
-    {
-      id: 'ORD-10005',
-      customer: 'David Wu',
-      amount: '$780.25',
-      status: 'Delivered',
-      date: '2026-03-24',
-      items: 4,
-    },
-    {
-      id: 'ORD-10006',
-      customer: 'Emily Brown',
-      amount: '$220.75',
-      status: 'Cancelled',
-      date: '2026-03-23',
-      items: 2,
-    },
-  ];
+  constructor(private orderService: OrderService) {}
+
+  ngOnInit(): void {
+    this.loadOrders();
+  }
+
+  // ✅ Load orders from API
+  loadOrders() {
+    this.isLoading.set(true);
+    this.orderService.getAllOrders().subscribe({
+      next: (res: OrdersResponse) => {
+        this.orders.set(res.orders);
+        this.isLoading.set(false);
+      },
+      error: (err: any) => {
+        this.errorMessage.set('Failed to load orders. Please try again.');
+        this.isLoading.set(false);
+        setTimeout(() => this.errorMessage.set(''), 5000);
+      },
+    });
+  }
 
   get filteredOrders() {
-    if (this.selectedStatus() === 'all') return this.orders;
-    return this.orders.filter((o) => o.status.toLowerCase() === this.selectedStatus());
+    if (this.selectedStatus() === 'all') return this.orders();
+    return this.orders().filter((o) => o.status.toLowerCase() === this.selectedStatus());
   }
 
   getStatusColor(status: string) {
@@ -86,10 +62,18 @@ export class OrderMonitor {
     }
   }
 
-  updateStatus(orderId: string, newStatus: string) {
-    const order = this.orders.find((o) => o.id === orderId);
-    if (order) {
-      order.status = newStatus;
-    }
+  // ✅ Format date for display
+  formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString();
+  }
+
+  // ✅ Get customer name
+  getCustomerName(order: Order): string {
+    return order.user.name;
+  }
+
+  // ✅ Get total items count
+  getTotalItems(order: Order): number {
+    return order.items.reduce((sum, item) => sum + item.quantity, 0);
   }
 }
