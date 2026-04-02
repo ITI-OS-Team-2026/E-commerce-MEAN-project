@@ -19,7 +19,7 @@ import { SellerOrderDetailComponent } from '../../components/order-detail/order-
   standalone: true,
   imports: [CommonModule, FormsModule, SellerOrderDetailComponent],
   templateUrl: './seller-orders.component.html',
-  styleUrls: ['./seller-orders.component.css'],
+  styleUrls: ['./seller-orders-component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SellerOrdersComponent implements OnInit, OnDestroy {

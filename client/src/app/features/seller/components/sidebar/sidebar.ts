@@ -20,12 +20,13 @@ export class Sidebar {
     { label: 'Users', icon: '👥', path: '/admin/users' },
     { label: 'Categories', icon: '📂', path: '/admin/categories' },
     { label: 'Orders', icon: '📦', path: '/admin/all-orders' },
+    { label: 'Order Details', icon: '📋', path: '/seller/orders' },
   ];
 
   constructor(
     private storageService: StorageService,
     private router: Router,
-  ) {}
+  ) { }
 
   toggleSidebar(): void {
     this.isCollapsed.update((val) => !val);

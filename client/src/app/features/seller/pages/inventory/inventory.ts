@@ -6,11 +6,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { StorageService } from '../../../../core/services/storage.service';
+import { Sidebar } from '../../components/sidebar/sidebar';
 
 @Component({
   selector: 'app-inventory',
   standalone: true,
-  imports: [Logo, RouterLink, CommonModule, FormsModule],
+  imports: [Logo, RouterLink, CommonModule, FormsModule, Sidebar],
   templateUrl: './inventory.html',
   styleUrl: './inventory.css',
 })
@@ -35,7 +36,7 @@ export class Inventory implements OnInit {
     private cdr: ChangeDetectorRef,
     private router: Router,
     private storageService: StorageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadProducts();

@@ -111,7 +111,7 @@
 <body class="bg-surface font-body text-on-surface antialiased">
     <!-- Sidebar Navigation -->
     <aside
-        class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-slate-50 flex flex-col gap-2 p-4 border-r border-slate-200/20 dark:border-slate-800/20 z-50">
+        class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-slate-50 dark:bg-slate-950 flex flex-col gap-2 p-4 border-r border-slate-200/20 z-50">
         <div class="mb-8 px-2">
             <app-logo></app-logo>
         </div>
@@ -121,8 +121,8 @@
                 <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
                 <span class="font-inter text-sm font-medium">Dashboard</span>
             </a>
-            <a class="flex items-center gap-3 px-3 py-2 bg-white dark:bg-slate-900 text-blue-700 dark:text-blue-400 shadow-sm rounded-lg transition-all duration-300"
-                >
+            <a
+                class="flex items-center gap-3 px-3 py-2 bg-white dark:bg-slate-900 text-blue-700 dark:text-blue-400 shadow-sm rounded-lg transition-all duration-300">
                 <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
                 <span class="font-inter text-sm font-medium">Product Entry</span>
             </a>
@@ -131,14 +131,12 @@
                 <span class="material-symbols-outlined" data-icon="group">group</span>
                 <span class="font-inter text-sm font-medium">Inventory</span>
             </a>
-            <a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all duration-300 rounded-lg"
-                routerLink="/cart">
-                <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
-                <span class="font-inter text-sm font-medium">Cart</span>
-            </a>
+
+
         </nav>
         <div class="mt-auto pt-4 border-t border-slate-200/20">
-            <a (click)="logout()" class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all duration-300 rounded-lg"
+            <a (click)="logout()"
+                class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all duration-300 rounded-lg"
                 href="#">
                 <span class="material-symbols-outlined" data-icon="logout">logout</span>
                 <span class="font-inter text-sm font-medium">Logout</span>
@@ -153,10 +151,11 @@
             <div class="flex items-center gap-4">
                 <span class="text-xl font-bold tracking-tight text-blue-900 font-headline">Add
                     New Product</span>
-                
+
             </div>
             <div class="flex items-center gap-4">
-                <div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden cursor-pointer" routerLink="/auth/profile">
+                <div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden cursor-pointer"
+                    routerLink="/auth/profile">
                     <img alt="User profile" data-alt="Close up of professional man's face"
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYfetKMe_haJuBlWU-iOjp7RbRF9M2rGcBSWHajjE_aiWeW2WkoLfoIxY-bRXsySqX0h7hvXQ9lE6bOhiarilm98Ky_Ttz9z-gdeAlrFK3qniwtbGRRlVqa6tLe7jgt2ZTyhBymnN59tSD9SRW7d8dqV5LqdLUaNZ6zjoJwQKoHRH4LjIxzeym19txI8V14RMlYBEAmYefPr7SulxtVqN3SNHysIJqkLP73ep741hWrxdK92g-ugomiEptXBQ_ywZTibrKF66oHagz" />
                 </div>

@@ -10,7 +10,7 @@ const paymentSchema = new mongoose.Schema(
     orderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Order',
-      required: true,
+      required: false,
     },
     amount: {
       type: Number,
@@ -26,6 +26,9 @@ const paymentSchema = new mongoose.Schema(
       default: 'pending',
     },
     stripePaymentIntentId: {
+      type: String,
+    },
+    stripeCheckoutSessionId: {
       type: String,
     },
   },

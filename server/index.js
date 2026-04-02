@@ -7,7 +7,7 @@ const app = require('./app');
 
 const startServer = async () => {
   try {
-    await mongoose.connect(`${process.env.MONGO_URL}/${process.env.DB_NAME}`);
+    await mongoose.connect(`${process.env.MONGO_URL}`);
     console.log("Db connected successfully");
 
     const port = Number(process.env.PORT) || 8000;

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Footer } from '../../../../shared/components/footer/footer';
@@ -19,10 +19,12 @@ import { PaymentService } from '../../../payment/services/payment.service';
   styleUrl: './checkout.css',
 })
 export class Checkout implements OnInit, OnDestroy {
+  private readonly SHIPPING_STORAGE_KEY = 'checkout_shipping_address';
+
   cart: CartModel | null = null;
   isLoading = true;
   error: string | null = null;
-  
+
   shippingAddress: ShippingAddress = {
     street: '',
     city: '',
@@ -37,18 +39,25 @@ export class Checkout implements OnInit, OnDestroy {
     private cartService: CartService,
     private checkoutService: CheckoutService,
     private paymentService: PaymentService,
+    private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    const paymentStatus = this.route.snapshot.queryParamMap.get('payment');
+
+    if (paymentStatus === 'cancel') {
+      this.error = 'Payment was canceled. Please try again.';
+    }
+
     this.getCart();
   }
 
   getCart(): void {
     this.isLoading = true;
     this.error = null;
-    
+
     this.cartService
       .getCart()
       .pipe(takeUntil(this.destroy$))
@@ -75,7 +84,7 @@ export class Checkout implements OnInit, OnDestroy {
       this.error = 'Please fill out all shipping address fields.';
       return;
     }
-    
+
     if (!this.cart) return;
 
     this.isLoading = true;
@@ -83,19 +92,27 @@ export class Checkout implements OnInit, OnDestroy {
     this.cdr.detectChanges();
 
     if (this.selectedPaymentMethod === 'credit_card') {
-      this.paymentService.createPaymentIntent(this.cart.totalPrice, '')
+      sessionStorage.setItem(this.SHIPPING_STORAGE_KEY, JSON.stringify(this.shippingAddress));
+
+      const successUrl = `${window.location.origin}/orders/success?session_id={CHECKOUT_SESSION_ID}`;
+      const cancelUrl = `${window.location.origin}/orders/checkout?payment=cancel`;
+
+      this.paymentService.createCheckoutSession(this.cart.totalPrice, 'usd', successUrl, cancelUrl)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (res) => {
-            const paymentIntentId = res.paymentIntentId || res.data?.paymentIntentId || res.id || res.data?.clientSecret;
-            const payload: CheckoutPayload = {
-              shippingAddress: this.shippingAddress,
-              paymentMethod: this.selectedPaymentMethod,
-              paymentIntentId
-            };
-            this.executeCheckout(payload);
+            const checkoutUrl = res?.data?.url;
+
+            if (!checkoutUrl) {
+              this.error = 'Stripe checkout URL is missing. Please try again.';
+              this.isLoading = false;
+              this.cdr.detectChanges();
+              return;
+            }
+
+            window.location.href = checkoutUrl;
           },
-          error: (err) => {
+          error: () => {
             this.error = 'Failed to initialize payment. Please try again.';
             this.isLoading = false;
             this.cdr.detectChanges();
@@ -110,15 +127,22 @@ export class Checkout implements OnInit, OnDestroy {
     }
   }
 
-  private executeCheckout(payload: CheckoutPayload): void {
+  private executeCheckout(payload: CheckoutPayload, isStripeFlow: boolean = false): void {
     this.checkoutService
       .checkout(payload)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
+          if (isStripeFlow) {
+            sessionStorage.removeItem(this.SHIPPING_STORAGE_KEY);
+            this.cartService.updateCartCount(0);
+            this.router.navigate(['/orders/success']);
+            return;
+          }
+
           // Clear cart globally on success
           this.cartService.updateCartCount(0);
-          this.router.navigate(['/orders']);
+          this.router.navigate(['/orders/history']);
         },
         error: (err) => {
           this.error = err?.error?.message || 'Failed to place order. Please try again.';

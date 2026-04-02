@@ -4,10 +4,11 @@ import { InventoryService } from '../../services/inventory.service';
 import { StorageService } from '../../../../core/services/storage.service';
 import { Logo } from '../../../../shared/components/logo/logo';
 import { Router, RouterLink } from '@angular/router';
+import { Sidebar } from '../../components/sidebar/sidebar';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, Logo , RouterLink],
+  imports: [CommonModule, Logo, RouterLink, Sidebar],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -23,7 +24,7 @@ export class Dashboard implements OnInit {
     private storageService: StorageService,
     private cdr: ChangeDetectorRef,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadSellerInfo();

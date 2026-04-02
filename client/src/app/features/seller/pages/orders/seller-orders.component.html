@@ -43,7 +43,7 @@
       <span class="search-icon">🔍</span>
     </div>
 
-    <div class="filter-buttons">
+    <nav class="filter-buttons" aria-label="Order status filter">
       <button class="filter-btn" [class.active]="selectedStatusFilter() === 'all'"
         (click)="onStatusFilterChange('all')">
         All Orders
@@ -52,7 +52,7 @@
         (click)="onStatusFilterChange(status)">
         {{ status | titlecase }}
       </button>
-    </div>
+    </nav>
   </div>
 
   <!-- Error Message -->
