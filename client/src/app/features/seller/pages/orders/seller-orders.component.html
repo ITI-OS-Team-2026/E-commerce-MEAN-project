@@ -1,127 +1,145 @@
-<div class="seller-orders-container">
-  <!-- Header Section -->
-  <div class="orders-header">
-    <div class="header-content">
-      <h1>Order Management</h1>
-      <p class="subtitle">Track and manage customer orders</p>
-    </div>
-    <button class="btn-refresh" (click)="refreshOrders()" [disabled]="isLoading()">
-      <span *ngIf="!isLoading()">🔄 Refresh</span>
-      <span *ngIf="isLoading()">Loading...</span>
-    </button>
-  </div>
+<!-- Page Layout: sidebar + main content -->
+<div class="bg-surface text-on-surface min-h-screen flex">
 
-  <!-- Stats Cards -->
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-value">{{ totalOrders() }}</div>
-      <div class="stat-label">Total Orders</div>
+  <!-- Sidebar -->
+  <aside
+    class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-slate-50 dark:bg-slate-950 flex flex-col gap-2 p-4 border-r border-slate-200/20 z-50">
+    <div class="flex items-center gap-3 px-2 mb-8">
+      <app-logo></app-logo>
     </div>
-    <div class="stat-card">
-      <div class="stat-value">{{ orderStatsComputed().pending }}</div>
-      <div class="stat-label">Pending</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value">{{ orderStatsComputed().packed }}</div>
-      <div class="stat-label">Packed</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value">{{ orderStatsComputed().shipped }}</div>
-      <div class="stat-label">Shipped</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value">{{ orderStatsComputed().delivered }}</div>
-      <div class="stat-label">Delivered</div>
-    </div>
-  </div>
+    <app-sidebar></app-sidebar>
+  </aside>
 
-  <!-- Filter and Search Section -->
-  <div class="filter-section">
-    <div class="search-box">
-      <input type="text" class="search-input" placeholder="Search by Order ID, Customer Name, or Email..."
-        (input)="onSearchChange($event.target.value)" />
-      <span class="search-icon">🔍</span>
+  <!-- Main Content -->
+  <main class="ml-64 flex-1 min-h-screen">
+
+    <div class="seller-orders-container">
+      <!-- Header Section -->
+      <div class="orders-header">
+        <div class="header-content">
+          <h1>Order Management</h1>
+          <p class="subtitle">Track and manage customer orders</p>
+        </div>
+        <button class="btn-refresh" (click)="refreshOrders()" [disabled]="isLoading()">
+          <span *ngIf="!isLoading()">🔄 Refresh</span>
+          <span *ngIf="isLoading()">Loading...</span>
+        </button>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">{{ totalOrders() }}</div>
+          <div class="stat-label">Total Orders</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ orderStatsComputed().pending }}</div>
+          <div class="stat-label">Pending</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ orderStatsComputed().packed }}</div>
+          <div class="stat-label">Packed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ orderStatsComputed().shipped }}</div>
+          <div class="stat-label">Shipped</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ orderStatsComputed().delivered }}</div>
+          <div class="stat-label">Delivered</div>
+        </div>
+      </div>
+
+      <!-- Filter and Search Section -->
+      <div class="filter-section">
+        <div class="search-box">
+          <input type="text" class="search-input" placeholder="Search by Order ID, Customer Name, or Email..."
+            (input)="onSearchChange($event.target.value)" />
+          <span class="search-icon">🔍</span>
+        </div>
+
+        <nav class="filter-buttons" aria-label="Order status filter">
+          <button class="filter-btn" [class.active]="selectedStatusFilter() === 'all'"
+            (click)="onStatusFilterChange('all')">
+            All Orders
+          </button>
+          <button *ngFor="let status of orderStatuses" class="filter-btn" [class.active]="selectedStatusFilter() === status"
+            (click)="onStatusFilterChange(status)">
+            {{ status | titlecase }}
+          </button>
+        </nav>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage()" class="error-message">
+        <span class="error-icon">⚠️</span>
+        <div>
+          <p class="error-title">Error Loading Orders</p>
+          <p class="error-text">{{ errorMessage() }}</p>
+        </div>
+        <button class="btn-retry" (click)="refreshOrders()">Retry</button>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoading() && orders().length === 0" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading orders...</p>
+      </div>
+
+      <!-- Orders Table -->
+      <div *ngIf="!isLoading()" class="orders-table-wrapper">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Email</th>
+              <th>Items</th>
+              <th>Total Amount</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of filteredOrders()" class="order-row">
+              <td class="order-id">
+                <code>{{ order._id }}</code>
+              </td>
+              <td class="customer-name">{{ order.user.name }}</td>
+              <td class="customer-email">{{ order.user.email }}</td>
+              <td class="items-count">{{ order.items.length }} item(s)</td>
+              <td class="total-amount">${{ order.totalAmount | number: '1.2-2' }}</td>
+              <td class="status-cell">
+                <span class="status-badge" [ngClass]="getStatusColor(order.status)">
+                  {{ order.status | titlecase }}
+                </span>
+              </td>
+              <td class="date">{{ formatDate(order.createdAt) }}</td>
+              <td class="action">
+                <button class="btn-view" (click)="selectOrder(order)">View Details</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Empty State -->
+        <div *ngIf="filteredOrders().length === 0" class="empty-state">
+          <div class="empty-icon">📦</div>
+          <h3>No Orders Found</h3>
+          <p>
+            {{ selectedStatusFilter() !== 'all' ? 'No orders with this status' : 'No orders available' }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Results Count -->
+      <div *ngIf="!isLoading() && filteredOrders().length > 0" class="results-count">
+        Showing {{ filteredOrderCount() }} of {{ totalOrders() }} orders
+      </div>
     </div>
 
-    <nav class="filter-buttons" aria-label="Order status filter">
-      <button class="filter-btn" [class.active]="selectedStatusFilter() === 'all'"
-        (click)="onStatusFilterChange('all')">
-        All Orders
-      </button>
-      <button *ngFor="let status of orderStatuses" class="filter-btn" [class.active]="selectedStatusFilter() === status"
-        (click)="onStatusFilterChange(status)">
-        {{ status | titlecase }}
-      </button>
-    </nav>
-  </div>
-
-  <!-- Error Message -->
-  <div *ngIf="errorMessage()" class="error-message">
-    <span class="error-icon">⚠️</span>
-    <div>
-      <p class="error-title">Error Loading Orders</p>
-      <p class="error-text">{{ errorMessage() }}</p>
-    </div>
-    <button class="btn-retry" (click)="refreshOrders()">Retry</button>
-  </div>
-
-  <!-- Loading State -->
-  <div *ngIf="isLoading() && orders().length === 0" class="loading-state">
-    <div class="spinner"></div>
-    <p>Loading orders...</p>
-  </div>
-
-  <!-- Orders Table -->
-  <div *ngIf="!isLoading()" class="orders-table-wrapper">
-    <table class="orders-table">
-      <thead>
-        <tr>
-          <th>Order ID</th>
-          <th>Customer</th>
-          <th>Email</th>
-          <th>Items</th>
-          <th>Total Amount</th>
-          <th>Status</th>
-          <th>Date</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let order of filteredOrders()" class="order-row">
-          <td class="order-id">
-            <code>{{ order._id }}</code>
-          </td>
-          <td class="customer-name">{{ order.user.name }}</td>
-          <td class="customer-email">{{ order.user.email }}</td>
-          <td class="items-count">{{ order.items.length }} item(s)</td>
-          <td class="total-amount">${{ order.totalAmount | number: '1.2-2' }}</td>
-          <td class="status-cell">
-            <span class="status-badge" [ngClass]="getStatusColor(order.status)">
-              {{ order.status | titlecase }}
-            </span>
-          </td>
-          <td class="date">{{ formatDate(order.createdAt) }}</td>
-          <td class="action">
-            <button class="btn-view" (click)="selectOrder(order)">View Details</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- Empty State -->
-    <div *ngIf="filteredOrders().length === 0" class="empty-state">
-      <div class="empty-icon">📦</div>
-      <h3>No Orders Found</h3>
-      <p>
-        {{ selectedStatusFilter() !== 'all' ? 'No orders with this status' : 'No orders available' }}
-      </p>
-    </div>
-  </div>
-
-  <!-- Results Count -->
-  <div *ngIf="!isLoading() && filteredOrders().length > 0" class="results-count">
-    Showing {{ filteredOrderCount() }} of {{ totalOrders() }} orders
-  </div>
+  </main>
 </div>
 
 <!-- Order Detail Modal -->
