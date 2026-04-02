@@ -15,17 +15,16 @@ export class Sidebar {
   mobileOpen = signal(false);
 
   menuItems = [
-    { label: 'Home', icon: '🏠', path: '/' },
-    { label: 'Dashboard', icon: '📊', path: '/admin/dashboard' },
-    { label: 'Users', icon: '👥', path: '/admin/users' },
-    { label: 'Categories', icon: '📂', path: '/admin/categories' },
-    { label: 'Orders', icon: '📦', path: '/admin/all-orders' },
+    { label: 'Dashboard', icon: '📊', path: '/seller/dashboard' },
+    { label: 'Inventory', icon: '🗃️', path: '/seller/inventory' },
+    { label: 'Orders', icon: '📦', path: '/seller/orders' },
+    { label: 'Add Product', icon: '➕', path: '/seller/productEntry' },
   ];
 
   constructor(
     private storageService: StorageService,
     private router: Router,
-  ) {}
+  ) { }
 
   toggleSidebar(): void {
     this.isCollapsed.update((val) => !val);

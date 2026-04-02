@@ -13,13 +13,15 @@ import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { SellerOrdersService } from '../../services/seller-orders.service';
 import { Order, OrderStatus } from '../../models/order.models';
 import { SellerOrderDetailComponent } from '../../components/order-detail/order-detail.component';
+import { Sidebar } from '../../components/sidebar/sidebar';
+import { Logo } from '../../../../shared/components/logo/logo';
 
 @Component({
   selector: 'app-seller-orders',
   standalone: true,
-  imports: [CommonModule, FormsModule, SellerOrderDetailComponent],
+  imports: [CommonModule, FormsModule, SellerOrderDetailComponent, Sidebar, Logo],
   templateUrl: './seller-orders.component.html',
-  styleUrls: ['./seller-orders.component.css'],
+  styleUrls: ['./seller-orders-component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SellerOrdersComponent implements OnInit, OnDestroy {

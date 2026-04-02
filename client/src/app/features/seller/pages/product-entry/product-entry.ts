@@ -6,11 +6,12 @@ import { environment } from '../../../../../environments/environment.development
 import { Router, RouterLink } from '@angular/router';
 import { StorageService } from '../../../../core/services/storage.service';
 import { Logo } from '../../../../shared/components/logo/logo';
+import { Sidebar } from '../../components/sidebar/sidebar';
 
 @Component({
   selector: 'app-product-entry',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, Logo , RouterLink],
+  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, Logo, RouterLink, Sidebar],
   templateUrl: './product-entry.html',
   styleUrl: './product-entry.css',
 })
@@ -89,7 +90,7 @@ export class ProductEntry implements OnInit {
 
     this.isSubmitting = true;
     const backendUrl = environment.apiUrl + '/products';
-    
+
     const formData = {
       ...this.productForm.value,
       price: Number(this.productForm.value.price),

@@ -110,9 +110,11 @@
                     routerLink="/products">Products</a>
             </div>
             <div class="flex items-center gap-4">
-                <button class="material-symbols-outlined text-slate-600 hover:text-blue-700 transition-colors cursor-pointer"
+                <button
+                    class="material-symbols-outlined text-slate-600 hover:text-blue-700 transition-colors cursor-pointer"
                     routerLink="/cart" data-icon="shopping_cart">shopping_cart</button>
-                <div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden cursor-pointer" routerLink="/auth/profile">
+                <div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden cursor-pointer"
+                    routerLink="/auth/profile">
                     <img alt="User profile" data-alt="Close up of professional man's face"
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYfetKMe_haJuBlWU-iOjp7RbRF9M2rGcBSWHajjE_aiWeW2WkoLfoIxY-bRXsySqX0h7hvXQ9lE6bOhiarilm98Ky_Ttz9z-gdeAlrFK3qniwtbGRRlVqa6tLe7jgt2ZTyhBymnN59tSD9SRW7d8dqV5LqdLUaNZ6zjoJwQKoHRH4LjIxzeym19txI8V14RMlYBEAmYefPr7SulxtVqN3SNHysIJqkLP73ep741hWrxdK92g-ugomiEptXBQ_ywZTibrKF66oHagz" />
                 </div>
@@ -130,8 +132,8 @@
                     <span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
                     Profile Overview
                 </a>
-                <a class="flex items-center gap-3 px-4 py-3 text-slate-900 font-bold bg-white rounded-lg shadow-sm font-inter text-sm translate-x-1 duration-200"
-                    >
+                <a
+                    class="flex items-center gap-3 px-4 py-3 text-slate-900 font-bold bg-white rounded-lg shadow-sm font-inter text-sm translate-x-1 duration-200">
                     <span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
                     Order History
                 </a>
@@ -149,6 +151,12 @@
                 <p class="text-on-surface-variant font-medium">Manage and track your recent architectural hardware
                     procurement.</p>
             </header>
+
+            <div *ngIf="paymentSuccessMessage"
+                class="mb-8 rounded-xl border border-[#cce7d5] bg-[#edf7f1] px-5 py-4 text-[#166534] flex items-center gap-3">
+                <span class="material-symbols-outlined">check_circle</span>
+                <p class="font-semibold">{{ paymentSuccessMessage }}</p>
+            </div>
 
             <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div class="md:col-span-2 relative">
@@ -277,7 +285,7 @@
                             Shipments</h4>
                         <div class="text-3xl font-manrope font-black text-on-surface">{{ getActiveShipments() }}</div>
                     </div>
-                
+
                 </div>
 
             </section>

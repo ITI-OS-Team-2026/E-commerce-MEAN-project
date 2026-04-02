@@ -84,7 +84,7 @@ export class Login {
         const role = res.tokenUser.role;
         //todo create the dashboards and navigate to them
         if (role === 'admin') this.router.navigate(['/admin']);
-        else if (role === 'seller') this.router.navigate(['/seller']);
+        else if (role === 'seller') this.router.navigate(['/seller/dashboard']);
         else this.router.navigate(['/']);
       },
       error: (err: unknown) => {
