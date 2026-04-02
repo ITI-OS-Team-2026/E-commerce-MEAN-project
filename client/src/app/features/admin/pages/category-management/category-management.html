@@ -1,1 +1,200 @@
-<p>category-management works!</p>
+<app-sidebar></app-sidebar>
+
+<main class="min-h-screen bg-gray-50 lg:ml-64 transition-all duration-300">
+  <app-admin-header></app-admin-header>
+
+  <div class="p-6 max-w-7xl mx-auto">
+    <!-- Error Notification -->
+    @if (errorMessage()) {
+      <div
+        class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center justify-between animate-in fade-in"
+      >
+        <span>{{ errorMessage() }}</span>
+        <button (click)="errorMessage.set('')" class="text-red-500 hover:text-red-700">✕</button>
+      </div>
+    }
+
+    <!-- Success Notification -->
+    @if (successMessage()) {
+      <div
+        class="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center justify-between animate-in fade-in"
+      >
+        <span>{{ successMessage() }}</span>
+        <button (click)="successMessage.set('')" class="text-green-500 hover:text-green-700">
+          ✕
+        </button>
+      </div>
+    }
+
+    <!-- Header Section -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Categories Management</h1>
+        <p class="text-gray-500 mt-1">Create, edit, and manage product categories</p>
+      </div>
+      <button
+        (click)="openModal()"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition"
+      >
+        Add Category
+      </button>
+    </div>
+
+    <!-- Categories Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      @for (category of categories(); track category._id) {
+        <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
+          <div class="mb-4">
+            <h3 class="text-lg font-semibold text-gray-900">{{ category.name }}</h3>
+            <p class="text-sm text-gray-500 mt-1">{{ category.slug }}</p>
+          </div>
+          <div class="bg-gray-50 rounded px-4 py-3 mb-4">
+            <p class="text-xs text-gray-600">Created: {{ formatDate(category.createdAt) }}</p>
+            <p class="text-xs text-gray-600 mt-1">Updated: {{ formatDate(category.updatedAt) }}</p>
+          </div>
+          <div class="flex gap-2">
+            <button
+              (click)="editCategory(category)"
+              class="flex-1 text-blue-600 hover:text-blue-900 font-medium py-2"
+            >
+              Edit
+            </button>
+            <button
+              (click)="openDeleteModal(category._id)"
+              class="flex-1 text-red-600 hover:text-red-900 font-medium py-2"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Categories Table -->
+    <app-data-table
+      title="All Categories"
+      [columns]="['Name', 'Slug']"
+      [data]="mapCategoriesForTable()"
+      (edit)="editCategory($event)"
+      (delete)="openDeleteModal($event)"
+    >
+    </app-data-table>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  @if (showModal()) {
+    <div
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      (click)="closeModal()"
+    >
+      <div
+        class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full"
+        (click)="$event.stopPropagation()"
+      >
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">
+          {{ isEditing() ? 'Edit Category' : 'Add New Category' }}
+        </h2>
+
+        <!-- Error in Modal -->
+        @if (errorMessage()) {
+          <div class="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded text-sm">
+            {{ errorMessage() }}
+          </div>
+        }
+
+        <form (ngSubmit)="submitForm()" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Category Name *</label>
+            <input
+              type="text"
+              [(ngModel)]="formData().name"
+              name="name"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Slug *</label>
+            <input
+              type="text"
+              [(ngModel)]="formData().slug"
+              name="slug"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <div class="flex gap-3 pt-4">
+            <button
+              type="button"
+              (click)="closeModal()"
+              class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium"
+            >
+              {{ isEditing() ? 'Update' : 'Add' }} Category
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- Delete Confirmation Modal -->
+  @if (isOpen()) {
+    <div
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      (click)="closeDeleteModal()"
+    >
+      <div
+        class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full"
+        (click)="$event.stopPropagation()"
+      >
+        <!-- Warning Icon -->
+        <div
+          class="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full"
+        >
+          <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+        </div>
+
+        <!-- Title -->
+        <h2 class="text-2xl font-bold text-gray-900 text-center mb-4">Delete Category</h2>
+
+        <!-- Warning Message -->
+        <p class="text-gray-600 text-center mb-6">
+          Are you sure you want to delete this category? This action cannot be undone.
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-3">
+          <button
+            type="button"
+            (click)="closeDeleteModal()"
+            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            (click)="confirmDelete(deleteId())"
+            class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</main>

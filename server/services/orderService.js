@@ -78,6 +78,17 @@ const getMyOrders = async (req) => {
   return orders;
 };
 
+const getAllOrders = async (req) => {
+  const user = showCurrentUser(req);
+  if (!user) throw new APIError('Authentication required', 401);
+
+  const orders = await Order.find()
+    .populate('items.product', 'name price')
+    .populate('user', 'name email');
+
+  return orders;
+};
+
 const updateOrderStatus = async (req) => {
   const user = showCurrentUser(req);
   if (!user) throw new APIError('Authentication required', 401);
@@ -129,5 +140,6 @@ module.exports = {
   placeOrder,
   getOrderById,
   getMyOrders,
+  getAllOrders,
   updateOrderStatus,
 };

@@ -1,0 +1,40 @@
+<app-sidebar></app-sidebar>
+
+<main class="min-h-screen bg-gray-50 lg:ml-64 transition-all duration-300">
+  <app-admin-header></app-admin-header>
+
+  <section class="p-6 max-w-3xl mx-auto">
+    <h1 class="text-3xl font-bold text-gray-900 mb-4">Admin Dashboard</h1>
+    <p class="text-gray-600 mb-8">Simple admin summary and important metrics.</p>
+
+    <div class="bg-white rounded-lg shadow-sm p-5 mb-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-3">Admin Info</h2>
+      <p class="text-gray-700">
+        <span class="font-medium">Name:</span> {{ adminUser?.name || 'Admin User' }}
+      </p>
+      <p class="text-gray-700">
+        <span class="font-medium">Email:</span> {{ adminUser?.email || 'admin@example.com' }}
+      </p>
+      <p class="text-gray-700"><span class="font-medium">Role:</span> Administrator</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <h3 class="text-base font-semibold text-gray-900 mb-2">Total Users</h3>
+        <div class="text-3xl font-bold text-blue-600">12,842</div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <h3 class="text-base font-semibold text-gray-900 mb-2">Total Orders</h3>
+        <div class="text-3xl font-bold text-green-600">3,456</div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <h3 class="text-base font-semibold text-gray-900 mb-2">Total Revenue</h3>
+        <div class="text-3xl font-bold text-yellow-600">$45,231</div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <h3 class="text-base font-semibold text-gray-900 mb-2">Active Sellers</h3>
+        <div class="text-3xl font-bold text-purple-600">128</div>
+      </div>
+    </div>
+  </section>
+</main>
