@@ -3,62 +3,38 @@
 <main class="min-h-screen bg-gray-50 lg:ml-64 transition-all duration-300">
   <app-admin-header></app-admin-header>
 
-  <div class="p-6 max-w-7xl mx-auto">
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <app-stats-card
-        *ngFor="let stat of stats"
-        [title]="stat.title"
-        [value]="stat.value"
-        [icon]="stat.icon"
-        [bgColor]="stat.bgColor"
-        [borderColor]="stat.borderColor"
-        [textColor]="stat.textColor"
-        [change]="stat.change"
-        [changeType]="stat.changeType"
-      >
-      </app-stats-card>
+  <section class="p-6 max-w-3xl mx-auto">
+    <h1 class="text-3xl font-bold text-gray-900 mb-4">Admin Dashboard</h1>
+    <p class="text-gray-600 mb-8">Simple admin summary and important metrics.</p>
+
+    <div class="bg-white rounded-lg shadow-sm p-5 mb-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-3">Admin Info</h2>
+      <p class="text-gray-700">
+        <span class="font-medium">Name:</span> {{ adminUser?.name || 'Admin User' }}
+      </p>
+      <p class="text-gray-700">
+        <span class="font-medium">Email:</span> {{ adminUser?.email || 'admin@example.com' }}
+      </p>
+      <p class="text-gray-700"><span class="font-medium">Role:</span> Administrator</p>
     </div>
 
-    <!-- Charts Section (Placeholder) -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-      <div class="lg:col-span-2 bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Sales Overview</h3>
-        <div
-          class="h-64 bg-gradient-to-br from-blue-50 to-blue-100 rounded flex items-center justify-center text-gray-500"
-        >
-          📊 Chart will be displayed here
-        </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <h3 class="text-base font-semibold text-gray-900 mb-2">Total Users</h3>
+        <div class="text-3xl font-bold text-blue-600">12,842</div>
       </div>
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Categories</h3>
-        <ul class="space-y-3">
-          <li class="flex justify-between items-center pb-3 border-b border-gray-200">
-            <span class="text-gray-700">Electronics</span>
-            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">32%</span>
-          </li>
-          <li class="flex justify-between items-center pb-3 border-b border-gray-200">
-            <span class="text-gray-700">Fashion</span>
-            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">28%</span>
-          </li>
-          <li class="flex justify-between items-center pb-3 border-b border-gray-200">
-            <span class="text-gray-700">Home & Garden</span>
-            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">22%</span>
-          </li>
-          <li class="flex justify-between items-center">
-            <span class="text-gray-700">Sports</span>
-            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">18%</span>
-          </li>
-        </ul>
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <h3 class="text-base font-semibold text-gray-900 mb-2">Total Orders</h3>
+        <div class="text-3xl font-bold text-green-600">3,456</div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <h3 class="text-base font-semibold text-gray-900 mb-2">Total Revenue</h3>
+        <div class="text-3xl font-bold text-yellow-600">$45,231</div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <h3 class="text-base font-semibold text-gray-900 mb-2">Active Sellers</h3>
+        <div class="text-3xl font-bold text-purple-600">128</div>
       </div>
     </div>
-
-    <!-- Recent Orders Table -->
-    <app-data-table
-      title="Recent Orders"
-      [columns]="['ID', 'Customer', 'Amount', 'Status', 'Date']"
-      [data]="recentOrders"
-    >
-    </app-data-table>
-  </div>
+  </section>
 </main>
