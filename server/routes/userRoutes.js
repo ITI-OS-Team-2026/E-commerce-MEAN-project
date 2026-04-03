@@ -36,6 +36,8 @@ router.patch(
 
 // ── Wishlist (customers only) ──────────────────────────────
 router.get('/wishlist', authenticate, restrictTo('customer'), getWishlist);
+router.post('/wishlist', authenticate, restrictTo('customer'), addToWishlist);
+router.post('/add-to-wishlist', authenticate, restrictTo('customer'), addToWishlist);
 router.post('/wishlist/:productId', authenticate, restrictTo('customer'), addToWishlist);
 router.delete('/wishlist/:productId', authenticate, restrictTo('customer'), removeFromWishlist);
 

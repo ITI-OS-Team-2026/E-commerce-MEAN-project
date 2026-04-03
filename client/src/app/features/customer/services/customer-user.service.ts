@@ -27,6 +27,15 @@ export interface CustomerUser {
   updatedAt: string;
 }
 
+export interface WishlistProduct {
+  _id: string;
+  name: string;
+  price: number;
+  images?: string[];
+  stock?: number;
+  description?: string;
+}
+
 export interface UpdateProfileRequest {
   name?: string;
   phone?: string;
@@ -55,6 +64,11 @@ export interface UpdateProfileResponse {
     isApproved?: boolean;
   };
   token: string;
+}
+
+export interface WishlistResponse {
+  results: number;
+  wishlist: WishlistProduct[];
 }
 
 @Injectable({
@@ -99,8 +113,8 @@ export class CustomerUserService {
   }
 
   // ✅ Get wishlist
-  getWishlist(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/users/wishlist`, {
+  getWishlist(): Observable<WishlistResponse> {
+    return this.http.get<WishlistResponse>(`${this.apiUrl}/users/wishlist`, {
       headers: this.getAuthHeaders(),
     });
   }

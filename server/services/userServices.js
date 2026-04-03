@@ -98,11 +98,15 @@ const updateUserPassword = async (userId, userData) => {
 // ── Wishlist ───────────────────────────────────────────────
 
 const addToWishlist = async (userId, productId) => {
+  if (!productId) throw new APIError('Product ID is required', 400);
+
   const user = await User.findByIdAndUpdate(
     userId,
     { $addToSet: { wishlist: productId } }, // $addToSet prevents duplicates
     { new: true },
   ).populate('wishlist', 'name price images');
+  if (!user) throw new APIError('User not found', 404);
+
   return user.wishlist;
 };
 

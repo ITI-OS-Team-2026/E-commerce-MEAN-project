@@ -5,6 +5,7 @@ import { CustomerSidebar } from '../../components/sidebar/sidebar';
 import { CustomerHeader } from '../../components/header/header';
 import { CustomerUserService } from '../../services/customer-user.service';
 import { CartService } from '../../../cart/services/cart.service';
+import { WishlistProduct } from '../../services/customer-user.service';
 
 @Component({
   selector: 'app-customer-wishlist',
@@ -17,7 +18,7 @@ export class CustomerWishlist implements OnInit {
   private userService = inject(CustomerUserService);
   private cartService = inject(CartService);
 
-  wishlistItems = signal<any[]>([]);
+  wishlistItems = signal<WishlistProduct[]>([]);
   isLoading = signal(false);
   errorMessage = signal('');
   successMessage = signal('');
@@ -32,7 +33,7 @@ export class CustomerWishlist implements OnInit {
 
     this.userService.getWishlist().subscribe({
       next: (response) => {
-        this.wishlistItems.set(response.data || []);
+        this.wishlistItems.set(response.wishlist || []);
         this.isLoading.set(false);
       },
       error: (error) => {
@@ -58,8 +59,8 @@ export class CustomerWishlist implements OnInit {
     });
   }
 
-  addToCart(product: any): void {
-    const productId = product._id || product.id;
+  addToCart(product: WishlistProduct): void {
+    const productId = product._id;
     this.cartService.addToCart({ productId, quantity: 1 }).subscribe({
       next: () => {
         this.successMessage.set('Added to cart');

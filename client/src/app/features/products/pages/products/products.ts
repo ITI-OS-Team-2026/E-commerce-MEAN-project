@@ -7,6 +7,8 @@ import { Navbar } from '../../../../shared/components/navbar/navbar';
 import { ProductsPageAside } from '../../components/products-page-aside/products-page-aside';
 import { ProductService } from '../../services/product.service';
 import { CategoryService } from '../../services/category.service';
+import { CustomerUserService } from '../../../customer/services/customer-user.service';
+import { StorageService } from '../../../../core/services/storage.service';
 import { Product } from '../../models/product.models';
 import { Category } from '../../models/category.models';
 
@@ -19,6 +21,8 @@ import { Category } from '../../models/category.models';
 export class Products {
   private productService = inject(ProductService);
   private categoryService = inject(CategoryService);
+  private customerUserService = inject(CustomerUserService);
+  private storageService = inject(StorageService);
 
   products = signal<Product[]>([]);
   categories = signal<Category[]>([]);
@@ -31,12 +35,17 @@ export class Products {
   currentPage = signal(1);
   pageSize = signal(12);
   totalProducts = signal(0);
+  wishlistLoading = signal<string[]>([]);
+  wishlistIds = signal<string[]>([]);
+  wishlistMessage = signal<string | null>(null);
+  wishlistError = signal<string | null>(null);
   totalPages = computed(() => Math.ceil(this.totalProducts() / this.pageSize()) || 1);
 
   sortParam = computed(() => this.getSortParam(this.sortBy()));
 
   constructor() {
     this.loadCategories();
+    this.loadWishlistIds();
 
     // Effect reads all reactive params directly — Angular tracks exactly these
     // signals as dependencies and re-runs whenever any of them changes.
@@ -49,6 +58,25 @@ export class Products {
       const limit = this.pageSize();
 
       this.fetchWithParams({ sort, category, priceMin, priceMax, page, limit });
+    });
+  }
+
+  private loadWishlistIds(): void {
+    const token = this.storageService.getToken();
+    const currentUser = this.storageService.getUser();
+
+    if (!token || currentUser?.role !== 'customer') {
+      this.wishlistIds.set([]);
+      return;
+    }
+
+    this.customerUserService.getWishlist().subscribe({
+      next: (response) => {
+        this.wishlistIds.set((response.wishlist || []).map((item) => item._id));
+      },
+      error: () => {
+        this.wishlistIds.set([]);
+      },
     });
   }
 
@@ -155,5 +183,83 @@ export class Products {
       default:
         return '-createdAt';
     }
+  }
+
+  addToWishlist(productId: string): void {
+    const token = this.storageService.getToken();
+    const currentUser = this.storageService.getUser();
+
+    if (!token) {
+      this.wishlistError.set('Please login first to add products to wishlist.');
+      setTimeout(() => this.wishlistError.set(null), 3000);
+      return;
+    }
+
+    if (currentUser?.role !== 'customer') {
+      this.wishlistError.set('Only customers can use wishlist.');
+      setTimeout(() => this.wishlistError.set(null), 3000);
+      return;
+    }
+
+    this.wishlistError.set(null);
+    this.wishlistMessage.set(null);
+    this.wishlistLoading.update((ids) => [...ids, productId]);
+
+    this.customerUserService.addToWishlist(productId).subscribe({
+      next: () => {
+        this.wishlistLoading.update((ids) => ids.filter((id) => id !== productId));
+        this.wishlistIds.update((ids) => (ids.includes(productId) ? ids : [...ids, productId]));
+        this.wishlistMessage.set('Product added to wishlist.');
+        setTimeout(() => this.wishlistMessage.set(null), 3000);
+      },
+      error: (err) => {
+        this.wishlistLoading.update((ids) => ids.filter((id) => id !== productId));
+        this.wishlistError.set(err?.error?.message || 'Failed to add product to wishlist.');
+        setTimeout(() => this.wishlistError.set(null), 3000);
+      },
+    });
+  }
+
+  removeFromWishlist(productId: string): void {
+    const token = this.storageService.getToken();
+    const currentUser = this.storageService.getUser();
+
+    if (!token) {
+      this.wishlistError.set('Please login first.');
+      setTimeout(() => this.wishlistError.set(null), 3000);
+      return;
+    }
+
+    if (currentUser?.role !== 'customer') {
+      this.wishlistError.set('Only customers can use wishlist.');
+      setTimeout(() => this.wishlistError.set(null), 3000);
+      return;
+    }
+
+    this.wishlistError.set(null);
+    this.wishlistMessage.set(null);
+    this.wishlistLoading.update((ids) => [...ids, productId]);
+
+    this.customerUserService.removeFromWishlist(productId).subscribe({
+      next: () => {
+        this.wishlistLoading.update((ids) => ids.filter((id) => id !== productId));
+        this.wishlistIds.update((ids) => ids.filter((id) => id !== productId));
+        this.wishlistMessage.set('Product removed from wishlist.');
+        setTimeout(() => this.wishlistMessage.set(null), 3000);
+      },
+      error: (err) => {
+        this.wishlistLoading.update((ids) => ids.filter((id) => id !== productId));
+        this.wishlistError.set(err?.error?.message || 'Failed to remove product from wishlist.');
+        setTimeout(() => this.wishlistError.set(null), 3000);
+      },
+    });
+  }
+
+  isInWishlist(productId: string): boolean {
+    return this.wishlistIds().includes(productId);
+  }
+
+  isWishlistLoading(productId: string): boolean {
+    return this.wishlistLoading().includes(productId);
   }
 }
