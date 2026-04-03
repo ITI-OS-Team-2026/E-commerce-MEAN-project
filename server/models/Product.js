@@ -21,6 +21,16 @@ const productSchema = new mongoose.Schema({
     required: true
   },
   images: [String],
+  ratingsAverage: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 5,
+  },
+  ratingsQuantity: {
+    type: Number,
+    default: 0
+  },
   stock: {
     type: Number,
     default: 0
