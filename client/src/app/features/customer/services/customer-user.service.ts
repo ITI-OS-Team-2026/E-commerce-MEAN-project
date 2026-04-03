@@ -34,14 +34,27 @@ export interface UpdateProfileRequest {
 }
 
 export interface ChangePasswordRequest {
-  currentPassword: string;
+  oldPassword: string;
   newPassword: string;
   confirmPassword: string;
 }
 
 export interface ProfileResponse {
-  success: boolean;
-  data: CustomerUser;
+  user: CustomerUser;
+}
+
+export interface UpdateProfileResponse {
+  updatedUser: {
+    name: string;
+    email?: string;
+    phone?: string;
+    userId: string;
+    role: 'customer' | 'seller' | 'admin';
+    isVerified: boolean;
+    isActive?: boolean;
+    isApproved?: boolean;
+  };
+  token: string;
 }
 
 @Injectable({
@@ -53,7 +66,7 @@ export class CustomerUserService {
   constructor(
     private http: HttpClient,
     private storageService: StorageService,
-  ) {}
+  ) { }
 
   // ✅ Get auth headers with Bearer token
   private getAuthHeaders(): HttpHeaders {
@@ -72,8 +85,8 @@ export class CustomerUserService {
   }
 
   // ✅ Update profile
-  updateProfile(data: UpdateProfileRequest): Observable<ProfileResponse> {
-    return this.http.patch<ProfileResponse>(`${this.apiUrl}/users/update`, data, {
+  updateProfile(data: UpdateProfileRequest): Observable<UpdateProfileResponse> {
+    return this.http.patch<UpdateProfileResponse>(`${this.apiUrl}/users/update`, data, {
       headers: this.getAuthHeaders(),
     });
   }

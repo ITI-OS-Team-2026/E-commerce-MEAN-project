@@ -48,18 +48,31 @@ const getSingleUser = async (req) => {
   return user;
 };
 
-const showCurrentUser = (req) => {
-  return req.user;
+const showCurrentUser = async (req) => {
+  const user = await User.findOne(
+    { _id: req.user.userId, isActive: true },
+    '-password -verificationToken',
+  );
+  if (!user) throw new APIError('User not found', 404);
+  return user;
 };
 
 const updateUser = async (userId, userData) => {
   const { name, email, phone, address, storeName } = userData;
 
+  const updatePayload = {};
+  if (name !== undefined) updatePayload.name = name;
+  if (email !== undefined) updatePayload.email = email;
+  if (phone !== undefined) updatePayload.phone = phone;
+  if (address !== undefined) updatePayload.address = address;
+  if (storeName !== undefined) updatePayload.storeName = storeName;
+
   const user = await User.findByIdAndUpdate(
     userId,
-    { name, email, phone, address, storeName },
+    updatePayload,
     { new: true, runValidators: true },
   );
+  if (!user) throw new APIError('User not found', 404);
 
   const updatedUser = createTokenUser(user);
   const token = createJWT({ payload: updatedUser });
