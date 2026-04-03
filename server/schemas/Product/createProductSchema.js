@@ -24,9 +24,9 @@ const createProductSchema = {
         'string.uri': 'Each image must be a valid URL',
       }),
     ),
-    stock: Joi.number().min(1).messages({
+    stock: Joi.number().min(0).messages({
       'number.base': 'Stock must be a number',
-      'number.min': 'Stock must be at least 1',
+      'number.min': 'Stock cannot be negative',
     }),
   })
     .required()

@@ -134,9 +134,14 @@ export class Products {
   }
 
   retryFetch(): void {
-    // Reset to page 1 with current filters — effect will re-run
-    this.currentPage.set(0); // force a change
-    this.currentPage.set(1);
+    this.fetchWithParams({
+      sort: this.sortParam(),
+      category: this.selectedCategory(),
+      priceMin: this.priceRange().min,
+      priceMax: this.priceRange().max,
+      page: this.currentPage(),
+      limit: this.pageSize(),
+    });
   }
 
   private getSortParam(sortBy: string): string {

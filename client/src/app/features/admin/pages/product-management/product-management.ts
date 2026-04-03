@@ -83,7 +83,7 @@ export class ProductManagement implements OnInit {
   mapProductsForTable() {
     return this.products().map(p => ({
       _id: p._id,
-      image: p.images?.[0]?.url || p.images?.[0],
+      image: p.images?.[0] ?? null,
       name: p.name,
       category: p.category?.name || 'Uncategorized',
       price: `$${p.price}`,
@@ -163,7 +163,7 @@ export class ProductManagement implements OnInit {
 
     this.productService.deleteProduct(id).subscribe({
       next: () => {
-        this.products.update(prods => prods.filter(p => p._id !== id));
+        this.loadProducts();
         this.successMessage.set('Product deleted successfully');
         this.closeDeleteModal();
         setTimeout(() => this.successMessage.set(''), 3000);
