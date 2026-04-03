@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { roleSectionCanActivate, roleSectionCanMatch } from './core/guards';
 
 export const routes: Routes = [
   {
@@ -31,6 +32,8 @@ export const routes: Routes = [
   },
   {
     path: 'customer',
+    canMatch: [roleSectionCanMatch('customer')],
+    canActivate: [roleSectionCanActivate('customer')],
     loadComponent: () =>
       import('./layouts/customer-layout/customer-layout').then((m) => m.CustomerLayout),
     loadChildren: () =>
@@ -38,12 +41,16 @@ export const routes: Routes = [
   },
   {
     path: 'seller',
+    canMatch: [roleSectionCanMatch('seller')],
+    canActivate: [roleSectionCanActivate('seller')],
     loadComponent: () =>
       import('./layouts/admin-layout/admin-layout/admin-layout').then((m) => m.AdminLayout),
     loadChildren: () => import('./features/seller/seller.routes').then((m) => m.SELLER_ROUTES),
   },
   {
     path: 'admin',
+    canMatch: [roleSectionCanMatch('admin')],
+    canActivate: [roleSectionCanActivate('admin')],
     loadComponent: () =>
       import('./layouts/admin-layout/admin-layout/admin-layout').then((m) => m.AdminLayout),
     loadChildren: () => import('./features/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
