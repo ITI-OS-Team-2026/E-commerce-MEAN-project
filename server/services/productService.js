@@ -2,13 +2,18 @@ const Product = require('../models/Product');
 const APIError = require('../utils/APIError');
 const cloudinary = require('../config/cloudinary');
 
+/**
+ * Helper: Extract public_id from Cloudinary URL
+ */
 const extractPublicId = (url) => {
   // Cloudinary URLs: .../upload/v123456/folder/public_id.ext
   const match = url.match(/\/upload\/(?:v\d+\/)?(.+)\.[a-z]+$/i);
   return match ? match[1] : null;
 };
 
-
+/**
+ * GET ALL PRODUCTS
+ */
 const getAllProducts = async (queryParams) => {
   const queryObj = { ...queryParams };
   const excludedFields = ['page', 'sort', 'limit', 'fields', 'search'];
@@ -17,8 +22,8 @@ const getAllProducts = async (queryParams) => {
   let queryStr = JSON.stringify(queryObj);
   queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
-  let dbQuery = Product.find(JSON.parse(queryStr));
-  dbQuery = dbQuery.where('isdeleted').equals(null);
+  const parsedFilter = JSON.parse(queryStr);
+  let dbQuery = Product.find({ ...parsedFilter, isdeleted: null });
 
   if (queryParams.search) {
     dbQuery = dbQuery.find({
@@ -51,6 +56,9 @@ const getAllProducts = async (queryParams) => {
   };
 };
 
+/**
+ * GET PRODUCT BY ID
+ */
 const getProductById = async (productId) => {
   const product = await Product.findOne({ _id: productId, isdeleted: null })
     .populate('category')
@@ -63,14 +71,18 @@ const getProductById = async (productId) => {
   return product;
 };
 
-
+/**
+ * CREATE PRODUCT
+ */
 const createProduct = async (productData) => {
   const product = new Product(productData);
   await product.save();
   return product;
 };
 
-
+/**
+ * UPDATE PRODUCT
+ */
 const updateProduct = async (productId, updateData) => {
   const product = await Product.findOne({ _id: productId, isdeleted: null });
 
@@ -78,6 +90,7 @@ const updateProduct = async (productId, updateData) => {
     throw new APIError('Product not found', 404);
   }
 
+  // ✅ If new images are provided → delete old ones from Cloudinary
   if (updateData.images && product.images?.length > 0) {
     for (const url of product.images) {
       const publicId = extractPublicId(url);
@@ -98,7 +111,9 @@ const updateProduct = async (productId, updateData) => {
   return updatedProduct;
 };
 
-
+/**
+ * DELETE PRODUCT (soft delete + optional Cloudinary cleanup)
+ */
 const deleteProduct = async (productId) => {
   const product = await Product.findOneAndUpdate(
     { _id: productId, isdeleted: null },
@@ -110,6 +125,7 @@ const deleteProduct = async (productId) => {
     throw new APIError('Product not found', 404);
   }
 
+  // ✅ OPTIONAL: delete images from Cloudinary
 
   if (product.images?.length > 0) {
     for (const url of product.images) {
