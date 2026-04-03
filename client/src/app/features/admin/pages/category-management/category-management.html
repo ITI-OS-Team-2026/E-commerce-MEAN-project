@@ -75,6 +75,7 @@
       title="All Categories"
       [columns]="['Name', 'Slug']"
       [data]="mapCategoriesForTable()"
+      [isLoading]="isLoading()"
       (edit)="editCategory($event)"
       (delete)="openDeleteModal($event)"
     >
@@ -84,7 +85,7 @@
   <!-- Add/Edit Modal -->
   @if (showModal()) {
     <div
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
       (click)="closeModal()"
     >
       <div
@@ -148,7 +149,7 @@
   <!-- Delete Confirmation Modal -->
   @if (isOpen()) {
     <div
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
       (click)="closeDeleteModal()"
     >
       <div

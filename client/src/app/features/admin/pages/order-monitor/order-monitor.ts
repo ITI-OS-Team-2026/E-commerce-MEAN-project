@@ -17,6 +17,11 @@ export class OrderMonitor implements OnInit {
   orders = signal<Order[]>([]);
   isLoading = signal(false);
   errorMessage = signal('');
+  currentPage = signal(1);
+  pageSize = signal(10);
+  Math = Math;
+
+  selectedOrder = signal<Order | null>(null);
 
   constructor(private orderService: OrderService) {}
 
@@ -33,7 +38,8 @@ export class OrderMonitor implements OnInit {
         this.isLoading.set(false);
       },
       error: (err: any) => {
-        this.errorMessage.set('Failed to load orders. Please try again.');
+        const errMsg = err?.error?.message || 'Failed to load orders. Please try again.';
+        this.errorMessage.set(errMsg);
         this.isLoading.set(false);
         setTimeout(() => this.errorMessage.set(''), 5000);
       },
@@ -43,6 +49,27 @@ export class OrderMonitor implements OnInit {
   get filteredOrders() {
     if (this.selectedStatus() === 'all') return this.orders();
     return this.orders().filter((o) => o.status.toLowerCase() === this.selectedStatus());
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredOrders.length / this.pageSize());
+  }
+
+  get paginatedOrders() {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return this.filteredOrders.slice(start, start + this.pageSize());
+  }
+
+  nextPage() {
+    if (this.currentPage() < this.totalPages) {
+      this.currentPage.update(p => p + 1);
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage() > 1) {
+      this.currentPage.update(p => p - 1);
+    }
   }
 
   getStatusColor(status: string) {
@@ -62,6 +89,15 @@ export class OrderMonitor implements OnInit {
     }
   }
 
+  // ✅ View Order logic
+  viewOrder(order: Order) {
+    this.selectedOrder.set(order);
+  }
+
+  closeOrderModal() {
+    this.selectedOrder.set(null);
+  }
+
   // ✅ Format date for display
   formatDate(dateString: string): string {
     return new Date(dateString).toLocaleDateString();
@@ -69,11 +105,11 @@ export class OrderMonitor implements OnInit {
 
   // ✅ Get customer name
   getCustomerName(order: Order): string {
-    return order.user.name;
+    return order.user?.name || 'Unknown';
   }
 
   // ✅ Get total items count
   getTotalItems(order: Order): number {
-    return order.items.reduce((sum, item) => sum + item.quantity, 0);
+    return order.items ? order.items.reduce((sum, item) => sum + item.quantity, 0) : 0;
   }
 }

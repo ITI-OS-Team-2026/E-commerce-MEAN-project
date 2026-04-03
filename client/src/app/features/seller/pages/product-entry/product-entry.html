@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Azure Meridian | Add/Edit Product</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#e6e8ea",
+                        "on-surface": "#191c1e",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#424654",
+                        "inverse-surface": "#2d3133",
+                        "error": "#ba1a1a",
+                        "secondary": "#515f74",
+                        "tertiary-container": "#a93802",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#3a485b",
+                        "surface-container": "#eceef0",
+                        "primary-container": "#2559bd",
+                        "on-tertiary-fixed-variant": "#812800",
+                        "tertiary-fixed-dim": "#ffb59b",
+                        "outline": "#737785",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary-container": "#d5e3fc",
+                        "on-tertiary-container": "#ffcebd",
+                        "primary": "#00419e",
+                        "on-secondary-container": "#57657a",
+                        "primary-fixed": "#dae2ff",
+                        "primary-fixed-dim": "#b1c5ff",
+                        "on-primary-fixed": "#001946",
+                        "on-background": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "surface-variant": "#e0e3e5",
+                        "inverse-primary": "#b1c5ff",
+                        "surface": "#f7f9fb",
+                        "secondary-fixed": "#d5e3fc",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "tertiary-fixed": "#ffdbcf",
+                        "tertiary": "#822800",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "background": "#f7f9fb",
+                        "on-secondary-fixed": "#0d1c2e",
+                        "on-tertiary-fixed": "#380d00",
+                        "surface-tint": "#2559bd",
+                        "surface-bright": "#f7f9fb",
+                        "outline-variant": "#c3c6d6",
+                        "on-primary-container": "#ccd8ff",
+                        "on-primary-fixed-variant": "#00419e",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-fixed-dim": "#b9c7df"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        .ghost-border {
+            border-bottom: 2px solid rgba(195, 198, 214, 0.4);
+            transition: border-color 0.2s;
+        }
+
+        .ghost-border:focus-within {
+            border-bottom-color: #00419e;
+        }
+
+        .ghost-border.invalid {
+            border-bottom-color: #ba1a1a;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
+
+<body class="bg-surface font-body text-on-surface antialiased">
+
+    <app-sidebar></app-sidebar>
+
+    <!-- Main Content Area -->
+    <main class="transition-all duration-300 min-h-screen lg:ml-64">
+        <!-- Top Navigation -->
+        <header class="w-full sticky top-0 z-40 bg-white/80 backdrop-blur-xl shadow-sm flex justify-between items-center pl-16 pr-8 lg:px-8 py-4">
+            <span class="text-xl font-bold tracking-tight text-blue-900 font-headline">Add New Product</span>
+            <div class="flex items-center gap-4">
+                <div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all" routerLink="/seller/profile">
+                    <img alt="User profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYfetKMe_haJuBlWU-iOjp7RbRF9M2rGcBSWHajjE_aiWeW2WkoLfoIxY-bRXsySqX0h7hvXQ9lE6bOhiarilm98Ky_Ttz9z-gdeAlrFK3qniwtbGRRlVqa6tLe7jgt2ZTyhBymnN59tSD9SRW7d8dqV5LqdLUaNZ6zjoJwQKoHRH4LjIxzeym19txI8V14RMlYBEAmYefPr7SulxtVqN3SNHysIJqkLP73ep741hWrxdK92g-ugomiEptXBQ_ywZTibrKF66oHagz" />
+                </div>
+            </div>
+        </header>
+
+        <div class="p-8 max-w-6xl mx-auto">
+
+            <!-- ── Success Banner ── -->
+            @if (successMessage()) {
+                <div class="mb-6 flex items-center gap-3 rounded-lg border border-primary/40 bg-primary-container/30 px-4 py-3 text-sm text-on-surface" role="alert">
+                    <span class="material-symbols-outlined text-primary">check_circle</span>
+                    <span class="font-medium">{{ successMessage() }}</span>
+                </div>
+            }
+
+            <!-- ── Error Banner (backend errors OR global frontend errors) ── -->
+            @if (errorMessage()) {
+                <div class="mb-6 flex items-center gap-3 rounded-lg border border-error/40 bg-error-container/30 px-4 py-3 text-sm text-on-error-container" role="alert">
+                    <span class="material-symbols-outlined text-error flex-shrink-0">error</span>
+                    <span class="font-medium">{{ errorMessage() }}</span>
+                </div>
+            }
+
+            <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="grid grid-cols-1 lg:grid-cols-12 gap-10" novalidate>
+
+                <!-- ══ Left Column: Form Fields ══ -->
+                <div class="lg:col-span-8 space-y-10">
+
+                    <!-- Section: Basic Information -->
+                    <section class="space-y-6">
+                        <h2 class="text-xl font-bold font-headline tracking-tight">Basic Information</h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                            <!-- Product Name -->
+                            <div class="md:col-span-2 space-y-1">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-outline">Product Name</label>
+                                <div class="ghost-border bg-surface-container-highest/30 px-4 py-3"
+                                    [class.invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+                                    <input formControlName="name"
+                                        class="w-full bg-transparent border-none p-0 text-base font-medium"
+                                        placeholder="e.g., Titanium Architectural Pivot Door Handle"
+                                        type="text" id="prod-name" />
+                                </div>
+                                @if (productForm.get('name')?.touched && productForm.get('name')?.errors?.['required']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Product name is required.
+                                    </span>
+                                }
+                                @if (productForm.get('name')?.touched && productForm.get('name')?.errors?.['minlength']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Must be at least 3 characters.
+                                    </span>
+                                }
+                                @if (productForm.get('name')?.touched && productForm.get('name')?.errors?.['maxlength']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Must be at most 100 characters.
+                                    </span>
+                                }
+                            </div>
+
+                            <!-- Category -->
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-outline">Category</label>
+                                <div class="ghost-border bg-surface-container-highest/30 px-4 py-3"
+                                    [class.invalid]="productForm.get('category')?.invalid && productForm.get('category')?.touched">
+                                    <select formControlName="category"
+                                        class="w-full bg-transparent border-none p-0 text-base font-medium appearance-none" id="prod-category">
+                                        <option value="">Select Category</option>
+                                        @for (cat of categories; track cat._id) {
+                                            <option [value]="cat._id">{{ cat.name }}</option>
+                                        }
+                                    </select>
+                                </div>
+                                @if (productForm.get('category')?.touched && productForm.get('category')?.errors?.['required']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Category is required.
+                                    </span>
+                                }
+                            </div>
+
+                            <!-- Description -->
+                            <div class="md:col-span-2 space-y-1">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-outline">Description</label>
+                                <div class="ghost-border bg-surface-container-highest/30 px-4 py-3"
+                                    [class.invalid]="productForm.get('description')?.invalid && productForm.get('description')?.touched">
+                                    <textarea formControlName="description"
+                                        class="w-full bg-transparent border-none p-0 text-base font-medium resize-none"
+                                        placeholder="Describe the product's aesthetic and functional properties..."
+                                        rows="4" id="prod-description"></textarea>
+                                </div>
+                                @if (productForm.get('description')?.touched && productForm.get('description')?.errors?.['required']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Description is required.
+                                    </span>
+                                }
+                                @if (productForm.get('description')?.touched && productForm.get('description')?.errors?.['minlength']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Must be at least 10 characters.
+                                    </span>
+                                }
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <!-- Section: Pricing & Inventory -->
+                    <section class="space-y-6">
+                        <h2 class="text-xl font-bold font-headline tracking-tight">Pricing &amp; Inventory</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                            <!-- Price -->
+                            <div class="space-y-1 bg-surface-container-low p-6 rounded-lg"
+                                [class.ring-1]="productForm.get('price')?.invalid && productForm.get('price')?.touched"
+                                [class.ring-error]="productForm.get('price')?.invalid && productForm.get('price')?.touched">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-outline mb-2">Retail Price</label>
+                                <div class="flex items-center">
+                                    <span class="text-outline font-bold mr-2">$</span>
+                                    <input formControlName="price"
+                                        class="w-full bg-transparent border-none p-0 text-2xl font-bold font-headline tracking-tight"
+                                        placeholder="0.00" type="number" id="prod-price" min="0" />
+                                </div>
+                                @if (productForm.get('price')?.touched && productForm.get('price')?.errors?.['required']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1 mt-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Price is required.
+                                    </span>
+                                }
+                                @if (productForm.get('price')?.touched && productForm.get('price')?.errors?.['min']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1 mt-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Price cannot be negative.
+                                    </span>
+                                }
+                            </div>
+
+                            <!-- Stock -->
+                            <div class="space-y-1 bg-surface-container-low p-6 rounded-lg"
+                                [class.ring-1]="productForm.get('stock')?.invalid && productForm.get('stock')?.touched"
+                                [class.ring-error]="productForm.get('stock')?.invalid && productForm.get('stock')?.touched">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-outline mb-2">Stock Quantity</label>
+                                <div class="flex items-center">
+                                    <input formControlName="stock"
+                                        class="w-full bg-transparent border-none p-0 text-2xl font-bold font-headline tracking-tight"
+                                        placeholder="0" type="number" id="prod-stock" min="0" />
+                                    <span class="material-symbols-outlined text-outline">inventory</span>
+                                </div>
+                                @if (productForm.get('stock')?.touched && productForm.get('stock')?.errors?.['min']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1 mt-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Stock cannot be negative.
+                                    </span>
+                                }
+                            </div>
+
+                        </div>
+                    </section>
+
+                </div>
+
+                <!-- ══ Right Column: Images & Actions ══ -->
+                <div class="lg:col-span-4 space-y-8">
+
+                    <!-- Image Upload Section -->
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-bold font-headline tracking-tight">Product Images</h2>
+                            <span class="text-xs text-outline">{{ selectedImages.length }} selected</span>
+                        </div>
+
+                        <!-- File picker button -->
+                        <label class="flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-xl px-4 py-6 cursor-pointer transition-colors"
+                            [class.border-outline-variant]="!imagesSubmitAttempted || hasImages"
+                            [class.border-error]="imagesSubmitAttempted && !hasImages"
+                            [class.bg-error-container]="imagesSubmitAttempted && !hasImages"
+                            [class.bg-surface-container-highest]="!imagesSubmitAttempted || hasImages"
+                            [class.hover:bg-surface-container-high]="!imagesSubmitAttempted || hasImages">
+                            <span class="material-symbols-outlined text-2xl"
+                                [class.text-outline]="!imagesSubmitAttempted || hasImages"
+                                [class.text-error]="imagesSubmitAttempted && !hasImages">upload_file</span>
+                            <span class="text-sm font-bold"
+                                [class.text-on-surface-variant]="!imagesSubmitAttempted || hasImages"
+                                [class.text-error]="imagesSubmitAttempted && !hasImages">
+                                {{ imagesSubmitAttempted && !hasImages ? 'At least one image required' : 'Click to select images' }}
+                            </span>
+                            <span class="text-xs text-outline italic">JPG, PNG, GIF, WEBP</span>
+                            <input type="file" multiple accept="image/*" class="hidden" (change)="onFileSelected($event)" id="prod-images" />
+                        </label>
+
+                        <!-- Image grid preview -->
+                        @if (selectedImages.length > 0) {
+                            <div class="grid grid-cols-3 gap-2">
+                                @for (item of selectedImages; track item.previewUrl; let i = $index) {
+                                    <div class="aspect-square rounded-lg bg-surface-container-high overflow-hidden group relative shadow-sm">
+                                        <img [src]="item.previewUrl" class="w-full h-full object-cover" [alt]="item.file.name" />
+                                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                            <button type="button" (click)="removeImage(i)"
+                                                class="w-8 h-8 rounded-full bg-error flex items-center justify-center text-white hover:bg-red-700 transition-colors">
+                                                <span class="material-symbols-outlined text-base leading-none">delete</span>
+                                            </button>
+                                        </div>
+                                        <!-- file name tooltip -->
+                                        <div class="absolute bottom-0 left-0 right-0 bg-black/60 px-1 py-0.5 truncate text-white text-[9px]">
+                                            {{ item.file.name }}
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        } @else {
+                            <p class="text-xs text-outline text-center italic">No images selected yet.</p>
+                        }
+                    </div>
+
+                    <!-- Actions Card -->
+                    <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-4 sticky top-24">
+                        <button type="submit" [disabled]="isSubmitting"
+                            class="w-full py-4 bg-gradient-to-br from-primary to-primary-container text-white font-bold rounded-lg shadow-lg shadow-primary/20 hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                            @if (isSubmitting) {
+                                <span class="material-symbols-outlined animate-spin text-lg leading-none">progress_activity</span>
+                                <span>Saving...</span>
+                            } @else {
+                                <span class="material-symbols-outlined text-lg leading-none">save</span>
+                                <span>Save Product</span>
+                            }
+                        </button>
+                        <button type="button" routerLink="/seller/inventory"
+                            class="w-full py-3 bg-surface-container-high text-on-surface font-bold rounded-lg hover:bg-surface-container-highest active:scale-[0.98] transition-all">
+                            Cancel
+                        </button>
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+    </main>
+</body>
+
+</html>

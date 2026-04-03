@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Order = require('../models/Order');
 const User = require('../models/User');
 const Product = require('../models/Product');
@@ -89,6 +90,50 @@ const getAllOrders = async (req) => {
   return orders;
 };
 
+const getSellerOrders = async (req) => {
+  const user = showCurrentUser(req);
+  if (!user) throw new APIError('Authentication required', 401);
+  if (user.role !== 'seller') {
+    throw new APIError('Only sellers can access seller orders', 403);
+  }
+
+  // Use aggregation to find orders where at least one item's product belongs to this seller
+  const orders = await Order.aggregate([
+    {
+      $lookup: {
+        from: 'products',
+        localField: 'items.product',
+        foreignField: '_id',
+        as: 'populatedProducts',
+      },
+    },
+    {
+      $match: {
+        'populatedProducts.seller': new mongoose.Types.ObjectId(user.userId),
+      },
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'user',
+        foreignField: '_id',
+        as: 'userData',
+      },
+    },
+    {
+      $unwind: {
+        path: '$userData',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $sort: { createdAt: -1 },
+    },
+  ]);
+
+  return orders;
+};
+
 const updateOrderStatus = async (req) => {
   const user = showCurrentUser(req);
   if (!user) throw new APIError('Authentication required', 401);
@@ -141,5 +186,6 @@ module.exports = {
   getOrderById,
   getMyOrders,
   getAllOrders,
+  getSellerOrders,
   updateOrderStatus,
 };

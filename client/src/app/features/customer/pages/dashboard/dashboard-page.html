@@ -1,0 +1,56 @@
+<app-customer-sidebar></app-customer-sidebar>
+
+<main class="min-h-screen bg-gray-50 lg:ml-64 transition-all duration-300">
+  <app-customer-header></app-customer-header>
+
+  <section class="p-6 max-w-3xl mx-auto">
+    <h1 class="text-3xl font-bold text-gray-900 mb-4">Customer Dashboard</h1>
+    <p class="text-gray-600 mb-8">View your orders, wishlist, and account information.</p>
+
+    <div class="bg-white rounded-lg shadow-sm p-5 mb-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-3">Customer Info</h2>
+      <p class="text-gray-700">
+        <span class="font-medium">Name:</span> {{ customerUser?.name || 'Customer' }}
+      </p>
+      <p class="text-gray-700">
+        <span class="font-medium">Email:</span> {{ customerUser?.email || 'customer@example.com' }}
+      </p>
+      <p class="text-gray-700"><span class="font-medium">Role:</span> Customer</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <h3 class="text-base font-semibold text-gray-900 mb-2">Total Orders</h3>
+        <div class="text-3xl font-bold text-blue-600">{{ totalOrders() }}</div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <h3 class="text-base font-semibold text-gray-900 mb-2">Total Spent</h3>
+        <div class="text-3xl font-bold text-green-600">${{ totalSpent() }}</div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <h3 class="text-base font-semibold text-gray-900 mb-2">Wishlist Items</h3>
+        <div class="text-3xl font-bold text-yellow-600">{{ wishlistCount() }}</div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <h3 class="text-base font-semibold text-gray-900 mb-2">Quick Links</h3>
+        <div class="flex gap-2 flex-wrap">
+          <a
+            routerLink="/customer/orders"
+            class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+            >View Orders</a
+          >
+          <span class="text-gray-300">•</span>
+          <a
+            routerLink="/customer/wishlist"
+            class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+            >Wishlist</a
+          >
+          <span class="text-gray-300">•</span>
+          <a routerLink="/" class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+            >Continue Shopping</a
+          >
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

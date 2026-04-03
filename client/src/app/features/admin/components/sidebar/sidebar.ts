@@ -18,6 +18,7 @@ export class Sidebar {
     { label: 'Home', icon: '🏠', path: '/' },
     { label: 'Dashboard', icon: '📊', path: '/admin/dashboard' },
     { label: 'Users', icon: '👥', path: '/admin/users' },
+    { label: 'Products', icon: '🛍️', path: '/admin/products' },
     { label: 'Categories', icon: '📂', path: '/admin/categories' },
     { label: 'Orders', icon: '📦', path: '/admin/all-orders' },
   ];

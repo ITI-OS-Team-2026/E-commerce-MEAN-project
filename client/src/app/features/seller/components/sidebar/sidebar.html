@@ -1,0 +1,83 @@
+<!-- Mobile hamburger (small screen) -->
+<button
+  class="lg:hidden fixed z-50 top-4 left-4 p-2 rounded-md bg-blue-600 text-white shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+  (click)="toggleMobile()"
+  aria-label="Toggle sidebar"
+>
+  @if (!mobileOpen()) {
+    ☰
+  } @else {
+    ✕
+  }
+</button>
+
+<!-- Mobile overlay -->
+@if (mobileOpen()) {
+  <div class="lg:hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-30" (click)="toggleMobile()"></div>
+}
+
+<!-- Sidebar -->
+<aside
+  [class.w-64]="!isCollapsed()"
+  [class.w-20]="isCollapsed()"
+  [class.-translate-x-full]="!mobileOpen()"
+  class="bg-gray-900 text-white transition-all duration-300 h-screen fixed left-0 top-0 overflow-y-auto shadow-lg transform lg:translate-x-0 z-40"
+>
+  <!-- Sidebar Header -->
+  <div class="p-4 pl-16 lg:p-4 flex items-center justify-between border-b border-gray-700">
+    <div [class.hidden]="isCollapsed()" class="text-xl font-bold text-blue-400">Seller</div>
+
+    <button (click)="toggleSidebar()" class="text-gray-400 hover:text-white transition">
+      @if (isCollapsed()) {
+        →
+      } @else {
+        ←
+      }
+    </button>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="p-4">
+    <ul class="space-y-2">
+      @for (item of menuItems; track item) {
+        <li>
+          <a
+            [routerLink]="item.path"
+            (click)="mobileOpen.set(false)"
+            routerLinkActive="bg-blue-600"
+            [routerLinkActiveOptions]="item.path === '/' ? { exact: true } : { exact: false }"
+            class="flex items-center gap-3 p-3 rounded-lg text-gray-300 hover:bg-gray-800 transition duration-200"
+          >
+            <span class="text-xl">{{ item.icon }}</span>
+
+            <span [class.hidden]="isCollapsed()" class="whitespace-nowrap">
+              {{ item.label }}
+            </span>
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <!-- Logout Button -->
+  <div class="absolute bottom-4 left-0 right-0 px-4">
+    <button
+      (click)="logout()"
+      class="w-full py-2 px-3 bg-red-600 hover:bg-red-700 rounded-lg text-white transition flex items-center gap-3 justify-center"
+    >
+      <span>🚪</span>
+
+      <span [class.hidden]="isCollapsed()"> Logout </span>
+    </button>
+  </div>
+</aside>
+
+<!-- Spacer -->
+<div
+  class="transition-all duration-300"
+  [ngClass]="{
+    'lg:ml-64': !isCollapsed(),
+    'lg:ml-20': isCollapsed(),
+    'ml-0': true,
+  }"
+></div>

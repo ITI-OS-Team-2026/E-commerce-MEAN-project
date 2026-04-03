@@ -25,7 +25,8 @@ export interface Product {
 
 export interface ProductsResponse {
   status: string;
-  results: number;
+  total?: number;    // total documents matching query (for pagination)
+  results: number;  // count of documents in this page
   data: {
     products: Product[];
   };

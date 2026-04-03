@@ -10,6 +10,7 @@ const {
   getOrderById,
   getMyOrders,
   getAllOrders,
+  getSellerOrders,
   updateOrderStatus,
 } = require('../controllers/orderController');
 
@@ -21,6 +22,7 @@ router.post(
   placeOrder,
 );
 router.get('/admin-orders', authenticate, restrictTo('admin'), getAllOrders);
+router.get('/seller', authenticate, restrictTo('seller'), getSellerOrders);
 router.get('/', authenticate, restrictTo('customer'), getMyOrders);
 router.get('/:id', authenticate, restrictTo('admin', 'customer', 'seller'), getOrderById);
 router.patch(

@@ -3,10 +3,9 @@ const APIError = require('../utils/APIError');
 const cloudinary = require('../config/cloudinary');
 
 const extractPublicId = (url) => {
-  const parts = url.split('/');
-  const fileWithExt = parts[parts.length - 1];
-  const publicId = fileWithExt.split('.')[0];
-  return `products/${publicId}`;
+  // Cloudinary URLs: .../upload/v123456/folder/public_id.ext
+  const match = url.match(/\/upload\/(?:v\d+\/)?(.+)\.[a-z]+$/i);
+  return match ? match[1] : null;
 };
 
 
@@ -35,15 +34,18 @@ const getAllProducts = async (queryParams) => {
   }
 
   const page = queryParams.page * 1 || 1;
-  const limit = queryParams.limit * 1 || 10;
+  const limit = Math.min(queryParams.limit * 1 || 20, 100);
   const skip = (page - 1) * limit;
 
   dbQuery = dbQuery.skip(skip).limit(limit);
 
   const products = await dbQuery.populate('category', 'name');
 
+  const totalCount = await Product.countDocuments({ ...parsedFilter, isdeleted: null });
+
   return {
     status: 'success',
+    total: totalCount,
     results: products.length,
     data: { products },
   };

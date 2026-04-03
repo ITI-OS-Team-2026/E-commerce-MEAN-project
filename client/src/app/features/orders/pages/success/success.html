@@ -1,0 +1,126 @@
+<!-- TopNavBar -->
+<app-navbar></app-navbar>
+
+<main class="pt-24 pb-20 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+  <!-- Verification Loading State -->
+  <div
+    *ngIf="isVerifying"
+    class="max-w-2xl mx-auto flex flex-col items-center justify-center min-h-64"
+  >
+    <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
+    <p class="mt-6 text-xl text-on-surface-variant font-medium text-center">
+      Verifying your payment...
+    </p>
+    <p class="mt-2 text-sm text-on-surface-variant text-center">
+      Please wait while we finalize your order.
+    </p>
+  </div>
+
+  <!-- Verification Error State -->
+  <div
+    *ngIf="verificationError && !isVerifying"
+    class="max-w-2xl mx-auto rounded-2xl border border-error/30 bg-error/5 p-8 sm:p-12 text-center shadow-sm"
+  >
+    <span class="material-symbols-outlined text-[56px] text-error">error</span>
+    <h1 class="mt-4 text-3xl font-extrabold tracking-tight text-error">
+      Payment Verification Failed
+    </h1>
+    <p class="mt-3 text-lg text-error font-medium">{{ verificationError }}</p>
+
+    <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+      <button
+        routerLink="/orders/checkout"
+        class="px-6 py-3 rounded-xl bg-error text-on-error font-bold hover:opacity-90 transition-opacity"
+      >
+        Return to Checkout
+      </button>
+      <button
+        routerLink="/"
+        class="px-6 py-3 rounded-xl border border-error text-error font-bold hover:bg-error/5 transition-colors"
+      >
+        Go to Home
+      </button>
+    </div>
+  </div>
+
+  <!-- Success State -->
+  <div *ngIf="!isVerifying && !verificationError" class="max-w-2xl mx-auto">
+    <!-- Success Card -->
+    <div class="bg-surface-container rounded-2xl shadow-sm overflow-hidden">
+      <!-- Top accent bar -->
+      <div class="h-1.5 w-full bg-linear-to-r from-primary to-primary-container"></div>
+
+      <div class="p-8 sm:p-12 text-center">
+        <!-- Icon -->
+        <div class="flex justify-center">
+          <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
+            <span class="material-symbols-outlined text-[52px] text-primary">check_circle</span>
+          </div>
+        </div>
+
+        <!-- Title -->
+        <h1 class="mt-6 text-3xl sm:text-4xl font-extrabold tracking-tight text-on-surface">
+          Payment Completed Successfully!
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="mt-3 text-base text-on-surface-variant font-medium">
+          Your order has been placed and confirmed.
+        </p>
+
+        <!-- What's Next box -->
+        <div
+          class="mt-8 p-6 bg-surface rounded-xl border border-outline-variant text-left space-y-3"
+        >
+          <h2 class="text-sm font-bold text-on-surface-variant uppercase tracking-widest mb-4">
+            What's Next?
+          </h2>
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary mt-0.5 text-xl">check_circle</span>
+            <span class="text-on-surface text-sm">Your payment has been securely processed</span>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary mt-0.5 text-xl">check_circle</span>
+            <span class="text-on-surface text-sm">Track your order in your account</span>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+          <button
+            routerLink="/customer/orders"
+            class="px-6 py-3 rounded-xl bg-primary text-on-primary font-bold hover:opacity-90 transition-opacity shadow-sm flex items-center justify-center gap-2"
+          >
+            <span class="material-symbols-outlined text-xl">receipt_long</span>
+            View My Orders
+          </button>
+          <button
+            routerLink="/products"
+            class="px-6 py-3 rounded-xl border border-outline-variant text-on-surface font-bold hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2"
+          >
+            <span class="material-symbols-outlined text-xl">shopping_bag</span>
+            Continue Shopping
+          </button>
+          <button
+            routerLink="/"
+            class="px-6 py-3 rounded-xl bg-surface-container-high text-on-surface-variant font-bold hover:bg-surface-variant transition-colors flex items-center justify-center gap-2"
+          >
+            <span class="material-symbols-outlined text-xl">home</span>
+            Home
+          </button>
+        </div>
+
+        <!-- Support link -->
+        <p class="mt-8 text-xs text-on-surface-variant">
+          Need help?
+          <a href="#" class="underline font-semibold text-primary hover:opacity-80"
+            >Contact Support</a
+          >
+        </p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<app-footer></app-footer>

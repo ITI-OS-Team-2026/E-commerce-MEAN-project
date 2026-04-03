@@ -11,9 +11,9 @@ const createProductSchema = {
       'string.empty': 'Description is required',
       'string.min': 'Description must be at least 10 characters',
     }),
-    price: Joi.number().min(0).required().messages({
+    price: Joi.number().min(15).required().messages({
       'number.base': 'Price must be a number',
-      'number.min': 'Price cannot be negative',
+      'number.min': 'Price must be at least 15',
       'any.required': 'Price is required',
     }),
     category: Joi.string().required().messages({

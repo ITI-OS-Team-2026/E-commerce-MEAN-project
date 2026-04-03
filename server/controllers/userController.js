@@ -1,4 +1,5 @@
 const userService = require('../services/userServices');
+const APIError = require('../utils/APIError');
 
 // ── Admin ──────────────────────────────────────────────────
 
@@ -24,8 +25,8 @@ const getSingleUser = async (req, res) => {
   return res.status(200).json({ user });
 };
 
-const showCurrentUser = (req, res) => {
-  const user = userService.showCurrentUser(req);
+const showCurrentUser = async (req, res) => {
+  const user = await userService.showCurrentUser(req);
   return res.status(200).json({ user });
 };
 
@@ -47,7 +48,10 @@ const getWishlist = async (req, res) => {
 };
 
 const addToWishlist = async (req, res) => {
-  const wishlist = await userService.addToWishlist(req.user.userId, req.params.productId);
+  const productId = req.params.productId || req.body.productId;
+  if (!productId) throw new APIError('Product ID is required', 400);
+
+  const wishlist = await userService.addToWishlist(req.user.userId, productId);
   return res.status(200).json({ wishlist });
 };
 

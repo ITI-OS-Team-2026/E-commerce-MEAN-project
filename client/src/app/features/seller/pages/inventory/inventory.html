@@ -1,1 +1,212 @@
-<p>inventory works!</p>
+<div class="bg-surface text-on-surface min-h-screen">
+    <app-sidebar></app-sidebar>
+    <main class="transition-all duration-300 min-h-screen lg:ml-64">
+        <header
+            class="w-full sticky top-0 z-40 bg-white/80 backdrop-blur-xl flex justify-between items-center pl-16 pr-8 lg:px-8 py-4 shadow-sm">
+            <div class="flex items-center gap-6 flex-1">
+                <h1 class="text-xl font-bold tracking-tight text-blue-900 font-headline">Inventory</h1>
+                <div class="relative max-w-md w-full">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg"
+                        data-icon="search">search</span>
+                    <input
+                        class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 transition-all"
+                        placeholder="Search product name or category..." type="text" [(ngModel)]="searchQuery"
+                        (ngModelChange)="onSearchChange()" />
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="h-8 w-px bg-slate-200 mx-2"></div>
+                <div class="flex items-center gap-4">
+                    <div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all"
+                        routerLink="/seller/profile">
+                        <img alt="User profile" data-alt="Close up of professional man's face"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYfetKMe_haJuBlWU-iOjp7RbRF9M2rGcBSWHajjE_aiWeW2WkoLfoIxY-bRXsySqX0h7hvXQ9lE6bOhiarilm98Ky_Ttz9z-gdeAlrFK3qniwtbGRRlVqa6tLe7jgt2ZTyhBymnN59tSD9SRW7d8dqV5LqdLUaNZ6zjoJwQKoHRH4LjIxzeym19txI8V14RMlYBEAmYefPr7SulxtVqN3SNHysIJqkLP73ep741hWrxdK92g-ugomiEptXBQ_ywZTibrKF66oHagz" />
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="p-8">
+            <section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div
+                    class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-transparent hover:border-primary/10 transition-all group">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-primary-fixed rounded-lg text-on-primary-fixed">
+                            <span class="material-symbols-outlined" data-icon="inventory">inventory</span>
+                        </div>
+                    </div>
+                    <p class="text-sm font-medium text-slate-500 mb-1">Total
+                        Products</p>
+                    <h3 class="text-2xl font-extrabold font-headline text-on-surface">{{ totalProducts }}</h3>
+                </div>
+                <div
+                    class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-transparent hover:border-primary/10 transition-all">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-error-container rounded-lg text-on-error-container">
+                            <span class="material-symbols-outlined" data-icon="warning">warning</span>
+                        </div>
+
+                    </div>
+                    <p class="text-sm font-medium text-slate-500 mb-1">Low
+                        Stock Alerts</p>
+                    <h3 class="text-2xl font-extrabold font-headline text-on-surface">{{ lowStockCount }}</h3>
+                </div>
+                <div
+                    class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-transparent hover:border-primary/10 transition-all">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-secondary-fixed rounded-lg text-on-secondary-fixed">
+                            <span class="material-symbols-outlined" data-icon="payments">payments</span>
+                        </div>
+                    </div>
+                    <p class="text-sm font-medium text-slate-500 mb-1">Inventory
+                        Value</p>
+                    <h3 class="text-2xl font-extrabold font-headline text-on-surface">{{ inventoryValue | currency }}
+                    </h3>
+                </div>
+                <div
+                    class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-transparent hover:border-primary/10 transition-all">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-tertiary-fixed rounded-lg text-on-tertiary-fixed">
+                            <span class="material-symbols-outlined" data-icon="rocket_launch">rocket_launch</span>
+                        </div>
+                    </div>
+                    <p class="text-sm font-medium text-slate-500 mb-1">New
+                        this Month</p>
+                    <h3 class="text-2xl font-extrabold font-headline text-on-surface">{{ newThisMonthCount }}</h3>
+                </div>
+            </section>
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <div class="flex items-center gap-2">
+
+                    <button
+                        class="px-6 py-2 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold text-sm rounded-lg shadow-md hover:shadow-lg transition-all active:scale-95"
+                        routerLink="/seller/productEntry">Add
+                        New Product</button>
+                </div>
+            </div>
+            <div
+                class="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden border border-outline-variant/10">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-surface-container-low border-b border-outline-variant/20">
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Product
+                                Name</th>
+
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Category
+                            </th>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Stock
+                                Level</th>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Price</th>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-surface-container">
+                        <tr *ngIf="isLoading">
+                            <td colspan="7" class="px-6 py-12 text-center text-slate-500">
+                                <div class="flex flex-col items-center gap-3">
+                                    <span class="material-symbols-outlined animate-spin text-3xl">sync</span>
+                                    <p class="font-medium">Loading inventory...</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr *ngIf="!isLoading && errorMessage">
+                            <td colspan="7" class="px-6 py-12 text-center text-error">
+                                <div class="flex flex-col items-center gap-3">
+                                    <span class="material-symbols-outlined text-3xl">error</span>
+                                    <p class="font-bold">{{ errorMessage }}</p>
+                                    <button (click)="loadProducts()"
+                                        class="px-4 py-2 bg-error text-white rounded-lg text-sm mt-2 flex items-center gap-2 mx-auto">
+                                        <span class="material-symbols-outlined text-sm">refresh</span>
+                                        Retry
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr *ngIf="!isLoading && filteredProducts.length === 0">
+                            <td colspan="7" class="px-6 py-12 text-center text-slate-500">
+                                <div class="flex flex-col items-center gap-3">
+                                    <p class="font-medium text-lg">{{ searchQuery ? 'No matches found' : 'No products
+                                        found' }}</p>
+                                    <p class="text-sm">{{ searchQuery ? 'Try a different search term.' : 'Start by
+                                        adding your first product to your inventory.' }}</p>
+                                    <button *ngIf="!searchQuery"
+                                        class="px-4 py-2 bg-primary text-white rounded-lg text-sm mt-2"
+                                        routerLink="/seller/productEntry">Add Product</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let product of pagedProducts"
+                            class="hover:bg-surface-container-low/50 transition-colors group">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded bg-slate-100 flex-shrink-0 overflow-hidden">
+                                        <img [alt]="product.name"
+                                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                            [src]="product.images?.[0]" />
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-on-surface">{{ product.name }}</p>
+                                        <p class="text-[11px] text-slate-400 font-medium">Last
+                                            updated {{ product.updatedAt | date:'short' }}</p>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td class="px-6 py-4">
+                                <span
+                                    class="px-2.5 py-1 bg-secondary-container text-on-secondary-container text-[11px] font-bold rounded-full">
+                                    {{ product.category?.name || 'Uncategorized' }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                        <div class="h-full"
+                                            [ngClass]="{'bg-primary': product.stock >= 10, 'bg-error': product.stock < 10}"
+                                            [style.width.%]="(product.stock / 100) * 100"></div>
+                                    </div>
+                                    <span class="text-sm font-semibold"
+                                        [ngClass]="{'text-on-surface': product.stock >= 10, 'text-error': product.stock < 10}">
+                                        {{ product.stock }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm font-bold text-on-surface">{{ product.price | currency }}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full"
+                                        [ngClass]="{'bg-primary animate-pulse': product.stock > 0, 'bg-slate-300': product.stock === 0}"></span>
+                                    <span class="text-xs font-bold"
+                                        [ngClass]="{'text-primary': product.stock > 0, 'text-slate-400': product.stock === 0}">
+                                        {{ product.stock > 0 ? 'Active' : 'Out of Stock' }}
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div
+                    class="bg-surface-container-low px-6 py-4 flex items-center justify-between border-t border-outline-variant/10">
+                    <button (click)="prevPage()" [disabled]="currentPage === 1"
+                        class="px-4 py-2 text-sm font-bold text-slate-500 hover:text-primary flex items-center gap-1 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                        <span class="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
+                        Previous
+                    </button>
+                    <div class="flex items-center gap-1">
+                        <button *ngFor="let page of pageNumbersList" (click)="goToPage(page)"
+                            [ngClass]="{'bg-primary text-on-primary': currentPage === page, 'hover:bg-slate-200': currentPage !== page}"
+                            class="w-8 h-8 rounded-lg text-xs font-bold transition-colors">
+                            {{ page }}
+                        </button>
+                    </div>
+                    <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+                        class="px-4 py-2 text-sm font-bold text-primary hover:text-primary-container flex items-center gap-1 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                        Next
+                        <span class="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>

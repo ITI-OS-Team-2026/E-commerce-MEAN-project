@@ -148,7 +148,56 @@
                 </div>
               </div>
             </div>
-          }
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-2">
+              <h3
+                class="font-headline font-extrabold text-lg text-on-surface cursor-pointer hover:text-primary transition-colors"
+                [routerLink]="['/products', product._id]">
+                {{ product.name }}
+              </h3>
+            </div>
+            <p class="text-sm text-on-surface-variant mb-6 line-clamp-2">
+              {{ product.description }}
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="text-2xl font-headline font-black text-on-surface">${{ product.price.toFixed(2) }}</span>
+              <div class="flex gap-2">
+                <button type="button"
+                  (click)="isInWishlist(product._id) ? removeFromWishlist(product._id) : addToWishlist(product._id)"
+                  [disabled]="isWishlistLoading(product._id)"
+                  class="px-3 py-2 rounded-lg border border-outline text-on-surface text-sm font-bold hover:bg-surface-container transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                  {{ isWishlistLoading(product._id) ? 'Saving...' : (isInWishlist(product._id) ? 'Remove Wishlist' :
+                  'Wishlist') }}
+                </button>
+                <button [disabled]="product.stock === 0"
+                  class="gradient-primary text-on-primary px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-bold active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                  <span class="material-symbols-outlined text-lg">add_shopping_cart</span>
+                  Add
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+      }
+
+      <!-- Bottom Pagination -->
+      @if (!loading() && totalPages() > 1) {
+      <div class="mt-8 flex justify-between items-center bg-surface-container-low p-4 rounded-xl">
+        <span class="text-sm font-medium text-on-surface-variant">
+          Page {{ currentPage() }} of {{ totalPages() }}
+        </span>
+        <div class="flex gap-2">
+          <button (click)="prevPage()" [disabled]="currentPage() === 1"
+            class="px-4 py-2 border border-outline rounded-lg text-sm font-bold text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            Previous
+          </button>
+          <button (click)="nextPage()" [disabled]="currentPage() >= totalPages()"
+            class="px-4 py-2 border border-outline rounded-lg text-sm font-bold text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            Next
+          </button>
         </div>
       }
 

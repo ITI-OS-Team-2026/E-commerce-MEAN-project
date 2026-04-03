@@ -28,8 +28,32 @@
       </nav> -->
     </div>
     <div class="flex items-center gap-6">
-      <app-button label="Sign Up" variant="outlined" route="/auth/register" size="md"></app-button>
-      <app-button label="Sign In" variant="primary" route="/auth/login" size="md"></app-button>
+      <ng-container *ngIf="!isLoggedIn; else authenticatedMenu">
+        <app-button
+          label="Sign Up"
+          variant="outlined"
+          route="/auth/register"
+          size="md"
+        ></app-button>
+        <app-button label="Sign In" variant="primary" route="/auth/login" size="md"></app-button>
+      </ng-container>
+
+      <ng-template #authenticatedMenu>
+        <span class="text-sm text-on-surface-variant">Hello, {{ user?.name || 'User' }}</span>
+        <app-button
+          label="My Dashboard"
+          variant="outlined"
+          [route]="profileRoute"
+          size="md"
+        ></app-button>
+        <button
+          type="button"
+          class="inline-flex items-center justify-center rounded-md font-label font-semibold transition-all duration-200 active:scale-95 px-5 py-2.5 text-sm sm:px-6 sm:py-3 bg-red-600 text-white border border-red-700 hover:bg-red-700"
+          (click)="logout()"
+        >
+          Logout
+        </button>
+      </ng-template>
     </div>
   </div>
 </header>
