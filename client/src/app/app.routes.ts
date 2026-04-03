@@ -30,6 +30,13 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'customer',
+    loadComponent: () =>
+      import('./layouts/customer-layout/customer-layout').then((m) => m.CustomerLayout),
+    loadChildren: () =>
+      import('./features/customer/customer.routes').then((m) => m.CUSTOMER_ROUTES),
+  },
+  {
     path: 'seller',
     loadComponent: () =>
       import('./layouts/admin-layout/admin-layout/admin-layout').then((m) => m.AdminLayout),

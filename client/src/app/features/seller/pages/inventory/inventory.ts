@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Logo } from '../../../../shared/components/logo/logo';
-import { RouterLink } from "@angular/router";
+import { RouterLink } from '@angular/router';
 import { InventoryService } from '../../services/inventory.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +10,7 @@ import { Sidebar } from '../../components/sidebar/sidebar';
 @Component({
   selector: 'app-inventory',
   standalone: true,
-  imports: [Logo, RouterLink, CommonModule, FormsModule, Sidebar],
+  imports: [RouterLink, CommonModule, FormsModule, Sidebar],
   templateUrl: './inventory.html',
   styleUrl: './inventory.css',
 })
@@ -35,8 +34,8 @@ export class Inventory implements OnInit {
     private inventoryService: InventoryService,
     private cdr: ChangeDetectorRef,
     private router: Router,
-    private storageService: StorageService
-  ) { }
+    private storageService: StorageService,
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
@@ -55,21 +54,22 @@ export class Inventory implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.errorMessage = err.message || 'An unexpected error occurred while loading your inventory.';
+        this.errorMessage =
+          err.message || 'An unexpected error occurred while loading your inventory.';
         this.isLoading = false;
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
   calculateStats(): void {
     this.totalProducts = this.products.length;
-    this.lowStockCount = this.products.filter(p => p.stock < 10).length;
-    this.inventoryValue = this.products.reduce((acc, p) => acc + (p.price * p.stock), 0);
+    this.lowStockCount = this.products.filter((p) => p.stock < 10).length;
+    this.inventoryValue = this.products.reduce((acc, p) => acc + p.price * p.stock, 0);
 
     const now = new Date();
     const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    this.newThisMonthCount = this.products.filter(p => {
+    this.newThisMonthCount = this.products.filter((p) => {
       const createdDate = p.createdAt ? new Date(p.createdAt) : new Date();
       return createdDate >= firstDayOfMonth;
     }).length;
@@ -79,10 +79,11 @@ export class Inventory implements OnInit {
     let result = this.products;
     if (this.searchQuery) {
       const query = this.searchQuery.toLowerCase();
-      result = this.products.filter(p =>
-        p.name.toLowerCase().includes(query) ||
-        (p.category?.name && p.category.name.toLowerCase().includes(query)) ||
-        (p._id && p._id.toLowerCase().includes(query))
+      result = this.products.filter(
+        (p) =>
+          p.name.toLowerCase().includes(query) ||
+          (p.category?.name && p.category.name.toLowerCase().includes(query)) ||
+          (p._id && p._id.toLowerCase().includes(query)),
       );
     }
     return result;

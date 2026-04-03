@@ -28,7 +28,7 @@ export class Checkout implements OnInit, OnDestroy {
   shippingAddress: ShippingAddress = {
     street: '',
     city: '',
-    country: ''
+    country: '',
   };
 
   selectedPaymentMethod: 'cash_on_delivery' | 'credit_card' = 'cash_on_delivery';
@@ -41,8 +41,8 @@ export class Checkout implements OnInit, OnDestroy {
     private paymentService: PaymentService,
     private route: ActivatedRoute,
     private router: Router,
-    private cdr: ChangeDetectorRef
-  ) { }
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
     const paymentStatus = this.route.snapshot.queryParamMap.get('payment');
@@ -80,7 +80,11 @@ export class Checkout implements OnInit, OnDestroy {
   }
 
   placeOrder(): void {
-    if (!this.shippingAddress.street || !this.shippingAddress.city || !this.shippingAddress.country) {
+    if (
+      !this.shippingAddress.street ||
+      !this.shippingAddress.city ||
+      !this.shippingAddress.country
+    ) {
       this.error = 'Please fill out all shipping address fields.';
       return;
     }
@@ -97,7 +101,8 @@ export class Checkout implements OnInit, OnDestroy {
       const successUrl = `${window.location.origin}/orders/success?session_id={CHECKOUT_SESSION_ID}`;
       const cancelUrl = `${window.location.origin}/orders/checkout?payment=cancel`;
 
-      this.paymentService.createCheckoutSession(this.cart.totalPrice, 'usd', successUrl, cancelUrl)
+      this.paymentService
+        .createCheckoutSession(this.cart.totalPrice, 'usd', successUrl, cancelUrl)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (res) => {
@@ -116,12 +121,12 @@ export class Checkout implements OnInit, OnDestroy {
             this.error = 'Failed to initialize payment. Please try again.';
             this.isLoading = false;
             this.cdr.detectChanges();
-          }
+          },
         });
     } else {
       const payload: CheckoutPayload = {
         shippingAddress: this.shippingAddress,
-        paymentMethod: this.selectedPaymentMethod
+        paymentMethod: this.selectedPaymentMethod,
       };
       this.executeCheckout(payload);
     }
@@ -136,19 +141,19 @@ export class Checkout implements OnInit, OnDestroy {
           if (isStripeFlow) {
             sessionStorage.removeItem(this.SHIPPING_STORAGE_KEY);
             this.cartService.updateCartCount(0);
-            this.router.navigate(['/orders/success']);
+            this.router.navigate(['/customer/orders']);
             return;
           }
 
           // Clear cart globally on success
           this.cartService.updateCartCount(0);
-          this.router.navigate(['/orders/history']);
+          this.router.navigate(['/customer/orders']);
         },
         error: (err) => {
           this.error = err?.error?.message || 'Failed to place order. Please try again.';
           this.isLoading = false;
           this.cdr.detectChanges();
-        }
+        },
       });
   }
 

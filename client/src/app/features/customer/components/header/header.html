@@ -1,0 +1,29 @@
+<header class="bg-white shadow-md sticky top-0 z-10 border-b border-gray-200">
+  <div class="pl-16 pr-6 lg:px-6 py-4 flex items-center justify-between">
+    <!-- Left Section -->
+    <div class="flex items-center gap-4">
+      <h1 class="text-2xl font-bold text-gray-900">Customer Dashboard</h1>
+      <span class="text-sm text-gray-500">{{ currentDate }}</span>
+    </div>
+
+    <!-- Right Section -->
+    <div class="flex items-center gap-6">
+      <!-- User Profile -->
+      <div class="flex items-center gap-3 cursor-pointer" routerLink="/customer/profile">
+        <div
+          class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden hover:ring-2 hover:ring-blue-500 transition-all"
+        >
+          <img
+            alt="Customer profile"
+            class="w-full h-full object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYfetKMe_haJuBlWU-iOjp7RbRF9M2rGcBSWHajjE_aiWeW2WkoLfoIxY-bRXsySqX0h7hvXQ9lE6bOhiarilm98Ky_Ttz9z-gdeAlrFK3qniwtbGRRlVqa6tLe7jgt2ZTyhBymnN59tSD9SRW7d8dqV5LqdLUaNZ6zjoJwQKoHRH4LjIxzeym19txI8V14RMlYBEAmYefPr7SulxtVqN3SNHysIJqkLP73ep741hWrxdK92g-ugomiEptXBQ_ywZTibrKF66oHagz"
+          />
+        </div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-medium text-gray-900">{{ currentUser }}</p>
+          <p class="text-xs text-gray-500">Customer</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

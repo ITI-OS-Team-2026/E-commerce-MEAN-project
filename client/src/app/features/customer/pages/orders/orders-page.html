@@ -1,0 +1,268 @@
+<app-customer-sidebar></app-customer-sidebar>
+
+<main class="min-h-screen bg-gray-50 lg:ml-64 transition-all duration-300">
+  <app-customer-header></app-customer-header>
+
+  <div class="p-6 max-w-7xl mx-auto">
+    <!-- Error Notification -->
+    @if (errorMessage()) {
+      <div
+        class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center justify-between animate-in fade-in"
+      >
+        <span>{{ errorMessage() }}</span>
+        <button (click)="errorMessage.set('')" class="text-red-500 hover:text-red-700">✕</button>
+      </div>
+    }
+
+    <!-- Header Section -->
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold text-gray-900">My Orders</h1>
+      <p class="text-gray-500 mt-1">Track and manage all your orders</p>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Filter by Status</h3>
+      <div class="flex flex-wrap gap-3">
+        @for (status of statusOptions; track status.value) {
+          <button
+            (click)="filterByStatus(status.value)"
+            [ngClass]="
+              selectedStatus() === status.value
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            "
+            class="px-4 py-2 rounded-lg font-medium transition"
+          >
+            {{ status.label }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Orders Table -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-900">Orders ({{ filteredOrders.length }})</h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-100 border-b border-gray-200">
+            <tr>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Order ID</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Amount</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Items</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (isLoading()) {
+              <tr>
+                <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                  <div class="flex items-center justify-center">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <span class="ml-2">Loading orders...</span>
+                  </div>
+                </td>
+              </tr>
+            } @else if (filteredOrders.length === 0) {
+              <tr>
+                <td colspan="6" class="px-6 py-8 text-center text-gray-500">No orders found.</td>
+              </tr>
+            } @else {
+              @for (order of paginatedOrders; track order._id) {
+                <tr class="border-b border-gray-200 hover:bg-gray-50 transition">
+                  <td class="px-6 py-4 text-sm text-gray-900 font-medium">
+                    {{ order._id.slice(-8) }}
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-700 font-semibold">
+                    ${{ order.totalAmount }}
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-700">{{ getTotalItems(order) }}</td>
+                  <td class="px-6 py-4 text-sm">
+                    <span
+                      [ngClass]="getStatusColor(order.status)"
+                      class="px-3 py-1 rounded-full text-sm font-medium"
+                    >
+                      {{ order.status }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-700">{{ formatDate(order.createdAt) }}</td>
+                  <td class="px-6 py-4 text-sm">
+                    <button
+                      (click)="viewOrder(order)"
+                      class="text-blue-600 hover:text-blue-900 font-medium"
+                    >
+                      View
+                    </button>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+        <span class="text-sm text-gray-600"
+          >Showing {{ filteredOrders.length > 0 ? (currentPage() - 1) * pageSize() + 1 : 0 }} to
+          {{ Math.min(currentPage() * pageSize(), filteredOrders.length) }} of
+          {{ filteredOrders.length }} entries</span
+        >
+        <div class="flex gap-2">
+          <button
+            (click)="prevPage()"
+            [disabled]="currentPage() === 1"
+            class="px-3 py-1 text-sm border border-gray-300 rounded text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Previous
+          </button>
+          <button
+            (click)="nextPage()"
+            [disabled]="currentPage() >= totalPages"
+            class="px-3 py-1 text-sm border border-gray-300 rounded text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Order Modal -->
+  @if (selectedOrder()) {
+    <div
+      class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in"
+      (click)="closeOrderModal()"
+    >
+      <div
+        class="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto"
+        (click)="$event.stopPropagation()"
+      >
+        <!-- Modal Header -->
+        <div
+          class="px-6 py-4 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white z-10"
+        >
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900">Order Details</h2>
+            <p class="text-sm text-gray-500">ID: {{ selectedOrder()?._id }}</p>
+          </div>
+          <button (click)="closeOrderModal()" class="text-gray-400 hover:text-red-500 transition">
+            <span class="text-2xl">✕</span>
+          </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="p-6 space-y-6">
+          <!-- Top Info Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Order Summary -->
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
+                Order Summary
+              </h3>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-gray-600 text-sm">Status:</span>
+                <span
+                  [ngClass]="getStatusColor(selectedOrder()?.status || '')"
+                  class="px-2 py-1 rounded-full text-xs font-medium"
+                >
+                  {{ selectedOrder()?.status }}
+                </span>
+              </div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-gray-600 text-sm">Payment Method:</span>
+                <span class="text-gray-800 font-medium text-sm">{{
+                  selectedOrder()?.paymentMethod || 'N/A'
+                }}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600 text-sm">Total Amount:</span>
+                <span class="text-gray-900 font-bold">${{ selectedOrder()?.totalAmount }}</span>
+              </div>
+            </div>
+
+            <!-- Order Date & Items -->
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
+                Order Details
+              </h3>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-gray-600 text-sm">Order Date:</span>
+                <span class="text-gray-800 font-medium text-sm">{{
+                  formatDate(selectedOrder()?.createdAt || '')
+                }}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600 text-sm">Total Items:</span>
+                <span class="text-gray-800 font-medium text-sm">{{
+                  selectedOrder() ? getTotalItems(selectedOrder()!) : 0
+                }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shipping Address -->
+          <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+            <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
+              Shipping Address
+            </h3>
+            @if (selectedOrder()?.shippingAddress) {
+              <div class="text-gray-700 text-sm leading-relaxed">
+                <p>{{ selectedOrder()?.shippingAddress?.street }}</p>
+                <p>
+                  {{ selectedOrder()?.shippingAddress?.city }},
+                  {{ selectedOrder()?.shippingAddress?.state || '' }}
+                  {{ selectedOrder()?.shippingAddress?.zip || '' }}
+                </p>
+                <p class="font-medium mt-1">{{ selectedOrder()?.shippingAddress?.country }}</p>
+              </div>
+            } @else {
+              <p class="text-gray-500 italic text-sm">No shipping address provided.</p>
+            }
+          </div>
+
+          <!-- Order Items -->
+          <div>
+            <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
+              Order Items
+            </h3>
+            <div class="border border-gray-200 rounded-lg overflow-hidden">
+              <table class="w-full text-sm text-left text-gray-600">
+                <thead class="bg-gray-50 text-gray-700 border-b border-gray-200">
+                  <tr>
+                    <th scope="col" class="px-4 py-3 font-semibold">Product</th>
+                    <th scope="col" class="px-4 py-3 font-semibold text-center">Quantity</th>
+                    <th scope="col" class="px-4 py-3 font-semibold text-right">Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of selectedOrder()?.items; track $index) {
+                    <tr class="border-b border-gray-200 last:border-0 hover:bg-gray-50 transition">
+                      <td class="px-4 py-3 text-gray-900 font-medium whitespace-nowrap">
+                        {{ item.product?.name || 'Unknown Product' }}
+                      </td>
+                      <td class="px-4 py-3 text-center">{{ item.quantity }}</td>
+                      <td class="px-4 py-3 text-right font-medium">${{ item.price }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="px-6 py-4 border-t border-gray-200 flex justify-end bg-gray-50 rounded-b-lg">
+          <button
+            (click)="closeOrderModal()"
+            class="px-5 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition shadow-sm"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</main>

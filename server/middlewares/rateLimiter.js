@@ -16,7 +16,7 @@ const limiter = rateLimit({
 // Authentication rate limiter (stricter)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 100, // Only 5 login/signup attempts per 15 minutes
+  limit: 1000, // Only 5 login/signup attempts per 15 minutes
   standardHeaders: 'draft-8',
   legacyHeaders: false,
   skipSuccessfulRequests: true, // Don't count successful logins
