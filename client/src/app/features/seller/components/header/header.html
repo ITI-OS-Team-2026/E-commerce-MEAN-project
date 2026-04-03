@@ -24,7 +24,7 @@
       </div>
 
       <!-- User Profile -->
-      <div class="flex items-center gap-3 pl-6 border-l border-gray-200">
+      <a routerLink="/seller/profile" class="flex items-center gap-3 pl-6 border-l border-gray-200 cursor-pointer hover:bg-gray-50 p-2 -my-2 rounded-lg transition-colors">
         <div
           class="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold"
         >
@@ -34,7 +34,7 @@
           <p class="text-sm font-medium text-gray-900">{{ currentUser }}</p>
           <p class="text-xs text-gray-500">Administrator</p>
         </div>
-      </div>
+      </a>
     </div>
   </div>
 </header>

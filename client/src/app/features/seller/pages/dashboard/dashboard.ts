@@ -53,8 +53,7 @@ export class Dashboard implements OnInit {
         this.totalRevenue = this.products.reduce((sum, product) => sum + (product.price || 0), 0);
         this.cdr.detectChanges()
       },
-      error: (error) => {
-        console.error('Error loading products', error);
+      error: (_error) => {
       }
     });
   }

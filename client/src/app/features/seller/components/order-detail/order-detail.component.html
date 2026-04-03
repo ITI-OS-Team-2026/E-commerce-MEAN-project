@@ -64,7 +64,10 @@
       <div *ngFor="let item of order.items" class="item-row">
         <div class="item-details">
           <h4 class="item-name">{{ item.product.name }}</h4>
-          <p class="item-meta">Quantity: <strong>{{ item.quantity }}</strong></p>
+          <p class="item-meta flex items-center gap-2 mt-1">
+            <img [src]="getProductImage(item.product)" [alt]="item.product.name" class="w-8 h-8 rounded object-cover shadow-sm" />
+            Quantity: <strong>{{ item.quantity }}</strong>
+          </p>
         </div>
         <div class="item-price">
           <p class="unit-price">{{ formatCurrency(item.price) }}</p>
