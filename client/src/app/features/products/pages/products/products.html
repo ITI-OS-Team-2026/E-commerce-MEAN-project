@@ -1,204 +1,184 @@
+<!-- TopNavBar -->
+<app-navbar></app-navbar>
 
-    <!-- TopNavBar -->
-    <app-navbar></app-navbar>
-
-    <main class="pt-24 pb-16 px-8 max-w-screen-2xl mx-auto min-h-screen">
-      <!-- Hero Header -->
-      <header class="mb-12">
-        <h1
-          class="text-4xl md:text-6xl font-extrabold tracking-tight font-headline text-on-surface mb-4"
-        >
-          Materials &amp; Hardware
-        </h1>
-        <p class="text-on-surface-variant max-w-2xl text-lg">
-          Curated collection of structural, decorative, and functional components engineered for
-          professional architects and designers.
-        </p>
-      </header>
-      <div class="flex flex-col lg:flex-row gap-12">
-        <!-- Sidebar Filters -->
-        <app-products-page-aside 
-          class="w-full lg:w-1/4"
-          [categories]="categories()"
-          [selectedCategory]="selectedCategory()"
-          [priceRange]="priceRange()"
-          (categoryChange)="onCategoryChange($event)"
-          (priceChange)="onPriceChange($event.min, $event.max)"
-        ></app-products-page-aside>
-        <!-- Product Grid -->
-        <div class="flex-1">
-          <div
-            class="flex justify-between items-center mb-8 bg-surface-container-low p-4 rounded-xl"
-          >
-            <span class="text-sm font-medium text-on-surface-variant"
-              >Showing {{ products().length }} of {{ totalProducts() }} results</span
-            >
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-bold uppercase text-on-surface-variant">Sort By</span>
-              <select
-                [ngModel]="sortBy()"
-                (ngModelChange)="onSortChange($event)"
-                class="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 cursor-pointer"
-              >
-                <option value="newest">Newest First</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Pagination Controls -->
-          @if (!loading() && totalPages() > 1) {
-            <div class="mb-6 flex justify-between items-center bg-surface-container-low p-4 rounded-xl">
-              <span class="text-sm font-medium text-on-surface-variant">
-                Page {{ currentPage() }} of {{ totalPages() }} &nbsp;&bull;&nbsp; {{ totalProducts() }} total items
-              </span>
-              <div class="flex gap-2">
-                <button
-                  (click)="prevPage()"
-                  [disabled]="currentPage() === 1"
-                  class="px-4 py-2 border border-outline rounded-lg text-sm font-bold text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  Previous
-                </button>
-                <button
-                  (click)="nextPage()"
-                  [disabled]="currentPage() >= totalPages()"
-                  class="px-4 py-2 border border-outline rounded-lg text-sm font-bold text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          }
-
-          <!-- Loading State -->
-          @if (loading()) {
-          <div class="flex justify-center items-center min-h-96">
-            <div class="text-center">
-              <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-              <p class="text-on-surface-variant">Loading products...</p>
-            </div>
-          </div>
-          }
-
-          <!-- Error State -->
-          @if (error() && !loading()) {
-          <div class="p-6 bg-error/10 rounded-xl border border-error mb-8">
-            <p class="text-error font-medium">{{ error() }}</p>
-            <button 
-              (click)="retryFetch()"
-              class="mt-4 px-4 py-2 bg-error text-on-error rounded-lg font-bold"
-            >
-              Try Again
-            </button>
-          </div>
-          }
-
-          <!-- No Products State -->
-          @if (!loading() && products().length === 0 && !error()) {
-          <div class="p-12 text-center">
-            <p class="text-on-surface-variant text-lg mb-4">No products found</p>
-            <button 
-              (click)="retryFetch()"
-              class="px-6 py-2 bg-primary text-on-primary rounded-lg font-bold"
-            >
-              Refresh
-            </button>
-          </div>
-          }
-
-          <!-- Products Grid -->
-          @if (!loading() && products().length > 0) {
-          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
-              <!-- Product Card -->
-              @for (product of products(); track product._id) {
-              <div
-                class="group relative bg-surface-container-lowest rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300"
-              >
-                <div 
-                  class="aspect-4/5 overflow-hidden bg-surface-container-low relative cursor-pointer"
-                  [routerLink]="['/products', product._id]"
-                >
-                  @if (product.images && product.images[0]) {
-                  <img
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    [src]="product.images[0]"
-                    [alt]="product.name"
-                  />
-                  }
-                  @if (!product.images || product.images.length === 0) {
-                  <div class="w-full h-full bg-surface-container flex items-center justify-center">
-                    <span class="material-symbols-outlined text-on-surface-variant/40 text-4xl">image_not_supported</span>
-                  </div>
-                  }
-                  <div class="absolute top-4 left-4">
-                    @if (product.stock > 0) {
-                    <span
-                      class="bg-white/90 backdrop-blur-sm px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full"
-                    >In Stock</span>
-                    }
-                    @if (product.stock === 0) {
-                    <span
-                      class="bg-error/90 backdrop-blur-sm text-on-error px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full"
-                    >Out of Stock</span>
-                    }
-                  </div>
-                </div>
-                <div class="p-6">
-                  <div class="flex justify-between items-start mb-2">
-                    <h3 
-                      class="font-headline font-extrabold text-lg text-on-surface cursor-pointer hover:text-primary transition-colors"
-                      [routerLink]="['/products', product._id]"
-                    >
-                      {{ product.name }}
-                    </h3>
-                  </div>
-                  <p class="text-sm text-on-surface-variant mb-6 line-clamp-2">
-                    {{ product.description }}
-                  </p>
-                  <div class="flex items-center justify-between">
-                    <span class="text-2xl font-headline font-black text-on-surface">${{ product.price.toFixed(2) }}</span>
-                    <button
-                      [disabled]="product.stock === 0"
-                      class="gradient-primary text-on-primary px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-bold active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      <span class="material-symbols-outlined text-lg">add_shopping_cart</span>
-                      Add
-                    </button>
-                  </div>
-                </div>
-              </div>
-              }
-            </div>
-          }
-
-          <!-- Bottom Pagination -->
-          @if (!loading() && totalPages() > 1) {
-            <div class="mt-8 flex justify-between items-center bg-surface-container-low p-4 rounded-xl">
-              <span class="text-sm font-medium text-on-surface-variant">
-                Page {{ currentPage() }} of {{ totalPages() }}
-              </span>
-              <div class="flex gap-2">
-                <button
-                  (click)="prevPage()"
-                  [disabled]="currentPage() === 1"
-                  class="px-4 py-2 border border-outline rounded-lg text-sm font-bold text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  Previous
-                </button>
-                <button
-                  (click)="nextPage()"
-                  [disabled]="currentPage() >= totalPages()"
-                  class="px-4 py-2 border border-outline rounded-lg text-sm font-bold text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          }
+<main class="pt-24 pb-16 px-8 max-w-screen-2xl mx-auto min-h-screen">
+  <!-- Hero Header -->
+  <header class="mb-12">
+    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight font-headline text-on-surface mb-4">
+      Materials &amp; Hardware
+    </h1>
+    <p class="text-on-surface-variant max-w-2xl text-lg">
+      Curated collection of structural, decorative, and functional components engineered for
+      professional architects and designers.
+    </p>
+  </header>
+  <div class="flex flex-col lg:flex-row gap-12">
+    <!-- Sidebar Filters -->
+    <app-products-page-aside class="w-full lg:w-1/4" [categories]="categories()" [selectedCategory]="selectedCategory()"
+      [priceRange]="priceRange()" (categoryChange)="onCategoryChange($event)"
+      (priceChange)="onPriceChange($event.min, $event.max)"></app-products-page-aside>
+    <!-- Product Grid -->
+    <div class="flex-1">
+      <div class="flex justify-between items-center mb-8 bg-surface-container-low p-4 rounded-xl">
+        <span class="text-sm font-medium text-on-surface-variant">Showing {{ products().length }} of {{ totalProducts()
+          }} results</span>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold uppercase text-on-surface-variant">Sort By</span>
+          <select [ngModel]="sortBy()" (ngModelChange)="onSortChange($event)"
+            class="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 cursor-pointer">
+            <option value="newest">Newest First</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+          </select>
         </div>
       </div>
-    </main>
-    <!-- Footer -->
-    <app-footer></app-footer>
+
+      <!-- Pagination Controls -->
+      @if (!loading() && totalPages() > 1) {
+      <div class="mb-6 flex justify-between items-center bg-surface-container-low p-4 rounded-xl">
+        <span class="text-sm font-medium text-on-surface-variant">
+          Page {{ currentPage() }} of {{ totalPages() }} &nbsp;&bull;&nbsp; {{ totalProducts() }} total items
+        </span>
+        <div class="flex gap-2">
+          <button (click)="prevPage()" [disabled]="currentPage() === 1"
+            class="px-4 py-2 border border-outline rounded-lg text-sm font-bold text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            Previous
+          </button>
+          <button (click)="nextPage()" [disabled]="currentPage() >= totalPages()"
+            class="px-4 py-2 border border-outline rounded-lg text-sm font-bold text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            Next
+          </button>
+        </div>
+      </div>
+      }
+
+      <!-- Loading State -->
+      @if (loading()) {
+      <div class="flex justify-center items-center min-h-96">
+        <div class="text-center">
+          <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+          <p class="text-on-surface-variant">Loading products...</p>
+        </div>
+      </div>
+      }
+
+      <!-- Error State -->
+      @if (error() && !loading()) {
+      <div class="p-6 bg-error/10 rounded-xl border border-error mb-8">
+        <p class="text-error font-medium">{{ error() }}</p>
+        <button (click)="retryFetch()" class="mt-4 px-4 py-2 bg-error text-on-error rounded-lg font-bold">
+          Try Again
+        </button>
+      </div>
+      }
+
+      @if (wishlistMessage()) {
+      <div class="p-4 bg-green-50 border border-green-200 rounded-xl mb-6 text-green-800 font-medium">
+        {{ wishlistMessage() }}
+      </div>
+      }
+
+      @if (wishlistError()) {
+      <div class="p-4 bg-red-50 border border-red-200 rounded-xl mb-6 text-red-700 font-medium">
+        {{ wishlistError() }}
+      </div>
+      }
+
+      <!-- No Products State -->
+      @if (!loading() && products().length === 0 && !error()) {
+      <div class="p-12 text-center">
+        <p class="text-on-surface-variant text-lg mb-4">No products found</p>
+        <button (click)="retryFetch()" class="px-6 py-2 bg-primary text-on-primary rounded-lg font-bold">
+          Refresh
+        </button>
+      </div>
+      }
+
+      <!-- Products Grid -->
+      @if (!loading() && products().length > 0) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
+        <!-- Product Card -->
+        @for (product of products(); track product._id) {
+        <div
+          class="group relative bg-surface-container-lowest rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300">
+          <div class="aspect-4/5 overflow-hidden bg-surface-container-low relative cursor-pointer"
+            [routerLink]="['/products', product._id]">
+            @if (product.images && product.images[0]) {
+            <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              [src]="product.images[0]" [alt]="product.name" />
+            }
+            @if (!product.images || product.images.length === 0) {
+            <div class="w-full h-full bg-surface-container flex items-center justify-center">
+              <span class="material-symbols-outlined text-on-surface-variant/40 text-4xl">image_not_supported</span>
+            </div>
+            }
+            <div class="absolute top-4 left-4">
+              @if (product.stock > 0) {
+              <span
+                class="bg-white/90 backdrop-blur-sm px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full">In
+                Stock</span>
+              }
+              @if (product.stock === 0) {
+              <span
+                class="bg-error/90 backdrop-blur-sm text-on-error px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full">Out
+                of Stock</span>
+              }
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-2">
+              <h3
+                class="font-headline font-extrabold text-lg text-on-surface cursor-pointer hover:text-primary transition-colors"
+                [routerLink]="['/products', product._id]">
+                {{ product.name }}
+              </h3>
+            </div>
+            <p class="text-sm text-on-surface-variant mb-6 line-clamp-2">
+              {{ product.description }}
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="text-2xl font-headline font-black text-on-surface">${{ product.price.toFixed(2) }}</span>
+              <div class="flex gap-2">
+                <button type="button"
+                  (click)="isInWishlist(product._id) ? removeFromWishlist(product._id) : addToWishlist(product._id)"
+                  [disabled]="isWishlistLoading(product._id)"
+                  class="px-3 py-2 rounded-lg border border-outline text-on-surface text-sm font-bold hover:bg-surface-container transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                  {{ isWishlistLoading(product._id) ? 'Saving...' : (isInWishlist(product._id) ? 'Remove Wishlist' :
+                  'Wishlist') }}
+                </button>
+                <button [disabled]="product.stock === 0"
+                  class="gradient-primary text-on-primary px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-bold active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                  <span class="material-symbols-outlined text-lg">add_shopping_cart</span>
+                  Add
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+      }
+
+      <!-- Bottom Pagination -->
+      @if (!loading() && totalPages() > 1) {
+      <div class="mt-8 flex justify-between items-center bg-surface-container-low p-4 rounded-xl">
+        <span class="text-sm font-medium text-on-surface-variant">
+          Page {{ currentPage() }} of {{ totalPages() }}
+        </span>
+        <div class="flex gap-2">
+          <button (click)="prevPage()" [disabled]="currentPage() === 1"
+            class="px-4 py-2 border border-outline rounded-lg text-sm font-bold text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            Previous
+          </button>
+          <button (click)="nextPage()" [disabled]="currentPage() >= totalPages()"
+            class="px-4 py-2 border border-outline rounded-lg text-sm font-bold text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            Next
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</main>
+<!-- Footer -->
+<app-footer></app-footer>
