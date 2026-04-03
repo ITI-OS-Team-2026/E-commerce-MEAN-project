@@ -39,7 +39,8 @@ export class UsersManagement implements OnInit {
       },
       error: (err: any) => {
         console.log(err);
-        this.errorMessage.set('Failed to load users. Please try again.');
+        const errMsg = err?.error?.message || 'Failed to load users. Please try again.';
+        this.errorMessage.set(errMsg);
         this.isLoading.set(false);
         setTimeout(() => this.errorMessage.set(''), 5000);
       },

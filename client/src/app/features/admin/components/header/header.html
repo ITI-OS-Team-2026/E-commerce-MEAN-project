@@ -1,5 +1,5 @@
 <header class="bg-white shadow-md sticky top-0 z-10 border-b border-gray-200">
-  <div class="px-6 py-4 flex items-center justify-between">
+  <div class="pl-16 pr-6 lg:px-6 py-4 flex items-center justify-between">
     <!-- Left Section -->
     <div class="flex items-center gap-4">
       <h1 class="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
@@ -8,27 +8,10 @@
 
     <!-- Right Section -->
     <div class="flex items-center gap-6">
-      <!-- Search Bar -->
-      <div class="hidden md:flex items-center bg-gray-100 rounded-lg px-4 py-2">
-        <span class="text-gray-400 mr-2">🔍</span>
-        <input type="text" placeholder="Search..." class="bg-gray-100 outline-none text-sm w-48" />
-      </div>
-
-      <!-- Notifications -->
-      <div class="relative cursor-pointer">
-        <span class="text-xl">🔔</span>
-        <!-- <span
-          class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
-          >3</span
-        > -->
-      </div>
-
       <!-- User Profile -->
-      <div class="flex items-center gap-3 pl-6 border-l border-gray-200">
-        <div
-          class="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold"
-        >
-          {{ currentUser.charAt(0) }}
+      <div class="flex items-center gap-3 cursor-pointer" routerLink="/admin/profile">
+        <div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden hover:ring-2 hover:ring-blue-500 transition-all">
+          <img alt="Admin profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYfetKMe_haJuBlWU-iOjp7RbRF9M2rGcBSWHajjE_aiWeW2WkoLfoIxY-bRXsySqX0h7hvXQ9lE6bOhiarilm98Ky_Ttz9z-gdeAlrFK3qniwtbGRRlVqa6tLe7jgt2ZTyhBymnN59tSD9SRW7d8dqV5LqdLUaNZ6zjoJwQKoHRH4LjIxzeym19txI8V14RMlYBEAmYefPr7SulxtVqN3SNHysIJqkLP73ep741hWrxdK92g-ugomiEptXBQ_ywZTibrKF66oHagz" />
         </div>
         <div class="hidden sm:block">
           <p class="text-sm font-medium text-gray-900">{{ currentUser }}</p>

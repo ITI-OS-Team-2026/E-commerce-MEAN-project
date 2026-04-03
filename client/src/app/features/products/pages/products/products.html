@@ -31,7 +31,7 @@
             class="flex justify-between items-center mb-8 bg-surface-container-low p-4 rounded-xl"
           >
             <span class="text-sm font-medium text-on-surface-variant"
-              >Showing {{ filteredProducts().length }} results</span
+              >Showing {{ products().length }} of {{ totalProducts() }} results</span
             >
             <div class="flex items-center gap-2">
               <span class="text-xs font-bold uppercase text-on-surface-variant">Sort By</span>
@@ -46,6 +46,32 @@
               </select>
             </div>
           </div>
+
+          <!-- Pagination Controls -->
+          @if (!loading() && totalPages() > 1) {
+            <div class="mb-6 flex justify-between items-center bg-surface-container-low p-4 rounded-xl">
+              <span class="text-sm font-medium text-on-surface-variant">
+                Page {{ currentPage() }} of {{ totalPages() }} &nbsp;&bull;&nbsp; {{ totalProducts() }} total items
+              </span>
+              <div class="flex gap-2">
+                <button
+                  (click)="prevPage()"
+                  [disabled]="currentPage() === 1"
+                  class="px-4 py-2 border border-outline rounded-lg text-sm font-bold text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Previous
+                </button>
+                <button
+                  (click)="nextPage()"
+                  [disabled]="currentPage() >= totalPages()"
+                  class="px-4 py-2 border border-outline rounded-lg text-sm font-bold text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          }
+
           <!-- Loading State -->
           @if (loading()) {
           <div class="flex justify-center items-center min-h-96">
@@ -61,7 +87,7 @@
           <div class="p-6 bg-error/10 rounded-xl border border-error mb-8">
             <p class="text-error font-medium">{{ error() }}</p>
             <button 
-              (click)="fetchProducts()"
+              (click)="retryFetch()"
               class="mt-4 px-4 py-2 bg-error text-on-error rounded-lg font-bold"
             >
               Try Again
@@ -70,11 +96,11 @@
           }
 
           <!-- No Products State -->
-          @if (!loading() && filteredProducts().length === 0 && !error()) {
+          @if (!loading() && products().length === 0 && !error()) {
           <div class="p-12 text-center">
             <p class="text-on-surface-variant text-lg mb-4">No products found</p>
             <button 
-              (click)="fetchProducts()"
+              (click)="retryFetch()"
               class="px-6 py-2 bg-primary text-on-primary rounded-lg font-bold"
             >
               Refresh
@@ -83,10 +109,10 @@
           }
 
           <!-- Products Grid -->
-          @if (!loading() && filteredProducts().length > 0) {
+          @if (!loading() && products().length > 0) {
           <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
               <!-- Product Card -->
-              @for (product of filteredProducts(); track product._id) {
+              @for (product of products(); track product._id) {
               <div
                 class="group relative bg-surface-container-lowest rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300"
               >
@@ -144,6 +170,31 @@
                 </div>
               </div>
               }
+            </div>
+          }
+
+          <!-- Bottom Pagination -->
+          @if (!loading() && totalPages() > 1) {
+            <div class="mt-8 flex justify-between items-center bg-surface-container-low p-4 rounded-xl">
+              <span class="text-sm font-medium text-on-surface-variant">
+                Page {{ currentPage() }} of {{ totalPages() }}
+              </span>
+              <div class="flex gap-2">
+                <button
+                  (click)="prevPage()"
+                  [disabled]="currentPage() === 1"
+                  class="px-4 py-2 border border-outline rounded-lg text-sm font-bold text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Previous
+                </button>
+                <button
+                  (click)="nextPage()"
+                  [disabled]="currentPage() >= totalPages()"
+                  class="px-4 py-2 border border-outline rounded-lg text-sm font-bold text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Next
+                </button>
+              </div>
             </div>
           }
         </div>

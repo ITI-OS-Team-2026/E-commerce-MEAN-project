@@ -28,19 +28,27 @@ export class Products {
   selectedCategory = signal('');
   priceRange = signal({ min: 0, max: 2500 });
 
-  private refetchTrigger = signal(0);
+  currentPage = signal(1);
+  pageSize = signal(12);
+  totalProducts = signal(0);
+  totalPages = computed(() => Math.ceil(this.totalProducts() / this.pageSize()) || 1);
 
   sortParam = computed(() => this.getSortParam(this.sortBy()));
-  filteredProducts = computed(() => {
-    return this.products().filter((p) => p.isdeleted === null);
-  });
 
   constructor() {
     this.loadCategories();
 
+    // Effect reads all reactive params directly — Angular tracks exactly these
+    // signals as dependencies and re-runs whenever any of them changes.
     effect(() => {
-      this.refetchTrigger(); // Create dependency
-      this.performFetch();
+      const sort = this.sortParam();
+      const category = this.selectedCategory();
+      const priceMin = this.priceRange().min;
+      const priceMax = this.priceRange().max;
+      const page = this.currentPage();
+      const limit = this.pageSize();
+
+      this.fetchWithParams({ sort, category, priceMin, priceMax, page, limit });
     });
   }
 
@@ -55,38 +63,38 @@ export class Products {
     });
   }
 
-  private performFetch(): void {
+  private fetchWithParams(params: {
+    sort: string;
+    category: string;
+    priceMin: number;
+    priceMax: number;
+    page: number;
+    limit: number;
+  }): void {
     this.loading.set(true);
     this.error.set(null);
 
-    // Build query object with only defined properties
     const query: any = {
-      sort: this.sortParam(),
-      page: 1,
-      limit: 12,
+      sort: params.sort,
+      page: params.page,
+      limit: params.limit,
     };
 
-    // Only add category if selected
-    if (this.selectedCategory() && this.selectedCategory() !== '') {
-      query.category = this.selectedCategory();
+    if (params.category) {
+      query.category = params.category;
     }
-
-    // Only add minPrice if greater than 0
-    if (this.priceRange().min > 0) {
-      query.minPrice = this.priceRange().min;
+    if (params.priceMin > 0) {
+      query.minPrice = params.priceMin;
     }
-
-    // Only add maxPrice if less than 2500
-    if (this.priceRange().max < 2500) {
-      query.maxPrice = this.priceRange().max;
+    if (params.priceMax < 2500) {
+      query.maxPrice = params.priceMax;
     }
-
-    console.log('Fetching products with query:', query);
 
     this.productService.getProducts(query).subscribe({
       next: (response) => {
-        console.log('Products fetched successfully:', response.data.products.length);
         this.products.set(response.data.products);
+        // Use total if present; fall back to results (page count) when absent
+        this.totalProducts.set(response.total ?? response.results ?? 0);
         this.loading.set(false);
       },
       error: (err) => {
@@ -99,21 +107,36 @@ export class Products {
 
   onSortChange(sort: string): void {
     this.sortBy.set(sort);
-    this.refetchTrigger.update((v) => v + 1);
+    this.currentPage.set(1);
   }
 
   onCategoryChange(categoryId: string): void {
     this.selectedCategory.set(categoryId);
-    this.refetchTrigger.update((v) => v + 1);
+    this.currentPage.set(1);
   }
 
   onPriceChange(min: number, max: number): void {
     this.priceRange.set({ min, max });
-    this.refetchTrigger.update((v) => v + 1);
+    this.currentPage.set(1);
   }
 
-  fetchProducts(): void {
-    this.refetchTrigger.update((v) => v + 1);
+  nextPage(): void {
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.update((p) => p + 1);
+      // Effect re-runs automatically because currentPage is a tracked dependency
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage() > 1) {
+      this.currentPage.update((p) => p - 1);
+    }
+  }
+
+  retryFetch(): void {
+    // Reset to page 1 with current filters — effect will re-run
+    this.currentPage.set(0); // force a change
+    this.currentPage.set(1);
   }
 
   private getSortParam(sortBy: string): string {

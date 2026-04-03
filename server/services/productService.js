@@ -39,15 +39,18 @@ const getAllProducts = async (queryParams) => {
   }
 
   const page = queryParams.page * 1 || 1;
-  const limit = queryParams.limit * 1 || 10;
+  const limit = queryParams.limit * 1 || 1000;
   const skip = (page - 1) * limit;
 
   dbQuery = dbQuery.skip(skip).limit(limit);
 
   const products = await dbQuery.populate('category', 'name');
 
+  const totalCount = await Product.countDocuments(JSON.parse(queryStr));
+
   return {
     status: 'success',
+    total: totalCount,
     results: products.length,
     data: { products },
   };

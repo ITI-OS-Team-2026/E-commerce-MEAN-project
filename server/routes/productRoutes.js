@@ -31,12 +31,12 @@ router.post(
 router.patch(
   '/:id',
   authenticate,
-  restrictTo('seller'),
+  restrictTo('admin'),
   uploadProductImages,
   attachImageUrls,
   validate(schemas.updateProductSchema),
   updateProductController,
 );
-router.delete('/:id', authenticate, restrictTo('seller'), deleteProductController);
+router.delete('/:id', authenticate, restrictTo('admin'), deleteProductController);
 
 module.exports = router;

@@ -1,0 +1,192 @@
+<app-sidebar></app-sidebar>
+
+<main class="min-h-screen bg-gray-50 lg:ml-64 transition-all duration-300">
+  <app-admin-header></app-admin-header>
+
+  <div class="p-6 max-w-7xl mx-auto">
+    <!-- Error Notification -->
+    @if (errorMessage()) {
+      <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center justify-between">
+        <span>{{ errorMessage() }}</span>
+        <button (click)="errorMessage.set('')" class="text-red-500">✕</button>
+      </div>
+    }
+
+    <!-- Success Notification -->
+    @if (successMessage()) {
+      <div class="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center justify-between">
+        <span>{{ successMessage() }}</span>
+        <button (click)="successMessage.set('')" class="text-green-500">✕</button>
+      </div>
+    }
+
+    <!-- Header Section -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Product Management</h1>
+        <p class="text-gray-500 mt-1">Manage and monitor all products on the platform</p>
+      </div>
+    </div>
+
+    <!-- Products Table -->
+    <app-data-table
+      title="All Products"
+      [columns]="['Name', 'Category', 'Price', 'Stock', 'Sales']"
+      [showEdit]="true"
+      role="admin"
+      [data]="mapProductsForTable()"
+      [isLoading]="isLoading()"
+      [isServerSide]="true"
+      [totalItems]="totalProducts()"
+      [currentPage]="currentPage()"
+      [pageSize]="pageSize()"
+      (pageChange)="onPageChange($event)"
+      (edit)="openEditModal($event)"
+      (delete)="openDeleteModal($event)"
+    >
+    </app-data-table>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  @if (showDeleteModal()) {
+    <div
+      class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+      (click)="closeDeleteModal()"
+    >
+      <div
+        class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full">
+          <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+        </div>
+
+        <h2 class="text-2xl font-bold text-gray-900 text-center mb-4">Delete Product</h2>
+        <p class="text-gray-600 text-center mb-6">
+          Are you sure you want to delete this product? This action cannot be undone.
+        </p>
+
+        <div class="flex gap-3">
+          <button
+            type="button"
+            (click)="closeDeleteModal()"
+            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            (click)="confirmDelete()"
+            class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Edit Product Modal -->
+  @if (showEditModal()) {
+    <div
+      class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+      (click)="closeEditModal()"
+    >
+      <div
+        class="bg-white rounded-lg shadow-lg p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Edit Product</h2>
+          <button (click)="closeEditModal()" class="text-gray-400 hover:text-red-500 transition text-2xl">✕</button>
+        </div>
+
+        <form [formGroup]="productForm" (ngSubmit)="submitEdit()" class="space-y-4">
+          <!-- Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Product Name *</label>
+            <input
+              type="text"
+              formControlName="name"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              placeholder="Enter product name"
+            />
+          </div>
+
+          <!-- Description -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+            <textarea
+              formControlName="description"
+              rows="3"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+              placeholder="Enter full product description"
+            ></textarea>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Price -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Price ($) *</label>
+              <input
+                type="number"
+                formControlName="price"
+                min="0"
+                step="0.01"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
+            <!-- Stock -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Stock Quantity *</label>
+              <input
+                type="number"
+                formControlName="stock"
+                min="0"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
+          </div>
+
+          <!-- Category -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+            <select
+              formControlName="category"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+            >
+              <option value="" disabled selected>Select a category</option>
+              @for (cat of categories(); track cat._id) {
+                <option [value]="cat._id">{{ cat.name }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="flex gap-3 pt-4 border-t border-gray-100">
+            <button
+              type="button"
+              (click)="closeEditModal()"
+              class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              [disabled]="productForm.invalid || isSubmitting()"
+              class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              @if (isSubmitting()) {
+                <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                Updating...
+              } @else {
+                Update Product
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</main>

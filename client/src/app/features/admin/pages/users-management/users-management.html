@@ -133,6 +133,7 @@
       [showEdit]="false"
       role="admin"
       [data]="mapUsersForTable()"
+      [isLoading]="isLoading()"
       (delete)="openDeleteModal($event)"
     >
     </app-data-table>
@@ -141,7 +142,7 @@
   <!-- Delete Confirmation Modal -->
   @if (showDeleteModal()) {
     <div
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
       (click)="closeDeleteModal()"
     >
       <div
