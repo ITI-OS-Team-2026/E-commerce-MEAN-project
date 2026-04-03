@@ -3,11 +3,10 @@ const Order = require('../models/Order');
 const User = require('../models/User');
 const Product = require('../models/Product');
 const APIError = require('../utils/APIError');
-const { showCurrentUser } = require('./userServices');
 const emailService = require('../services/emailService'); // ✅ correct import
 
 const placeOrder = async (req) => {
-  const user = showCurrentUser(req);
+  const user = req.user;
   if (!user) throw new APIError('Authentication required', 401);
 
   const { items, shippingAddress } = req.body;
@@ -54,7 +53,7 @@ const placeOrder = async (req) => {
 };
 
 const getOrderById = async (req) => {
-  const user = showCurrentUser(req);
+  const user = req.user;
   if (!user) throw new APIError('Authentication required', 401);
 
   const order = await Order.findById(req.params.id).populate('items.product', 'name price');
@@ -71,7 +70,7 @@ const getOrderById = async (req) => {
 };
 
 const getMyOrders = async (req) => {
-  const user = showCurrentUser(req);
+  const user = req.user;
   if (!user) throw new APIError('Authentication required', 401);
 
   const orders = await Order.find({ user: user.userId }).populate('items.product', 'name price');
@@ -80,7 +79,7 @@ const getMyOrders = async (req) => {
 };
 
 const getAllOrders = async (req) => {
-  const user = showCurrentUser(req);
+  const user = req.user;
   if (!user) throw new APIError('Authentication required', 401);
 
   const orders = await Order.find()
@@ -91,7 +90,7 @@ const getAllOrders = async (req) => {
 };
 
 const getSellerOrders = async (req) => {
-  const user = showCurrentUser(req);
+  const user = req.user;
   if (!user) throw new APIError('Authentication required', 401);
   if (user.role !== 'seller') {
     throw new APIError('Only sellers can access seller orders', 403);
@@ -135,7 +134,7 @@ const getSellerOrders = async (req) => {
 };
 
 const updateOrderStatus = async (req) => {
-  const user = showCurrentUser(req);
+  const user = req.user;
   if (!user) throw new APIError('Authentication required', 401);
 
   if (!['admin', 'seller', 'customer'].includes(user.role)) {
