@@ -27,13 +27,20 @@ export class Products {
   sortBy = signal('newest');
   selectedCategory = signal('');
   priceRange = signal({ min: 0, max: 2500 });
+  currentPage = signal(1);
 
+  private itemsPerPage = 10;
   private refetchTrigger = signal(0);
+  private lastFetchResultCount = signal(0);
 
   sortParam = computed(() => this.getSortParam(this.sortBy()));
   filteredProducts = computed(() => {
     return this.products().filter((p) => p.isdeleted === null);
   });
+  hasNextPage = computed(() => {
+    return this.lastFetchResultCount() === this.itemsPerPage;
+  });
+  canGoToPreviousPage = computed(() => this.currentPage() > 1);
 
   constructor() {
     this.loadCategories();
@@ -62,8 +69,8 @@ export class Products {
     // Build query object with only defined properties
     const query: any = {
       sort: this.sortParam(),
-      page: 1,
-      limit: 12,
+      page: this.currentPage(),
+      limit: this.itemsPerPage,
     };
 
     // Only add category if selected
@@ -81,12 +88,17 @@ export class Products {
       query.maxPrice = this.priceRange().max;
     }
 
-    console.log('Fetching products with query:', query);
+    console.log('Fetching products with query (Page: ' + this.currentPage() + '):', query);
 
     this.productService.getProducts(query).subscribe({
       next: (response) => {
-        console.log('Products fetched successfully:', response.data.products.length);
-        this.products.set(response.data.products);
+        const fetchedProducts = response.data.products;
+        console.log(
+          'Products fetched successfully on page ' + this.currentPage() + ':',
+          fetchedProducts.length,
+        );
+        this.lastFetchResultCount.set(fetchedProducts.length);
+        this.products.set(fetchedProducts);
         this.loading.set(false);
       },
       error: (err) => {
@@ -99,20 +111,40 @@ export class Products {
 
   onSortChange(sort: string): void {
     this.sortBy.set(sort);
+    this.currentPage.set(1);
     this.refetchTrigger.update((v) => v + 1);
   }
 
   onCategoryChange(categoryId: string): void {
     this.selectedCategory.set(categoryId);
+    this.currentPage.set(1);
     this.refetchTrigger.update((v) => v + 1);
   }
 
   onPriceChange(min: number, max: number): void {
     this.priceRange.set({ min, max });
+    this.currentPage.set(1);
     this.refetchTrigger.update((v) => v + 1);
   }
 
+  goToNextPage(): void {
+    if (this.hasNextPage()) {
+      this.currentPage.update((p) => p + 1);
+      this.refetchTrigger.update((v) => v + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  goToPreviousPage(): void {
+    if (this.canGoToPreviousPage()) {
+      this.currentPage.update((p) => p - 1);
+      this.refetchTrigger.update((v) => v + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
   fetchProducts(): void {
+    this.currentPage.set(1);
     this.refetchTrigger.update((v) => v + 1);
   }
 
