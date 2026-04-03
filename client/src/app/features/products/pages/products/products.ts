@@ -262,4 +262,13 @@ export class Products {
   isWishlistLoading(productId: string): boolean {
     return this.wishlistLoading().includes(productId);
   }
+
+  getRatingValue(rating?: number): number {
+    return Math.max(0, Math.min(5, rating ?? 0));
+  }
+
+  getRatingStars(rating?: number): string {
+    const fullStars = Math.round(this.getRatingValue(rating));
+    return '★'.repeat(fullStars) + '☆'.repeat(5 - fullStars);
+  }
 }

@@ -14,6 +14,8 @@ export interface Product {
   name: string;
   description: string;
   price: number;
+  ratingsAverage?: number;
+  ratingsQuantity?: number;
   category: ProductCategory | string | null;
   images: string[];
   stock: number;
