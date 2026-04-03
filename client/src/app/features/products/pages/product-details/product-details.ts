@@ -53,6 +53,7 @@ export class ProductDetails {
   formComment = signal('');
   formSubmitting = signal(false);
   formError = signal<string | null>(null);
+  starIndexes = [1, 2, 3, 4, 5];
 
   // Review Computed
   averageRating = computed(() => {
@@ -298,6 +299,22 @@ export class ProductDetails {
 
   setRating(rating: number): void {
     this.formRating.set(rating);
+  }
+
+  getStarType(rating: number | undefined, starIndex: number): 'full' | 'half' | 'empty' {
+    const normalized = Math.max(0, Math.min(5, rating ?? 0));
+    const fullStars = Math.floor(normalized);
+    const hasHalfStar = normalized - fullStars >= 0.5;
+
+    if (starIndex <= fullStars) {
+      return 'full';
+    }
+
+    if (starIndex === fullStars + 1 && hasHalfStar) {
+      return 'half';
+    }
+
+    return 'empty';
   }
 
   handleAddOrUpdateReview(): void {

@@ -1,0 +1,11 @@
+.star-rating {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.05rem;
+}
+
+.star-icon {
+	font-size: 1.1rem;
+	line-height: 1;
+	font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+}
