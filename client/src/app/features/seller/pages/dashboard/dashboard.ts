@@ -2,13 +2,12 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InventoryService } from '../../services/inventory.service';
 import { StorageService } from '../../../../core/services/storage.service';
-import { Logo } from '../../../../shared/components/logo/logo';
 import { Router, RouterLink } from '@angular/router';
 import { Sidebar } from '../../components/sidebar/sidebar';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, Logo, RouterLink, Sidebar],
+  imports: [CommonModule, RouterLink, Sidebar],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -24,7 +23,7 @@ export class Dashboard implements OnInit {
     private storageService: StorageService,
     private cdr: ChangeDetectorRef,
     private router: Router,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.loadSellerInfo();
@@ -39,7 +38,7 @@ export class Dashboard implements OnInit {
         name: payload.name,
         userId: payload.userId,
         role: payload.role,
-        isApproved: payload.isApproved
+        isApproved: payload.isApproved,
       };
     }
   }
@@ -51,10 +50,9 @@ export class Dashboard implements OnInit {
         this.totalProducts = this.products.length;
         // Calculate total revenue if price is available
         this.totalRevenue = this.products.reduce((sum, product) => sum + (product.price || 0), 0);
-        this.cdr.detectChanges()
+        this.cdr.detectChanges();
       },
-      error: (_error) => {
-      }
+      error: (_error) => {},
     });
   }
 

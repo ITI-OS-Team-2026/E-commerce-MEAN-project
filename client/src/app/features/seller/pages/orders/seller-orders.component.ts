@@ -14,12 +14,11 @@ import { SellerOrdersService } from '../../services/seller-orders.service';
 import { Order, OrderStatus } from '../../models/order.models';
 import { SellerOrderDetailComponent } from '../../components/order-detail/order-detail.component';
 import { Sidebar } from '../../components/sidebar/sidebar';
-import { Logo } from '../../../../shared/components/logo/logo';
 
 @Component({
   selector: 'app-seller-orders',
   standalone: true,
-  imports: [CommonModule, FormsModule, SellerOrderDetailComponent, Sidebar, Logo],
+  imports: [CommonModule, FormsModule, SellerOrderDetailComponent, Sidebar],
   templateUrl: './seller-orders.component.html',
   styleUrls: ['./seller-orders-component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,7 +71,7 @@ export class SellerOrdersComponent implements OnInit, OnDestroy {
     };
   });
 
-  constructor(private sellerOrdersService: SellerOrdersService) { }
+  constructor(private sellerOrdersService: SellerOrdersService) {}
 
   ngOnInit(): void {
     this.loadOrders();
@@ -100,9 +99,7 @@ export class SellerOrdersComponent implements OnInit, OnDestroy {
           this.isLoading.set(false);
         },
         error: (error) => {
-          this.errorMessage.set(
-            error.error?.message || 'Failed to load orders. Please try again.'
-          );
+          this.errorMessage.set(error.error?.message || 'Failed to load orders. Please try again.');
           this.isLoading.set(false);
         },
       });
@@ -113,11 +110,7 @@ export class SellerOrdersComponent implements OnInit, OnDestroy {
    */
   private setupSearchListener(): void {
     this.searchTerm$
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        takeUntil(this.destroy$)
-      )
+      .pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$))
       .subscribe((searchTerm) => {
         if (!searchTerm.trim()) {
           this.loadOrders();
@@ -127,9 +120,8 @@ export class SellerOrdersComponent implements OnInit, OnDestroy {
         // Client-side search implementation
         // You can also implement server-side search with a new endpoint
         const lowercaseSearch = searchTerm.toLowerCase();
-        const filtered = this.orders().filter(
-          (order) =>
-            order.status.toLowerCase().includes(lowercaseSearch)
+        const filtered = this.orders().filter((order) =>
+          order.status.toLowerCase().includes(lowercaseSearch),
         );
 
         this.orders.set(filtered);
@@ -176,7 +168,7 @@ export class SellerOrdersComponent implements OnInit, OnDestroy {
    */
   onOrderStatusUpdated(updatedOrder: Order): void {
     const updatedOrders = this.orders().map((order) =>
-      order._id === updatedOrder._id ? updatedOrder : order
+      order._id === updatedOrder._id ? updatedOrder : order,
     );
     this.orders.set(updatedOrders);
     this.selectedOrder.set(updatedOrder);

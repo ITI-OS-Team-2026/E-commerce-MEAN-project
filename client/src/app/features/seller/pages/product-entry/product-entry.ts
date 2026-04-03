@@ -5,13 +5,12 @@ import { CommonModule } from '@angular/common';
 import { environment } from '../../../../../environments/environment.development';
 import { Router, RouterLink } from '@angular/router';
 import { StorageService } from '../../../../core/services/storage.service';
-import { Logo } from '../../../../shared/components/logo/logo';
 import { Sidebar } from '../../components/sidebar/sidebar';
 
 @Component({
   selector: 'app-product-entry',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, Logo, RouterLink, Sidebar],
+  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, RouterLink, Sidebar],
   templateUrl: './product-entry.html',
   styleUrl: './product-entry.css',
 })
@@ -31,14 +30,14 @@ export class ProductEntry implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private storageService: StorageService
+    private storageService: StorageService,
   ) {
     this.productForm = this.fb.group({
-      name:        ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       description: ['', [Validators.required, Validators.minLength(10)]],
-      price:       [null, [Validators.required, Validators.min(0)]],
-      category:    ['', Validators.required],
-      stock:       [0, [Validators.min(0)]],
+      price: [null, [Validators.required, Validators.min(0)]],
+      category: ['', Validators.required],
+      stock: [0, [Validators.min(0)]],
     });
   }
 
@@ -121,11 +120,11 @@ export class ProductEntry implements OnInit {
 
     // 4. Build FormData — backend receives multipart, attachImageUrls uploads to Cloudinary
     const formData = new FormData();
-    formData.append('name',        this.productForm.value.name);
+    formData.append('name', this.productForm.value.name);
     formData.append('description', this.productForm.value.description);
-    formData.append('price',       String(this.productForm.value.price));
-    formData.append('category',    this.productForm.value.category);
-    formData.append('stock',       String(this.productForm.value.stock ?? 0));
+    formData.append('price', String(this.productForm.value.price));
+    formData.append('category', this.productForm.value.category);
+    formData.append('stock', String(this.productForm.value.stock ?? 0));
     for (const img of this.selectedImages) {
       formData.append('images', img.file);
     }
@@ -142,9 +141,7 @@ export class ProductEntry implements OnInit {
           this.isSubmitting = false;
           // Backend always returns { status: 'fail', message: string } via APIError + errorHandler
           const msg: string =
-            err?.error?.message ||
-            err?.message ||
-            'Something went wrong. Please try again.';
+            err?.error?.message || err?.message || 'Something went wrong. Please try again.';
           this.errorMessage.set(msg);
           setTimeout(() => this.errorMessage.set(null), 7000);
         },
