@@ -31,20 +31,17 @@ export class Products {
   sortBy = signal('newest');
   selectedCategory = signal('');
   priceRange = signal({ min: 0, max: 2500 });
-  currentPage = signal(1);
 
-  private itemsPerPage = 10;
-  private refetchTrigger = signal(0);
-  private lastFetchResultCount = signal(0);
+  currentPage = signal(1);
+  pageSize = signal(12);
+  totalProducts = signal(0);
+  wishlistLoading = signal<string[]>([]);
+  wishlistIds = signal<string[]>([]);
+  wishlistMessage = signal<string | null>(null);
+  wishlistError = signal<string | null>(null);
+  totalPages = computed(() => Math.ceil(this.totalProducts() / this.pageSize()) || 1);
 
   sortParam = computed(() => this.getSortParam(this.sortBy()));
-  filteredProducts = computed(() => {
-    return this.products().filter((p) => p.isdeleted === null);
-  });
-  hasNextPage = computed(() => {
-    return this.lastFetchResultCount() === this.itemsPerPage;
-  });
-  canGoToPreviousPage = computed(() => this.currentPage() > 1);
 
   constructor() {
     this.loadCategories();
@@ -106,9 +103,9 @@ export class Products {
     this.error.set(null);
 
     const query: any = {
-      sort: this.sortParam(),
-      page: this.currentPage(),
-      limit: this.itemsPerPage,
+      sort: params.sort,
+      page: params.page,
+      limit: params.limit,
     };
 
     if (params.category) {
@@ -121,17 +118,11 @@ export class Products {
       query.maxPrice = params.priceMax;
     }
 
-    console.log('Fetching products with query (Page: ' + this.currentPage() + '):', query);
-
     this.productService.getProducts(query).subscribe({
       next: (response) => {
-        const fetchedProducts = response.data.products;
-        console.log(
-          'Products fetched successfully on page ' + this.currentPage() + ':',
-          fetchedProducts.length,
-        );
-        this.lastFetchResultCount.set(fetchedProducts.length);
-        this.products.set(fetchedProducts);
+        this.products.set(response.data.products);
+        // Use total if present; fall back to results (page count) when absent
+        this.totalProducts.set(response.total ?? response.results ?? 0);
         this.loading.set(false);
       },
       error: (err) => {
@@ -145,40 +136,40 @@ export class Products {
   onSortChange(sort: string): void {
     this.sortBy.set(sort);
     this.currentPage.set(1);
-    this.refetchTrigger.update((v) => v + 1);
   }
 
   onCategoryChange(categoryId: string): void {
     this.selectedCategory.set(categoryId);
     this.currentPage.set(1);
-    this.refetchTrigger.update((v) => v + 1);
   }
 
   onPriceChange(min: number, max: number): void {
     this.priceRange.set({ min, max });
     this.currentPage.set(1);
-    this.refetchTrigger.update((v) => v + 1);
   }
 
-  goToNextPage(): void {
-    if (this.hasNextPage()) {
+  nextPage(): void {
+    if (this.currentPage() < this.totalPages()) {
       this.currentPage.update((p) => p + 1);
-      this.refetchTrigger.update((v) => v + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Effect re-runs automatically because currentPage is a tracked dependency
     }
   }
 
-  goToPreviousPage(): void {
-    if (this.canGoToPreviousPage()) {
+  prevPage(): void {
+    if (this.currentPage() > 1) {
       this.currentPage.update((p) => p - 1);
-      this.refetchTrigger.update((v) => v + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 
-  fetchProducts(): void {
-    this.currentPage.set(1);
-    this.refetchTrigger.update((v) => v + 1);
+  retryFetch(): void {
+    this.fetchWithParams({
+      sort: this.sortParam(),
+      category: this.selectedCategory(),
+      priceMin: this.priceRange().min,
+      priceMax: this.priceRange().max,
+      page: this.currentPage(),
+      limit: this.pageSize(),
+    });
   }
 
   private getSortParam(sortBy: string): string {
