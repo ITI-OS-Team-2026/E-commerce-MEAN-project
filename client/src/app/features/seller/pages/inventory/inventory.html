@@ -1,25 +1,8 @@
-<div class="bg-surface text-on-surface min-h-screen flex">
-    <aside
-        class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-slate-50 dark:bg-slate-950 flex flex-col gap-2 p-4 border-r border-slate-200/20 z-50">
-        <div class="flex items-center gap-3 px-2 mb-8">
-            <div>
-                <app-logo></app-logo>
-            </div>
-        </div>
-        <app-sidebar></app-sidebar>
-
-        <div class="mt-auto pt-4 flex flex-col gap-1 border-t border-slate-200/20">
-            <a (click)="logout()"
-                class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:text-blue-600 hover:bg-slate-200/50 transition-all duration-300 rounded-lg font-medium text-sm"
-                href="#">
-                <span class="material-symbols-outlined" data-icon="logout">logout</span>
-                <span>Logout</span>
-            </a>
-        </div>
-    </aside>
-    <main class="ml-64 flex-1 min-h-screen">
+<div class="bg-surface text-on-surface min-h-screen">
+    <app-sidebar></app-sidebar>
+    <main class="transition-all duration-300 min-h-screen lg:ml-64">
         <header
-            class="w-full sticky top-0 z-40 bg-white/80 backdrop-blur-xl flex justify-between items-center px-8 py-4 shadow-sm">
+            class="w-full sticky top-0 z-40 bg-white/80 backdrop-blur-xl flex justify-between items-center pl-16 pr-8 lg:px-8 py-4 shadow-sm">
             <div class="flex items-center gap-6 flex-1">
                 <h1 class="text-xl font-bold tracking-tight text-blue-900 font-headline">Inventory</h1>
                 <div class="relative max-w-md w-full">
@@ -35,8 +18,8 @@
             <div class="flex items-center gap-4">
                 <div class="h-8 w-px bg-slate-200 mx-2"></div>
                 <div class="flex items-center gap-4">
-                    <div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden cursor-pointer"
-                        routerLink="/auth/profile">
+                    <div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all"
+                        routerLink="/seller/profile">
                         <img alt="User profile" data-alt="Close up of professional man's face"
                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYfetKMe_haJuBlWU-iOjp7RbRF9M2rGcBSWHajjE_aiWeW2WkoLfoIxY-bRXsySqX0h7hvXQ9lE6bOhiarilm98Ky_Ttz9z-gdeAlrFK3qniwtbGRRlVqa6tLe7jgt2ZTyhBymnN59tSD9SRW7d8dqV5LqdLUaNZ6zjoJwQKoHRH4LjIxzeym19txI8V14RMlYBEAmYefPr7SulxtVqN3SNHysIJqkLP73ep741hWrxdK92g-ugomiEptXBQ_ywZTibrKF66oHagz" />
                     </div>
@@ -159,7 +142,7 @@
                                     <div class="w-10 h-10 rounded bg-slate-100 flex-shrink-0 overflow-hidden">
                                         <img [alt]="product.name"
                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                            [src]="product.images?.[0] || 'https://via.placeholder.com/150'" />
+                                            [src]="product.images?.[0]" />
                                     </div>
                                     <div>
                                         <p class="text-sm font-bold text-on-surface">{{ product.name }}</p>

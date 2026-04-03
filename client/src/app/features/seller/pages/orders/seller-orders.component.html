@@ -1,17 +1,11 @@
 <!-- Page Layout: sidebar + main content -->
-<div class="bg-surface text-on-surface min-h-screen flex">
+<div class="bg-surface text-on-surface min-h-screen">
 
   <!-- Sidebar -->
-  <aside
-    class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-slate-50 dark:bg-slate-950 flex flex-col gap-2 p-4 border-r border-slate-200/20 z-50">
-    <div class="flex items-center gap-3 px-2 mb-8">
-      <app-logo></app-logo>
-    </div>
-    <app-sidebar></app-sidebar>
-  </aside>
+  <app-sidebar></app-sidebar>
 
   <!-- Main Content -->
-  <main class="ml-64 flex-1 min-h-screen">
+  <main class="transition-all duration-300 min-h-screen lg:ml-64">
 
     <div class="seller-orders-container">
       <!-- Header Section -->
@@ -53,7 +47,7 @@
       <!-- Filter and Search Section -->
       <div class="filter-section">
         <div class="search-box">
-          <input type="text" class="search-input" placeholder="Search by Order ID, Customer Name, or Email..."
+          <input type="text" class="search-input" placeholder="Search by Status..."
             (input)="onSearchChange($event.target.value)" />
           <span class="search-icon">🔍</span>
         </div>

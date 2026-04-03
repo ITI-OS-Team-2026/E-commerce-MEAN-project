@@ -100,7 +100,6 @@ export class SellerOrdersComponent implements OnInit, OnDestroy {
           this.isLoading.set(false);
         },
         error: (error) => {
-          console.error('Failed to load orders:', error);
           this.errorMessage.set(
             error.error?.message || 'Failed to load orders. Please try again.'
           );
@@ -130,9 +129,7 @@ export class SellerOrdersComponent implements OnInit, OnDestroy {
         const lowercaseSearch = searchTerm.toLowerCase();
         const filtered = this.orders().filter(
           (order) =>
-            order._id.toLowerCase().includes(lowercaseSearch) ||
-            order.user.name.toLowerCase().includes(lowercaseSearch) ||
-            order.user.email.toLowerCase().includes(lowercaseSearch)
+            order.status.toLowerCase().includes(lowercaseSearch)
         );
 
         this.orders.set(filtered);

@@ -43,7 +43,6 @@ export class Inventory implements OnInit {
   }
 
   loadProducts(): void {
-    console.log('DEBUG: Inventory.loadProducts() started');
     this.isLoading = true;
     this.errorMessage = '';
 

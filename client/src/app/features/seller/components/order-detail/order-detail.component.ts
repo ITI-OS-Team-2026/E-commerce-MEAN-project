@@ -84,7 +84,6 @@ export class SellerOrderDetailComponent implements OnInit {
       },
       error: (error) => {
         this.isUpdating.set(false);
-        console.error('Error updating order status:', error);
         this.updateError.set(
           error.error?.message || 'Failed to update order status. Please try again.'
         );
@@ -100,9 +99,17 @@ export class SellerOrderDetailComponent implements OnInit {
     if (this.order.status === 'cancelled' && status !== 'cancelled') {
       return false;
     }
+    
+    // Prevent changing delivered status (it's final)
+    if (this.order.status === 'delivered' && status !== 'delivered') {
+      return false;
+    }
 
-    // Add more business logic as needed
-    return true;
+    // Prevent backwards progression
+    const currentIdx = this.orderStatuses.indexOf(this.order.status);
+    const targetIdx = this.orderStatuses.indexOf(status);
+
+    return targetIdx >= currentIdx;
   }
 
   /**
@@ -156,5 +163,14 @@ export class SellerOrderDetailComponent implements OnInit {
       default:
         return 'status-default';
     }
+  }
+
+  /**
+   * Get product image from populatedProducts array
+   */
+  getProductImage(productId: string | any): string {
+    const id = typeof productId === 'string' ? productId : productId?._id;
+    const product = (this.order as any).populatedProducts?.find((p: any) => p._id === id);
+    return product?.images?.[0] || 'https://via.placeholder.com/50';
   }
 }

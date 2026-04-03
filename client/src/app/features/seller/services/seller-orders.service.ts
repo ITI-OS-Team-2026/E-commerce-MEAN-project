@@ -39,7 +39,6 @@ export class SellerOrdersService {
   getAllOrders(): Observable<OrderListResponse> {
     return this.http.get<OrderListResponse>(`${this.baseUrl}/seller`, this.authHeaders).pipe(
       catchError((error) => {
-        console.error('Error fetching orders:', error);
         return throwError(() => error);
       })
     );
@@ -52,7 +51,6 @@ export class SellerOrdersService {
   getOrderById(orderId: string): Observable<OrderDetailResponse> {
     return this.http.get<OrderDetailResponse>(`${this.baseUrl}/${orderId}`, this.authHeaders).pipe(
       catchError((error) => {
-        console.error(`Error fetching order ${orderId}:`, error);
         return throwError(() => error);
       })
     );
@@ -70,7 +68,6 @@ export class SellerOrdersService {
       .patch<UpdateOrderStatusResponse>(`${this.baseUrl}/${orderId}`, payload, this.authHeaders)
       .pipe(
         catchError((error) => {
-          console.error(`Error updating order ${orderId}:`, error);
           return throwError(() => error);
         })
       );
@@ -85,7 +82,6 @@ export class SellerOrdersService {
       .get<OrderListResponse>(`${this.baseUrl}?status=${status}`, this.authHeaders)
       .pipe(
         catchError((error) => {
-          console.error(`Error fetching orders with status ${status}:`, error);
           return throwError(() => error);
         })
       );

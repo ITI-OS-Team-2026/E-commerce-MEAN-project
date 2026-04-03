@@ -11,9 +11,9 @@ const createProductSchema = {
       'string.empty': 'Description is required',
       'string.min': 'Description must be at least 10 characters',
     }),
-    price: Joi.number().min(0).required().messages({
+    price: Joi.number().min(15).required().messages({
       'number.base': 'Price must be a number',
-      'number.min': 'Price cannot be negative',
+      'number.min': 'Price must be at least 15',
       'any.required': 'Price is required',
     }),
     category: Joi.string().required().messages({
@@ -24,9 +24,9 @@ const createProductSchema = {
         'string.uri': 'Each image must be a valid URL',
       }),
     ),
-    stock: Joi.number().min(0).messages({
+    stock: Joi.number().min(1).messages({
       'number.base': 'Stock must be a number',
-      'number.min': 'Stock cannot be negative',
+      'number.min': 'Stock must be at least 1',
     }),
   })
     .required()

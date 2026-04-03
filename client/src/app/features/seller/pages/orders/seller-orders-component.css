@@ -461,7 +461,7 @@
 
 @media (max-width: 1024px) {
   .seller-orders-container {
-    padding: 1.5rem;
+    padding: 4rem 1.5rem 1.5rem 1.5rem;
   }
 
   .seller-orders-container .stats-grid {

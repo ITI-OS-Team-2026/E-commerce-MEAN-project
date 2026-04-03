@@ -7,13 +7,10 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Azure Meridian | Add/Edit Product</title>
     <link
-        href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet" />
     <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script id="tailwind-config">
@@ -86,17 +83,17 @@
             vertical-align: middle;
         }
 
-        .glass-nav {
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-
         .ghost-border {
-            border-bottom: 2px solid rgba(195, 198, 214, 0.2);
+            border-bottom: 2px solid rgba(195, 198, 214, 0.4);
+            transition: border-color 0.2s;
         }
 
         .ghost-border:focus-within {
             border-bottom-color: #00419e;
+        }
+
+        .ghost-border.invalid {
+            border-bottom-color: #ba1a1a;
         }
 
         input:focus,
@@ -109,171 +106,246 @@
 </head>
 
 <body class="bg-surface font-body text-on-surface antialiased">
-    <!-- Sidebar Navigation -->
-    <aside
-        class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-slate-50 dark:bg-slate-950 flex flex-col gap-2 p-4 border-r border-slate-200/20 z-50">
-        <div class="mb-8 px-2">
-            <app-logo></app-logo>
-        </div>
-               <app-sidebar></app-sidebar>
 
-        <div class="mt-auto pt-4 border-t border-slate-200/20">
-            <a (click)="logout()"
-                class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all duration-300 rounded-lg"
-                href="#">
-                <span class="material-symbols-outlined" data-icon="logout">logout</span>
-                <span class="font-inter text-sm font-medium">Logout</span>
-            </a>
-        </div>
-    </aside>
+    <app-sidebar></app-sidebar>
+
     <!-- Main Content Area -->
-    <main class="ml-64 min-h-screen">
+    <main class="transition-all duration-300 min-h-screen lg:ml-64">
         <!-- Top Navigation -->
-        <header
-            class="w-full sticky top-0 z-40 bg-white/80 backdrop-blur-xl shadow-sm dark:shadow-none flex justify-between items-center px-8 py-4">
+        <header class="w-full sticky top-0 z-40 bg-white/80 backdrop-blur-xl shadow-sm flex justify-between items-center pl-16 pr-8 lg:px-8 py-4">
+            <span class="text-xl font-bold tracking-tight text-blue-900 font-headline">Add New Product</span>
             <div class="flex items-center gap-4">
-                <span class="text-xl font-bold tracking-tight text-blue-900 font-headline">Add
-                    New Product</span>
-
-            </div>
-            <div class="flex items-center gap-4">
-                <div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden cursor-pointer"
-                    routerLink="/auth/profile">
-                    <img alt="User profile" data-alt="Close up of professional man's face"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYfetKMe_haJuBlWU-iOjp7RbRF9M2rGcBSWHajjE_aiWeW2WkoLfoIxY-bRXsySqX0h7hvXQ9lE6bOhiarilm98Ky_Ttz9z-gdeAlrFK3qniwtbGRRlVqa6tLe7jgt2ZTyhBymnN59tSD9SRW7d8dqV5LqdLUaNZ6zjoJwQKoHRH4LjIxzeym19txI8V14RMlYBEAmYefPr7SulxtVqN3SNHysIJqkLP73ep741hWrxdK92g-ugomiEptXBQ_ywZTibrKF66oHagz" />
+                <div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all" routerLink="/seller/profile">
+                    <img alt="User profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYfetKMe_haJuBlWU-iOjp7RbRF9M2rGcBSWHajjE_aiWeW2WkoLfoIxY-bRXsySqX0h7hvXQ9lE6bOhiarilm98Ky_Ttz9z-gdeAlrFK3qniwtbGRRlVqa6tLe7jgt2ZTyhBymnN59tSD9SRW7d8dqV5LqdLUaNZ6zjoJwQKoHRH4LjIxzeym19txI8V14RMlYBEAmYefPr7SulxtVqN3SNHysIJqkLP73ep741hWrxdK92g-ugomiEptXBQ_ywZTibrKF66oHagz" />
                 </div>
             </div>
         </header>
+
         <div class="p-8 max-w-6xl mx-auto">
-            <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                <!-- Left Column: Form Fields -->
+
+            <!-- ── Success Banner ── -->
+            @if (successMessage()) {
+                <div class="mb-6 flex items-center gap-3 rounded-lg border border-primary/40 bg-primary-container/30 px-4 py-3 text-sm text-on-surface" role="alert">
+                    <span class="material-symbols-outlined text-primary">check_circle</span>
+                    <span class="font-medium">{{ successMessage() }}</span>
+                </div>
+            }
+
+            <!-- ── Error Banner (backend errors OR global frontend errors) ── -->
+            @if (errorMessage()) {
+                <div class="mb-6 flex items-center gap-3 rounded-lg border border-error/40 bg-error-container/30 px-4 py-3 text-sm text-on-error-container" role="alert">
+                    <span class="material-symbols-outlined text-error flex-shrink-0">error</span>
+                    <span class="font-medium">{{ errorMessage() }}</span>
+                </div>
+            }
+
+            <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="grid grid-cols-1 lg:grid-cols-12 gap-10" novalidate>
+
+                <!-- ══ Left Column: Form Fields ══ -->
                 <div class="lg:col-span-8 space-y-10">
+
                     <!-- Section: Basic Information -->
                     <section class="space-y-6">
-                        <div class="flex items-center gap-2 mb-2">
-                            <h2 class="text-xl font-bold font-headline tracking-tight">Basic
-                                Information</h2>
-                        </div>
+                        <h2 class="text-xl font-bold font-headline tracking-tight">Basic Information</h2>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="md:col-span-2">
-                                <label
-                                    class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Product
-                                    Name</label>
-                                <div class="ghost-border bg-surface-container-highest/30 px-4 py-3">
+
+                            <!-- Product Name -->
+                            <div class="md:col-span-2 space-y-1">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-outline">Product Name</label>
+                                <div class="ghost-border bg-surface-container-highest/30 px-4 py-3"
+                                    [class.invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched">
                                     <input formControlName="name"
                                         class="w-full bg-transparent border-none p-0 text-base font-medium"
-                                        placeholder="e.g., Titanium Architectural Pivot Door Handle" type="text" />
+                                        placeholder="e.g., Titanium Architectural Pivot Door Handle"
+                                        type="text" id="prod-name" />
                                 </div>
+                                @if (productForm.get('name')?.touched && productForm.get('name')?.errors?.['required']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Product name is required.
+                                    </span>
+                                }
+                                @if (productForm.get('name')?.touched && productForm.get('name')?.errors?.['minlength']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Must be at least 3 characters.
+                                    </span>
+                                }
+                                @if (productForm.get('name')?.touched && productForm.get('name')?.errors?.['maxlength']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Must be at most 100 characters.
+                                    </span>
+                                }
                             </div>
-                            <div>
-                                <label
-                                    class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Category</label>
-                                <div class="ghost-border bg-surface-container-highest/30 px-4 py-3">
+
+                            <!-- Category -->
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-outline">Category</label>
+                                <div class="ghost-border bg-surface-container-highest/30 px-4 py-3"
+                                    [class.invalid]="productForm.get('category')?.invalid && productForm.get('category')?.touched">
                                     <select formControlName="category"
-                                        class="w-full bg-transparent border-none p-0 text-base font-medium appearance-none">
+                                        class="w-full bg-transparent border-none p-0 text-base font-medium appearance-none" id="prod-category">
                                         <option value="">Select Category</option>
-                                        <option *ngFor="let cat of categories" [value]="cat._id">{{ cat.name }}</option>
+                                        @for (cat of categories; track cat._id) {
+                                            <option [value]="cat._id">{{ cat.name }}</option>
+                                        }
                                     </select>
                                 </div>
+                                @if (productForm.get('category')?.touched && productForm.get('category')?.errors?.['required']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Category is required.
+                                    </span>
+                                }
                             </div>
-                            <div class="md:col-span-2">
-                                <label
-                                    class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Description</label>
-                                <div class="ghost-border bg-surface-container-highest/30 px-4 py-3">
+
+                            <!-- Description -->
+                            <div class="md:col-span-2 space-y-1">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-outline">Description</label>
+                                <div class="ghost-border bg-surface-container-highest/30 px-4 py-3"
+                                    [class.invalid]="productForm.get('description')?.invalid && productForm.get('description')?.touched">
                                     <textarea formControlName="description"
                                         class="w-full bg-transparent border-none p-0 text-base font-medium resize-none"
-                                        placeholder="Describe the aesthetic and functional properties..."
-                                        rows="4"></textarea>
+                                        placeholder="Describe the product's aesthetic and functional properties..."
+                                        rows="4" id="prod-description"></textarea>
                                 </div>
+                                @if (productForm.get('description')?.touched && productForm.get('description')?.errors?.['required']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Description is required.
+                                    </span>
+                                }
+                                @if (productForm.get('description')?.touched && productForm.get('description')?.errors?.['minlength']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Must be at least 10 characters.
+                                    </span>
+                                }
                             </div>
+
                         </div>
                     </section>
+
                     <!-- Section: Pricing & Inventory -->
                     <section class="space-y-6">
-                        <h2 class="text-xl font-bold font-headline tracking-tight">Pricing
-                            &amp; Inventory</h2>
+                        <h2 class="text-xl font-bold font-headline tracking-tight">Pricing &amp; Inventory</h2>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="bg-surface-container-low p-6 rounded-lg">
-                                <label class="block text-xs font-bold uppercase tracking-wider text-outline mb-2">Retail
-                                    Price</label>
+
+                            <!-- Price -->
+                            <div class="space-y-1 bg-surface-container-low p-6 rounded-lg"
+                                [class.ring-1]="productForm.get('price')?.invalid && productForm.get('price')?.touched"
+                                [class.ring-error]="productForm.get('price')?.invalid && productForm.get('price')?.touched">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-outline mb-2">Retail Price</label>
                                 <div class="flex items-center">
                                     <span class="text-outline font-bold mr-2">$</span>
                                     <input formControlName="price"
                                         class="w-full bg-transparent border-none p-0 text-2xl font-bold font-headline tracking-tight"
-                                        placeholder="0.00" type="number" />
+                                        placeholder="0.00" type="number" id="prod-price" min="0" />
                                 </div>
+                                @if (productForm.get('price')?.touched && productForm.get('price')?.errors?.['required']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1 mt-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Price is required.
+                                    </span>
+                                }
+                                @if (productForm.get('price')?.touched && productForm.get('price')?.errors?.['min']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1 mt-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Price cannot be negative.
+                                    </span>
+                                }
                             </div>
 
-                            <div class="bg-surface-container-low p-6 rounded-lg">
-                                <label class="block text-xs font-bold uppercase tracking-wider text-outline mb-2">Stock
-                                    Quantity</label>
+                            <!-- Stock -->
+                            <div class="space-y-1 bg-surface-container-low p-6 rounded-lg"
+                                [class.ring-1]="productForm.get('stock')?.invalid && productForm.get('stock')?.touched"
+                                [class.ring-error]="productForm.get('stock')?.invalid && productForm.get('stock')?.touched">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-outline mb-2">Stock Quantity</label>
                                 <div class="flex items-center">
                                     <input formControlName="stock"
                                         class="w-full bg-transparent border-none p-0 text-2xl font-bold font-headline tracking-tight"
-                                        placeholder="0" type="number" />
-                                    <span class="material-symbols-outlined text-outline"
-                                        data-icon="inventory">inventory</span>
+                                        placeholder="0" type="number" id="prod-stock" min="0" />
+                                    <span class="material-symbols-outlined text-outline">inventory</span>
                                 </div>
+                                @if (productForm.get('stock')?.touched && productForm.get('stock')?.errors?.['min']) {
+                                    <span class="text-xs font-medium text-error flex items-center gap-1 mt-1">
+                                        <span class="material-symbols-outlined text-sm">error</span> Stock cannot be negative.
+                                    </span>
+                                }
                             </div>
+
                         </div>
                     </section>
 
                 </div>
-                <!-- Right Column: Media & Actions -->
+
+                <!-- ══ Right Column: Images & Actions ══ -->
                 <div class="lg:col-span-4 space-y-8">
-                    <!-- Media Upload Section -->
+
+                    <!-- Image Upload Section -->
                     <div class="space-y-4">
-                        <h2 class="text-lg font-bold font-headline tracking-tight">Product
-                            Assets</h2>
-                        <div class="space-y-4">
-                            <div class="flex gap-2">
-                                <input #imgUrl type="text" placeholder="Paste image URL here..."
-                                    class="flex-1 bg-surface-container-highest/30 px-4 py-2 rounded ghost-border border-none text-sm"
-                                    (keyup.enter)="addImage(imgUrl.value); imgUrl.value=''" />
-                                <button type="button" (click)="addImage(imgUrl.value); imgUrl.value=''"
-                                    class="px-4 py-2 bg-primary text-white text-xs font-bold rounded hover:brightness-110 transition-all">
-                                    Add
-                                </button>
-                            </div>
-                            <p class="text-[10px] text-outline italic leading-tight">
-                                * Images must be valid URLs (starting with http/https)
-                            </p>
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-bold font-headline tracking-tight">Product Images</h2>
+                            <span class="text-xs text-outline">{{ selectedImages.length }} selected</span>
                         </div>
 
-                        <div class="grid grid-cols-3 gap-2">
-                            <div *ngFor="let control of imagesFormArray.controls; let i = index"
-                                class="aspect-square rounded-lg bg-surface-container-high overflow-hidden group relative">
-                                <img [src]="control.value" class="w-full h-full object-cover"
-                                    onerror="this.src='https://placehold.co/400x400?text=Invalid+Image'" />
-                                <div
-                                    class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                    <span (click)="removeImage(i)"
-                                        class="material-symbols-outlined text-white cursor-pointer"
-                                        data-icon="delete">delete</span>
-                                </div>
+                        <!-- File picker button -->
+                        <label class="flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-xl px-4 py-6 cursor-pointer transition-colors"
+                            [class.border-outline-variant]="!imagesSubmitAttempted || hasImages"
+                            [class.border-error]="imagesSubmitAttempted && !hasImages"
+                            [class.bg-error-container]="imagesSubmitAttempted && !hasImages"
+                            [class.bg-surface-container-highest]="!imagesSubmitAttempted || hasImages"
+                            [class.hover:bg-surface-container-high]="!imagesSubmitAttempted || hasImages">
+                            <span class="material-symbols-outlined text-2xl"
+                                [class.text-outline]="!imagesSubmitAttempted || hasImages"
+                                [class.text-error]="imagesSubmitAttempted && !hasImages">upload_file</span>
+                            <span class="text-sm font-bold"
+                                [class.text-on-surface-variant]="!imagesSubmitAttempted || hasImages"
+                                [class.text-error]="imagesSubmitAttempted && !hasImages">
+                                {{ imagesSubmitAttempted && !hasImages ? 'At least one image required' : 'Click to select images' }}
+                            </span>
+                            <span class="text-xs text-outline italic">JPG, PNG, GIF, WEBP</span>
+                            <input type="file" multiple accept="image/*" class="hidden" (change)="onFileSelected($event)" id="prod-images" />
+                        </label>
+
+                        <!-- Image grid preview -->
+                        @if (selectedImages.length > 0) {
+                            <div class="grid grid-cols-3 gap-2">
+                                @for (item of selectedImages; track item.previewUrl; let i = $index) {
+                                    <div class="aspect-square rounded-lg bg-surface-container-high overflow-hidden group relative shadow-sm">
+                                        <img [src]="item.previewUrl" class="w-full h-full object-cover" [alt]="item.file.name" />
+                                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                            <button type="button" (click)="removeImage(i)"
+                                                class="w-8 h-8 rounded-full bg-error flex items-center justify-center text-white hover:bg-red-700 transition-colors">
+                                                <span class="material-symbols-outlined text-base leading-none">delete</span>
+                                            </button>
+                                        </div>
+                                        <!-- file name tooltip -->
+                                        <div class="absolute bottom-0 left-0 right-0 bg-black/60 px-1 py-0.5 truncate text-white text-[9px]">
+                                            {{ item.file.name }}
+                                        </div>
+                                    </div>
+                                }
                             </div>
-                            <!-- Empty states placeholders or drop zone could stay if needed, but the user asked for a way to store/send -->
-                            <div *ngIf="imagesFormArray.length === 0"
-                                class="aspect-square rounded-lg bg-surface-container-high flex items-center justify-center border border-dashed border-outline-variant">
-                                <span class="material-symbols-outlined text-outline"
-                                    data-icon="add">add_photo_alternate</span>
-                            </div>
-                        </div>
+                        } @else {
+                            <p class="text-xs text-outline text-center italic">No images selected yet.</p>
+                        }
                     </div>
+
                     <!-- Actions Card -->
                     <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-4 sticky top-24">
-                        <button (click)="onSubmit()" [disabled]="isSubmitting"
-                            class="w-full py-4 bg-gradient-to-br from-primary to-primary-container text-white font-bold rounded-lg shadow-lg shadow-primary/20 hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50"
-                            type="button">
-                            {{ isSubmitting ? 'Saving...' : 'Save Product' }}
+                        <button type="submit" [disabled]="isSubmitting"
+                            class="w-full py-4 bg-gradient-to-br from-primary to-primary-container text-white font-bold rounded-lg shadow-lg shadow-primary/20 hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                            @if (isSubmitting) {
+                                <span class="material-symbols-outlined animate-spin text-lg leading-none">progress_activity</span>
+                                <span>Saving...</span>
+                            } @else {
+                                <span class="material-symbols-outlined text-lg leading-none">save</span>
+                                <span>Save Product</span>
+                            }
                         </button>
-                        <button
-                            class="w-full py-3 bg-surface-container-high text-on-surface font-bold rounded-lg hover:bg-surface-container-highest active:scale-[0.98] transition-all"
-                            type="button">
+                        <button type="button" routerLink="/seller/inventory"
+                            class="w-full py-3 bg-surface-container-high text-on-surface font-bold rounded-lg hover:bg-surface-container-highest active:scale-[0.98] transition-all">
                             Cancel
                         </button>
                     </div>
+
                 </div>
+
             </form>
         </div>
     </main>

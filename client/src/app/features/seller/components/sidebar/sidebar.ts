@@ -15,6 +15,7 @@ export class Sidebar {
   mobileOpen = signal(false);
 
   menuItems = [
+    { label: 'Home', icon: '🏠', path: '/' },
     { label: 'Dashboard', icon: '📊', path: '/seller/dashboard' },
     { label: 'Inventory', icon: '🗃️', path: '/seller/inventory' },
     { label: 'Orders', icon: '📦', path: '/seller/orders' },
