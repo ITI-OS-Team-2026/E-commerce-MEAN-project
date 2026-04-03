@@ -15,6 +15,7 @@ const orderRouter = require('./routes/orderRoutes');
 const cartRouter = require('./routes/cartRoutes');
 const paymentRoutes = require('./routes/paymentRoutes.js');
 const checkoutRouter = require('./routes/checkoutRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 
 const app = express();
 
@@ -34,6 +35,8 @@ app.use('/api/v1/orders', orderRouter);
 app.use('/api/v1/cart', cartRouter);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/v1/checkout', checkoutRouter);
+app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/products/:productId/reviews', reviewRouter);
 
 // Handle wrong routes
 app.use((req, res, next) => {

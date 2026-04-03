@@ -119,6 +119,24 @@
             >
               {{ product()?.name }}
             </h1>
+
+            <!-- Rating Summary -->
+            @if (!reviewsLoading()) {
+              <div class="flex items-center space-x-2">
+                <div class="star-rating" aria-label="Average product rating">
+                  @for (star of starIndexes; track star) {
+                    <span class="material-symbols-outlined star-icon"
+                      [ngClass]="getStarType(averageRating(), star) === 'empty' ? 'text-outline-variant/50' : 'text-amber-500'">
+                      {{ getStarType(averageRating(), star) === 'full' ? 'star' : (getStarType(averageRating(), star) === 'half' ? 'star_half' : 'star') }}
+                    </span>
+                  }
+                </div>
+                <span class="text-sm font-bold text-on-surface">{{ averageRating() | number:'1.1-1' }} ★</span>
+                <span class="text-sm text-on-surface-variant">
+                  ({{ totalReviews() }} {{ totalReviews() === 1 ? 'review' : 'reviews' }})
+                </span>
+              </div>
+            }
             <p class="text-base sm:text-lg text-on-surface-variant font-body leading-relaxed">
               {{ product()?.description }}
             </p>
@@ -240,7 +258,130 @@
         </div>
       </div>
 
-     
+      <!-- Customer Reviews Section -->
+      <div class="mt-16 space-y-8">
+        <div class="flex items-center justify-between border-b border-outline-variant/20 pb-4">
+          <h2 class="text-2xl font-bold text-on-surface">Customer Reviews</h2>
+          @if (canReview() && !showReviewForm()) {
+            <button
+              (click)="openReviewForm()"
+              class="px-6 py-2 bg-primary text-on-primary font-bold rounded-lg hover:opacity-90 transition-opacity"
+            >
+              Write a Review
+            </button>
+          } @else if (userReview() && !showReviewForm()) {
+            <button
+              (click)="openReviewForm()"
+              class="px-6 py-2 bg-surface-container-high text-on-surface font-bold rounded-lg hover:bg-surface-variant border border-outline-variant transition-opacity"
+            >
+              Edit My Review
+            </button>
+          }
+        </div>
+
+        <!-- Review Form Inline -->
+        @if (showReviewForm()) {
+          <div class="bg-surface-container rounded-xl p-6 mt-6 space-y-6 border-2 border-primary/20">
+            <h3 class="text-xl font-bold text-on-surface">{{ editMode() ? 'Edit Your Review' : 'Write a Review' }}</h3>
+            
+            @if (formError()) {
+              <div class="text-error text-sm bg-error/10 p-3 rounded border border-error/50">{{ formError() }}</div>
+            }
+
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-bold text-on-surface-variant mb-2">Rating</label>
+                <div class="flex items-center space-x-2">
+                  @for (star of [1,2,3,4,5]; track star) {
+                    <button type="button" (click)="setRating(star)" class="focus:outline-none transition-transform hover:scale-110">
+                      <span class="material-symbols-outlined text-3xl" [ngClass]="star <= formRating() ? 'text-amber-500' : 'text-outline-variant/30'">
+                        star
+                      </span>
+                    </button>
+                  }
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-bold text-on-surface-variant mb-2">Comment</label>
+                <textarea 
+                  [ngModel]="formComment()"
+                  (ngModelChange)="formComment.set($event)"
+                  rows="4" 
+                  class="w-full bg-surface-container-high border border-outline-variant rounded-lg p-3 text-on-surface focus:outline-none focus:border-primary resize-none"
+                  placeholder="What did you like or dislike?"
+                ></textarea>
+              </div>
+
+              <div class="flex gap-4 pt-2">
+                <button
+                  (click)="handleAddOrUpdateReview()"
+                  [disabled]="formSubmitting() || !formComment().trim()"
+                  class="px-6 py-2 bg-primary text-on-primary font-bold rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center"
+                >
+                  @if (formSubmitting()) {
+                    <div class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-on-primary mr-2"></div>
+                    <span>Submitting...</span>
+                  } @else {
+                    <span>Submit Review</span>
+                  }
+                </button>
+                <button
+                  (click)="cancelForm()"
+                  [disabled]="formSubmitting()"
+                  class="px-6 py-2 bg-surface-container border border-outline-variant text-on-surface font-bold rounded-lg hover:bg-surface-variant transition-opacity disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (reviewsLoading()) {
+          <div class="flex justify-center py-8">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        } @else if (reviewsError()) {
+          <div class="bg-error/10 border border-error rounded-lg p-4 text-center text-error">
+            {{ reviewsError() }}
+          </div>
+        } @else if (totalReviews() === 0) {
+          <div class="text-center py-12 bg-surface-container rounded-xl">
+            <span class="material-symbols-outlined text-4xl text-on-surface-variant/50">rate_review</span>
+            <p class="mt-4 text-on-surface-variant">No reviews yet. Be the first to review this product!</p>
+          </div>
+        } @else {
+          <!-- Reviews List -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            @for (review of reviews(); track review._id) {
+              <div class="bg-surface-container rounded-xl p-6 space-y-4">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="font-bold text-on-surface">{{ review.user && review.user.name ? review.user.name : 'Anonymous' }}</h3>
+                    <p class="text-xs text-on-surface-variant mt-1">{{ review.createdAt | date:'mediumDate' }}</p>
+                  </div>
+                  <div class="star-rating" aria-label="Review rating">
+                    @for (star of starIndexes; track star) {
+                      <span class="material-symbols-outlined star-icon"
+                        [ngClass]="getStarType(review.rating, star) === 'empty' ? 'text-outline-variant/50' : 'text-amber-500'">
+                        {{ getStarType(review.rating, star) === 'full' ? 'star' : (getStarType(review.rating, star) === 'half' ? 'star_half' : 'star') }}
+                      </span>
+                    }
+                  </div>
+                </div>
+                <p class="text-sm text-on-surface-variant">{{ review.comment }}</p>
+                @if (userReview() && userReview()!._id === review._id) {
+                  <div class="pt-4 flex gap-3 border-t border-outline-variant/20 mt-4">
+                    <button (click)="openReviewForm()" class="text-xs font-bold text-primary hover:underline uppercase tracking-wider">Edit</button>
+                    <button (click)="deleteExistingReview()" class="text-xs font-bold text-error hover:underline uppercase tracking-wider">Delete</button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
     </div>
   }
 </main>

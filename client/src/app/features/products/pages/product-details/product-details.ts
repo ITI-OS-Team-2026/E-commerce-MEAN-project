@@ -8,6 +8,7 @@ import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product.models';
 import { CartService } from '../../../cart/services/cart.service';
 import { StorageService } from '../../../../core/services/storage.service';
+import { ReviewService, Review } from '../../services/review.service';
 
 @Component({
   selector: 'app-product-details',
@@ -21,6 +22,7 @@ export class ProductDetails {
   private router = inject(Router);
   private cartService = inject(CartService);
   private storageService = inject(StorageService);
+  private reviewService = inject(ReviewService);
 
   // Signals for state management
   product = signal<Product | null>(null);
@@ -40,12 +42,39 @@ export class ProductDetails {
   canNextSlide = computed(() => this.currentSlideIndex() < this.relatedProducts().length - 4);
   canPrevSlide = computed(() => this.currentSlideIndex() > 0);
 
+  // Review Signals
+  reviews = signal<Review[]>([]);
+  reviewsLoading = signal(false);
+  reviewsError = signal<string | null>(null);
+  userReview = signal<Review | null>(null);
+  showReviewForm = signal(false);
+  editMode = signal(false);
+  formRating = signal(5);
+  formComment = signal('');
+  formSubmitting = signal(false);
+  formError = signal<string | null>(null);
+  starIndexes = [1, 2, 3, 4, 5];
+
+  // Review Computed
+  averageRating = computed(() => {
+    const revs = this.reviews();
+    if (revs.length === 0) return 0;
+    const sum = revs.reduce((acc, r) => acc + r.rating, 0);
+    return sum / revs.length;
+  });
+  totalReviews = computed(() => this.reviews().length);
+  canReview = computed(() => {
+    const isLoggedIn = this.storageService.isLoggedIn();
+    return isLoggedIn && !this.userReview();
+  });
+
   constructor() {
     // Watch for route param changes and load product
     effect(() => {
       const productId = this.route.snapshot.params['id'];
       if (productId) {
         this.loadProduct(productId);
+        this.loadReviews(productId);
       } else {
         this.error.set('Product ID not found');
         this.loading.set(false);
@@ -215,5 +244,134 @@ export class ProductDetails {
 
   navigateToProduct(productId: string): void {
     this.router.navigate(['/products', productId]);
+  }
+
+  private loadReviews(productId: string): void {
+    this.reviewsLoading.set(true);
+    this.reviewsError.set(null);
+    this.userReview.set(null);
+    
+    this.reviewService.getProductReviews(productId).subscribe({
+      next: (response) => {
+        this.reviews.set(response.data);
+        this.reviewsLoading.set(false);
+        
+        if (this.storageService.isLoggedIn()) {
+          const user = this.storageService.getUser() as any;
+          if (user) {
+            const userId = user.userId || user._id || user.id;
+            const currentUserReview = response.data.find((r) => 
+              r.user && (r.user._id === userId || r.user === userId)
+            );
+            if (currentUserReview) {
+              this.userReview.set(currentUserReview);
+            }
+          }
+        }
+      },
+      error: (err) => {
+        console.error('Error loading reviews:', err);
+        this.reviewsError.set('Failed to load reviews');
+        this.reviewsLoading.set(false);
+      }
+    });
+  }
+
+  openReviewForm(): void {
+    const existing = this.userReview();
+    if (existing) {
+      this.editMode.set(true);
+      this.formRating.set(existing.rating);
+      this.formComment.set(existing.comment);
+    } else {
+      this.editMode.set(false);
+      this.formRating.set(5);
+      this.formComment.set('');
+    }
+    this.showReviewForm.set(true);
+    this.formError.set(null);
+  }
+
+  cancelForm(): void {
+    this.showReviewForm.set(false);
+    this.formError.set(null);
+  }
+
+  setRating(rating: number): void {
+    this.formRating.set(rating);
+  }
+
+  getStarType(rating: number | undefined, starIndex: number): 'full' | 'half' | 'empty' {
+    const normalized = Math.max(0, Math.min(5, rating ?? 0));
+    const fullStars = Math.floor(normalized);
+    const hasHalfStar = normalized - fullStars >= 0.5;
+
+    if (starIndex <= fullStars) {
+      return 'full';
+    }
+
+    if (starIndex === fullStars + 1 && hasHalfStar) {
+      return 'half';
+    }
+
+    return 'empty';
+  }
+
+  handleAddOrUpdateReview(): void {
+    const product = this.product();
+    if (!product) return;
+
+    this.formSubmitting.set(true);
+    this.formError.set(null);
+
+    const productId = product._id;
+    const rating = this.formRating();
+    const comment = this.formComment();
+
+    if (this.editMode() && this.userReview()) {
+      const reviewId = this.userReview()!._id;
+      this.reviewService.updateReview(reviewId, rating, comment).subscribe({
+        next: () => {
+          this.formSubmitting.set(false);
+          this.showReviewForm.set(false);
+          this.loadReviews(productId);
+        },
+        error: (err) => {
+          this.formError.set(err?.error?.message || 'Failed to update review');
+          this.formSubmitting.set(false);
+        }
+      });
+    } else {
+      this.reviewService.addReview(productId, rating, comment).subscribe({
+        next: () => {
+          this.formSubmitting.set(false);
+          this.showReviewForm.set(false);
+          this.loadReviews(productId);
+        },
+        error: (err) => {
+          this.formError.set(err?.error?.message || 'Failed to submit review');
+          this.formSubmitting.set(false);
+        }
+      });
+    }
+  }
+
+  deleteExistingReview(): void {
+    const existing = this.userReview();
+    const product = this.product();
+    if (!existing || !product) return;
+
+    if (confirm('Are you sure you want to delete your review?')) {
+      this.reviewService.deleteReview(existing._id).subscribe({
+        next: () => {
+          this.userReview.set(null);
+          this.loadReviews(product._id);
+        },
+        error: (err) => {
+          console.error('Failed to delete review', err);
+          alert('Failed to delete review');
+        }
+      });
+    }
   }
 }

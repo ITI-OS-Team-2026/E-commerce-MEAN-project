@@ -136,6 +136,23 @@
             <p class="text-sm text-on-surface-variant mb-6 line-clamp-2">
               {{ product.description }}
             </p>
+            @if ((product.ratingsQuantity ?? 0) > 0) {
+            <div class="mb-4 flex items-center gap-2">
+              <div class="star-rating" aria-label="Product rating">
+                @for (star of starIndexes; track star) {
+                <span class="material-symbols-outlined star-icon"
+                  [ngClass]="getStarType(product.ratingsAverage, star) === 'empty' ? 'text-outline-variant/50' : 'text-amber-500'">
+                  {{ getStarType(product.ratingsAverage, star) === 'full' ? 'star' : (getStarType(product.ratingsAverage, star) === 'half' ? 'star_half' : 'star') }}
+                </span>
+                }
+              </div>
+              <span class="text-sm font-semibold text-on-surface">{{ getRatingValue(product.ratingsAverage) | number:'1.1-1' }}</span>
+              <span class="text-xs text-on-surface-variant">({{ product.ratingsQuantity }} {{ product.ratingsQuantity === 1 ? 'review' : 'reviews' }})</span>
+            </div>
+            }
+            @if ((product.ratingsQuantity ?? 0) === 0) {
+            <div class="mb-4 text-xs text-on-surface-variant">No reviews yet</div>
+            }
             <div class="flex items-center justify-between">
               <span class="text-2xl font-headline font-black text-on-surface">${{ product.price.toFixed(2) }}</span>
               <div class="flex gap-2">

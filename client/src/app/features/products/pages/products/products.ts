@@ -39,6 +39,7 @@ export class Products {
   wishlistIds = signal<string[]>([]);
   wishlistMessage = signal<string | null>(null);
   wishlistError = signal<string | null>(null);
+  starIndexes = [1, 2, 3, 4, 5];
   totalPages = computed(() => Math.ceil(this.totalProducts() / this.pageSize()) || 1);
 
   sortParam = computed(() => this.getSortParam(this.sortBy()));
@@ -261,5 +262,25 @@ export class Products {
 
   isWishlistLoading(productId: string): boolean {
     return this.wishlistLoading().includes(productId);
+  }
+
+  getRatingValue(rating?: number): number {
+    return Math.max(0, Math.min(5, rating ?? 0));
+  }
+
+  getStarType(rating: number | undefined, starIndex: number): 'full' | 'half' | 'empty' {
+    const normalized = this.getRatingValue(rating);
+    const fullStars = Math.floor(normalized);
+    const hasHalfStar = normalized - fullStars >= 0.5;
+
+    if (starIndex <= fullStars) {
+      return 'full';
+    }
+
+    if (starIndex === fullStars + 1 && hasHalfStar) {
+      return 'half';
+    }
+
+    return 'empty';
   }
 }
