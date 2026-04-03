@@ -82,7 +82,7 @@ export class Login {
 
         // ← redirect based on role
         const role = res.tokenUser.role;
-        if (role === 'admin') this.router.navigate(['/admin']);
+        if (role === 'admin') this.router.navigate(['/admin/dashboard']);
         else if (role === 'seller') this.router.navigate(['/seller/dashboard']);
         else this.router.navigate(['/customer/dashboard']);
       },
