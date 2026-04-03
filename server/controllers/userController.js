@@ -24,8 +24,8 @@ const getSingleUser = async (req, res) => {
   return res.status(200).json({ user });
 };
 
-const showCurrentUser = (req, res) => {
-  const user = userService.showCurrentUser(req);
+const showCurrentUser = async (req, res) => {
+  const user = await userService.showCurrentUser(req);
   return res.status(200).json({ user });
 };
 
