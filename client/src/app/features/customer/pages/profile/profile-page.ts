@@ -1,10 +1,23 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { CustomerSidebar } from '../../components/sidebar/sidebar';
 import { CustomerHeader } from '../../components/header/header';
 import { StorageService } from '../../../../core/services/storage.service';
+
+interface UserProfile {
+  name: string;
+  email: string;
+  phone?: string;
+  address?: {
+    street?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+    country?: string;
+  };
+}
 
 @Component({
   selector: 'app-customer-profile',
@@ -14,50 +27,73 @@ import { StorageService } from '../../../../core/services/storage.service';
   styles: [],
 })
 export class CustomerProfile implements OnInit {
+  private fb = inject(FormBuilder);
+  private storageService = inject(StorageService);
+
   profileForm!: FormGroup;
   isEditing = signal(false);
   isSaving = signal(false);
+  isLoading = signal(false);
   successMessage = signal('');
   errorMessage = signal('');
-  customerUser: any = null;
+  customerUser = signal<UserProfile | null>(null);
 
-  constructor(
-    private fb: FormBuilder,
-    private storageService: StorageService,
-  ) {
-    this.customerUser = this.storageService.getUser();
+  constructor() {
     this.initializeForm();
   }
 
   ngOnInit(): void {
-    this.loadProfileData();
+    this.loadProfile();
   }
 
   private initializeForm(): void {
     this.profileForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.required]],
-      address: [''],
+      phone: [''],
+      street: [''],
       city: [''],
       state: [''],
-      zipCode: [''],
+      zip: [''],
+      country: [''],
     });
   }
 
-  private loadProfileData(): void {
-    if (this.customerUser) {
-      this.profileForm.patchValue({
-        name: this.customerUser.name || '',
-        email: this.customerUser.email || '',
-        phone: this.customerUser.phone || '',
-        address: this.customerUser.address || '',
-        city: this.customerUser.city || '',
-        state: this.customerUser.state || '',
-        zipCode: this.customerUser.zipCode || '',
-      });
-    }
-    this.profileForm.disable();
+  private loadProfile(): void {
+    this.isLoading.set(true);
+    this.errorMessage.set('');
+
+    // Load profile from localStorage (mock data)
+    setTimeout(() => {
+      try {
+        const user = this.storageService.getUser();
+        if (user) {
+          const userProfile: UserProfile = {
+            name: user.name || '',
+            email: user.email || '',
+            phone: user.phone || '',
+            address: user.address || {},
+          };
+          this.customerUser.set(userProfile);
+          this.profileForm.patchValue({
+            name: userProfile.name || '',
+            email: userProfile.email || '',
+            phone: userProfile.phone || '',
+            street: userProfile.address?.street || '',
+            city: userProfile.address?.city || '',
+            state: userProfile.address?.state || '',
+            zip: userProfile.address?.zip || '',
+            country: userProfile.address?.country || '',
+          });
+        }
+        this.profileForm.disable();
+        this.isLoading.set(false);
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        this.errorMessage.set('Failed to load profile');
+        this.isLoading.set(false);
+      }
+    }, 300);
   }
 
   enableEdit(): void {
@@ -68,7 +104,7 @@ export class CustomerProfile implements OnInit {
   cancelEdit(): void {
     this.isEditing.set(false);
     this.profileForm.disable();
-    this.loadProfileData();
+    this.loadProfile();
     this.successMessage.set('');
     this.errorMessage.set('');
   }
@@ -76,14 +112,39 @@ export class CustomerProfile implements OnInit {
   saveProfile(): void {
     if (this.profileForm.valid) {
       this.isSaving.set(true);
-      // Save profile logic - to be implemented
+      this.errorMessage.set('');
+
       setTimeout(() => {
-        this.isSaving.set(false);
-        this.isEditing.set(false);
-        this.profileForm.disable();
-        this.successMessage.set('Profile updated successfully!');
-        setTimeout(() => this.successMessage.set(''), 3000);
-      }, 1000);
+        try {
+          const formValue = this.profileForm.getRawValue();
+          const updatedUser = {
+            ...this.storageService.getUser(),
+            name: formValue.name,
+            phone: formValue.phone,
+            address: {
+              street: formValue.street,
+              city: formValue.city,
+              state: formValue.state,
+              zip: formValue.zip,
+              country: formValue.country,
+            },
+          };
+
+          // Save to localStorage
+          this.storageService.saveUser(updatedUser);
+          this.customerUser.set(updatedUser);
+
+          this.isSaving.set(false);
+          this.isEditing.set(false);
+          this.profileForm.disable();
+          this.successMessage.set('Profile updated successfully!');
+          setTimeout(() => this.successMessage.set(''), 3000);
+        } catch (error) {
+          console.error('Error saving profile:', error);
+          this.errorMessage.set('Failed to save profile');
+          this.isSaving.set(false);
+        }
+      }, 500);
     }
   }
 }

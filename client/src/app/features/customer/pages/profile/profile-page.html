@@ -5,7 +5,7 @@
 
   <section class="p-6 max-w-2xl mx-auto">
     <h1 class="text-3xl font-bold text-gray-900 mb-2">My Profile</h1>
-    <p class="text-gray-600 mb-8">{{ customerUser?.email }}</p>
+    <p class="text-gray-600 mb-8">{{ customerUser()?.email }}</p>
 
     <!-- Success/Error Messages -->
     @if (successMessage()) {
@@ -24,11 +24,15 @@
       <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
         <!-- Personal Information Section -->
         <div class="mb-8">
-          <h2 class="text-lg font-semibold text-gray-900 mb-4 pb-4 border-b border-gray-200">Personal Information</h2>
+          <h2 class="text-lg font-semibold text-gray-900 mb-4 pb-4 border-b border-gray-200">
+            Personal Information
+          </h2>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
             <div>
-              <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+              <label for="name" class="block text-sm font-medium text-gray-700 mb-2"
+                >Full Name</label
+              >
               <input
                 id="name"
                 type="text"
@@ -42,7 +46,9 @@
             </div>
 
             <div>
-              <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+              <label for="email" class="block text-sm font-medium text-gray-700 mb-2"
+                >Email Address</label
+              >
               <input
                 id="email"
                 type="email"
@@ -57,7 +63,9 @@
           </div>
 
           <div>
-            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2"
+              >Phone Number</label
+            >
             <input
               id="phone"
               type="tel"
@@ -70,10 +78,14 @@
 
         <!-- Address Information Section -->
         <div class="mb-8">
-          <h2 class="text-lg font-semibold text-gray-900 mb-4 pb-4 border-b border-gray-200">Address Information</h2>
+          <h2 class="text-lg font-semibold text-gray-900 mb-4 pb-4 border-b border-gray-200">
+            Address Information
+          </h2>
 
           <div class="mb-6">
-            <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Street Address</label>
+            <label for="address" class="block text-sm font-medium text-gray-700 mb-2"
+              >Street Address</label
+            >
             <input
               id="address"
               type="text"
@@ -96,7 +108,9 @@
             </div>
 
             <div>
-              <label for="state" class="block text-sm font-medium text-gray-700 mb-2">State/Province</label>
+              <label for="state" class="block text-sm font-medium text-gray-700 mb-2"
+                >State/Province</label
+              >
               <input
                 id="state"
                 type="text"
@@ -107,7 +121,9 @@
             </div>
 
             <div>
-              <label for="zipCode" class="block text-sm font-medium text-gray-700 mb-2">Zip Code</label>
+              <label for="zipCode" class="block text-sm font-medium text-gray-700 mb-2"
+                >Zip Code</label
+              >
               <input
                 id="zipCode"
                 type="text"

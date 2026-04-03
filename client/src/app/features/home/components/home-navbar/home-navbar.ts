@@ -16,7 +16,7 @@ export class HomeNavbar {
   constructor(
     private router: Router,
     private storage: StorageService,
-  ) { }
+  ) {}
 
   get user(): LoginResponse['tokenUser'] | null {
     return this.storage.getUser();
@@ -35,6 +35,7 @@ export class HomeNavbar {
 
     if (role === 'admin') return '/admin';
     if (role === 'seller') return '/seller/dashboard';
+    if (role === 'customer') return '/customer/dashboard';
 
     return '/orders';
   }
