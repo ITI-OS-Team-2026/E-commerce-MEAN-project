@@ -23,10 +23,10 @@ const attachImageUrls = async (req, res, next) => {
 
         imageUrls.push(result.secure_url);
       }
+      
+      // ❗ Add images to request body so Joi + controller can use it
+      req.body.images = imageUrls;
     }
-
-    // ❗ Add images to request body so Joi + controller can use it
-    req.body.images = imageUrls;
 
     next();
   } catch (err) {

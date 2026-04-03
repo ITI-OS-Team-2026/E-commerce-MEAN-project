@@ -21,19 +21,19 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="bg-white rounded-lg shadow-sm p-5">
         <h3 class="text-base font-semibold text-gray-900 mb-2">Total Users</h3>
-        <div class="text-3xl font-bold text-blue-600">12,842</div>
+        <div class="text-3xl font-bold text-blue-600">{{ totalUsers() }}</div>
       </div>
       <div class="bg-white rounded-lg shadow-sm p-5">
         <h3 class="text-base font-semibold text-gray-900 mb-2">Total Orders</h3>
-        <div class="text-3xl font-bold text-green-600">3,456</div>
+        <div class="text-3xl font-bold text-green-600">{{ totalOrders() }}</div>
       </div>
       <div class="bg-white rounded-lg shadow-sm p-5">
         <h3 class="text-base font-semibold text-gray-900 mb-2">Total Revenue</h3>
-        <div class="text-3xl font-bold text-yellow-600">$45,231</div>
+        <div class="text-3xl font-bold text-yellow-600">{{ totalRevenue() | currency:'USD' }}</div>
       </div>
       <div class="bg-white rounded-lg shadow-sm p-5">
         <h3 class="text-base font-semibold text-gray-900 mb-2">Active Sellers</h3>
-        <div class="text-3xl font-bold text-purple-600">128</div>
+        <div class="text-3xl font-bold text-purple-600">{{ activeSellers() }}</div>
       </div>
     </div>
   </section>
