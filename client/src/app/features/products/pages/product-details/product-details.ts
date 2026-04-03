@@ -140,7 +140,7 @@ export class ProductDetails {
   addToCart(): void {
     const product = this.product();
     if (!product) return;
-    
+
     if (!this.storageService.isLoggedIn()) {
       this.router.navigate(['/auth/login']);
       return;
@@ -154,8 +154,10 @@ export class ProductDetails {
         this.cartService.getCart().subscribe({
           next: (response) => {
             this.cartService.updateCartCount(response.data.itemsCount);
-            const cartItem = response.data.items.find((item: any) => 
-              (typeof item.product === 'string' ? item.product === product._id : item.product?._id === product._id)
+            const cartItem = response.data.items.find((item: any) =>
+              typeof item.product === 'string'
+                ? item.product === product._id
+                : item.product?._id === product._id,
             );
             if (cartItem) {
               this.itemInCartQty.set(cartItem.quantity);
@@ -165,13 +167,13 @@ export class ProductDetails {
           error: (err) => {
             this.addToCartError.set('Failed to add to cart');
             this.addingToCart.set(false);
-          }
+          },
         });
       },
       error: (err) => {
         this.addToCartError.set('Failed to add to cart');
         this.addingToCart.set(false);
-      }
+      },
     });
   }
 
@@ -184,34 +186,8 @@ export class ProductDetails {
       return;
     }
 
-    this.addingToCart.set(true);
-    this.addToCartError.set(null);
-
-    this.cartService.addToCart({ productId: product._id, quantity: this.quantity() }).subscribe({
-      next: () => {
-        this.cartService.getCart().subscribe({
-          next: (response) => {
-            this.cartService.updateCartCount(response.data.itemsCount);
-            const cartItem = response.data.items.find((item: any) => 
-              (typeof item.product === 'string' ? item.product === product._id : item.product?._id === product._id)
-            );
-            if (cartItem) {
-              this.itemInCartQty.set(cartItem.quantity);
-            }
-            this.addingToCart.set(false);
-            this.router.navigate(['/orders/checkout']);
-          },
-          error: (err) => {
-            this.addToCartError.set('Failed to add to cart');
-            this.addingToCart.set(false);
-          }
-        });
-      },
-      error: (err) => {
-        this.addToCartError.set('Failed to add to cart');
-        this.addingToCart.set(false);
-      }
-    });
+    // Navigate directly to checkout without adding to cart
+    this.router.navigate(['/orders/checkout']);
   }
 
   goBack(): void {

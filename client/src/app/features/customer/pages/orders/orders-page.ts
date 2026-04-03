@@ -1,32 +1,8 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CustomerSidebar } from '../../components/sidebar/sidebar';
 import { CustomerHeader } from '../../components/header/header';
-
-interface OrderItem {
-  product?: { name: string };
-  quantity: number;
-  price: number;
-}
-
-interface ShippingAddress {
-  street?: string;
-  city?: string;
-  state?: string;
-  zip?: string;
-  country?: string;
-}
-
-interface Order {
-  _id: string;
-  totalAmount: number;
-  status: string;
-  createdAt: string;
-  paymentMethod?: string;
-  items: OrderItem[];
-  shippingAddress?: ShippingAddress;
-  user?: { name: string; email: string };
-}
+import { CustomerOrderService, Order } from '../../services/customer-order.service';
 
 @Component({
   selector: 'app-customer-orders',
@@ -36,6 +12,8 @@ interface Order {
   styles: [],
 })
 export class CustomerOrders implements OnInit {
+  private orderService = inject(CustomerOrderService);
+
   selectedStatus = signal('all');
   orders = signal<Order[]>([]);
   isLoading = signal(false);
@@ -60,14 +38,20 @@ export class CustomerOrders implements OnInit {
 
   loadOrders() {
     this.isLoading.set(true);
-    // TODO: Replace with actual API call
-    // For now, using mock data
-    setTimeout(() => {
-      this.orders.set([
-        // Add mock orders here if needed
-      ]);
-      this.isLoading.set(false);
-    }, 500);
+    this.errorMessage.set('');
+
+    this.orderService.getMyOrders().subscribe({
+      next: (response) => {
+        this.orders.set(response.orders || []);
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading orders:', error);
+        this.errorMessage.set(error?.error?.message || 'Failed to load orders');
+        this.orders.set([]);
+        this.isLoading.set(false);
+      },
+    });
   }
 
   get filteredOrders() {

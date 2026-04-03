@@ -4,7 +4,7 @@ const APIError = require('../utils/APIError');
 // General API rate limiter
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 100,
+  limit: 1000,
   standardHeaders: 'draft-8',
   legacyHeaders: false,
   ipv6Subnet: 56,
@@ -28,7 +28,7 @@ const authLimiter = rateLimit({
 // Password reset rate limiter (very strict)
 const passwordResetLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  limit: 3, // Only 3 password reset attempts per hour
+  limit: 10, // Only 3 password reset attempts per hour
   standardHeaders: 'draft-8',
   legacyHeaders: false,
   handler: (req, res, next) => {
