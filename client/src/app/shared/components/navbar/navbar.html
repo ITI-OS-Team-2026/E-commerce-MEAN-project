@@ -1,16 +1,19 @@
 <nav class="fixed top-0 w-full z-50 bg-white/80 white:bg-slate-600/80 backdrop-blur-md shadow-sm dark:shadow-none">
-  <div class="flex justify-between items-center h-16 px-4 sm:px-6 lg:px-8 w-full max-w-screen-2xl mx-auto">
-    <div class="flex items-center gap-4 sm:gap-12 shrink-0">
+  <div class="flex justify-between items-center h-16 px-3 sm:px-4 md:px-6 lg:px-8 w-full mx-auto">
+    <!-- Logo (Left) -->
+    <div class="flex items-center shrink-0">
       <app-logo class="h-8 w-auto"></app-logo>
     </div>
-    <div class="flex items-center gap-2 sm:gap-4 lg:gap-6 flex-1 justify-center sm:flex-none lg:flex-none">
-      <div class="relative w-40 sm:w-48 md:w-56 lg:w-64">
+
+    <!-- Search Bar (Desktop - Hidden on Mobile) -->
+    <div class="hidden md:flex flex-1 mx-4 lg:mx-8 max-w-sm lg:max-w-md">
+      <div class="relative w-full">
         <span
           class="absolute left-3 top-1/2 -translate-y-1/2 text-outline material-symbols-outlined text-sm">search</span>
         <input [(ngModel)]="searchQuery" (input)="onSearchInput(searchQuery)" (blur)="onSearchBlur()"
           class="w-full pl-10 pr-4 py-2 bg-surface-container-highest border-none focus:ring-2 focus:ring-primary rounded-lg text-sm"
           placeholder="Search..." type="text" />
-        <!-- Search Results Dropdown -->
+        <!-- Desktop Search Results Dropdown -->
         <div *ngIf="showResults && searchResults.length > 0"
           class="search-dropdown absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-outline-variant/20 overflow-hidden z-50 max-h-96 overflow-y-auto">
           <button *ngFor="let product of searchResults" (click)="selectProduct(product)"
@@ -30,20 +33,63 @@
           </button>
         </div>
       </div>
-      <div class="flex items-center gap-2 sm:gap-4">
-        <div class="relative flex">
-          <button routerLink="/cart"
-            class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-200 rounded-full shrink-0">
-            <span class="material-symbols-outlined text-sm sm:text-base" data-icon="shopping_cart">shopping_cart</span>
-          </button>
-          <span *ngIf="cartItemsCount > 0"
-            class="absolute top-0 right-0 bg-blue-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full z-10">
-            {{ cartItemsCount }}
-          </span>
-        </div>
-        <button routerLink="/customer/dashboard"
-          class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-200 rounded-full shrink-0">
-          <span class="material-symbols-outlined text-sm sm:text-base" data-icon="account_circle">account_circle</span>
+    </div>
+
+    <!-- Right Side Controls -->
+    <div class="flex items-center gap-1 sm:gap-2 md:gap-4 shrink-0">
+      <!-- Mobile Search Icon (Visible on Mobile) -->
+      <button (click)="toggleSearchBar()"
+        class="md:hidden p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-200 rounded-full">
+        <span class="material-symbols-outlined text-sm" data-icon="search">search</span>
+      </button>
+
+      <!-- Cart Button -->
+      <div class="relative flex">
+        <button routerLink="/cart"
+          class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-200 rounded-full">
+          <span class="material-symbols-outlined text-sm sm:text-base" data-icon="shopping_cart">shopping_cart</span>
+        </button>
+        <span *ngIf="cartItemsCount > 0"
+          class="absolute top-0 right-0 bg-blue-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full z-10">
+          {{ cartItemsCount }}
+        </span>
+      </div>
+
+      <!-- Account Button -->
+      <button routerLink="/customer/dashboard"
+        class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-200 rounded-full">
+        <span class="material-symbols-outlined text-sm sm:text-base" data-icon="account_circle">account_circle</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Search Bar (Shown when toggled) -->
+  <div *ngIf="showSearchBar"
+    class="md:hidden border-t border-outline-variant/20 px-3 py-3 sm:px-4 bg-white/95 dark:bg-slate-800/95">
+    <div class="relative">
+      <span
+        class="absolute left-3 top-1/2 -translate-y-1/2 text-outline material-symbols-outlined text-sm">search</span>
+      <input [(ngModel)]="searchQuery" (input)="onSearchInput(searchQuery)" (blur)="onSearchBlur()"
+        class="mobile-search-input w-full pl-10 pr-4 py-2 bg-surface-container-highest border-none focus:ring-2 focus:ring-primary rounded-lg text-sm"
+        placeholder="Search products..." type="text" />
+
+      <!-- Mobile Search Results Dropdown -->
+      <div *ngIf="showResults && searchResults.length > 0"
+        class="search-dropdown absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-outline-variant/20 overflow-hidden z-50 max-h-80 overflow-y-auto">
+        <button *ngFor="let product of searchResults" (click)="selectProduct(product)"
+          class="w-full flex items-center gap-3 px-4 py-3 hover:bg-surface-container-low dark:hover:bg-slate-700/50 transition-colors text-left">
+          <img *ngIf="product.images && product.images[0]" [src]="product.images[0]" [alt]="product.name"
+            class="w-10 h-10 rounded object-cover" />
+          <div *ngIf="!product.images || product.images.length === 0"
+            class="w-10 h-10 rounded bg-surface-container flex items-center justify-center">
+            <span class="material-symbols-outlined text-sm text-on-surface-variant/40">image_not_supported</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-on-surface truncate">{{ product.name }}</p>
+            <p class="text-xs text-on-surface-variant">
+              <span class="font-bold text-primary">${{ product.price.toFixed(2) }}</span>
+            </p>
+          </div>
         </button>
       </div>
     </div>

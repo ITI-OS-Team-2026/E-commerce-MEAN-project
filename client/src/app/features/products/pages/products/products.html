@@ -4,6 +4,7 @@
 <main class="pt-24 pb-16 px-8 max-w-screen-2xl mx-auto min-h-screen">
   <!-- Hero Header -->
   <header class="mb-12">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight font-headline text-on-surface mb-4">
       Materials &amp; Hardware
     </h1>
@@ -142,12 +143,15 @@
                 @for (star of starIndexes; track star) {
                 <span class="material-symbols-outlined star-icon"
                   [ngClass]="getStarType(product.ratingsAverage, star) === 'empty' ? 'text-outline-variant/50' : 'text-amber-500'">
-                  {{ getStarType(product.ratingsAverage, star) === 'full' ? 'star' : (getStarType(product.ratingsAverage, star) === 'half' ? 'star_half' : 'star') }}
+                  {{ getStarType(product.ratingsAverage, star) === 'full' ? 'star' :
+                  (getStarType(product.ratingsAverage, star) === 'half' ? 'star_half' : 'star') }}
                 </span>
                 }
               </div>
-              <span class="text-sm font-semibold text-on-surface">{{ getRatingValue(product.ratingsAverage) | number:'1.1-1' }}</span>
-              <span class="text-xs text-on-surface-variant">({{ product.ratingsQuantity }} {{ product.ratingsQuantity === 1 ? 'review' : 'reviews' }})</span>
+              <span class="text-sm font-semibold text-on-surface">{{ getRatingValue(product.ratingsAverage) |
+                number:'1.1-1' }}</span>
+              <span class="text-xs text-on-surface-variant">({{ product.ratingsQuantity }} {{ product.ratingsQuantity
+                === 1 ? 'review' : 'reviews' }})</span>
             </div>
             }
             @if ((product.ratingsQuantity ?? 0) === 0) {
@@ -159,9 +163,12 @@
                 <button type="button"
                   (click)="isInWishlist(product._id) ? removeFromWishlist(product._id) : addToWishlist(product._id)"
                   [disabled]="isWishlistLoading(product._id)"
-                  class="px-3 py-2 rounded-lg border border-outline text-on-surface text-sm font-bold hover:bg-surface-container transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-                  {{ isWishlistLoading(product._id) ? 'Saving...' : (isInWishlist(product._id) ? 'Remove Wishlist' :
-                  'Wishlist') }}
+                  class="ml-[20px] px-3 py-2 rounded-lg border border-outline text-on-surface text-sm font-bold hover:bg-surface-container transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+
+                  <i class="fa-heart" [class.fa-solid]="isInWishlist(product._id)"
+                    [class.fa-regular]="!isInWishlist(product._id)">
+                  </i>
+
                 </button>
                 <button [disabled]="product.stock === 0"
                   class="gradient-primary text-on-primary px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-bold active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
