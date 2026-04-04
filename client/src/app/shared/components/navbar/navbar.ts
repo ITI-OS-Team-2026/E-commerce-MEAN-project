@@ -20,6 +20,7 @@ export class Navbar implements OnInit, OnDestroy {
   searchQuery: string = '';
   searchResults: Product[] = [];
   showResults: boolean = false;
+  showSearchBar: boolean = false;
   private destroy$ = new Subject<void>();
   private searchSubject = new Subject<string>();
   cartItemsCount: number = 0;
@@ -29,7 +30,7 @@ export class Navbar implements OnInit, OnDestroy {
     private router: Router,
     private cartService: CartService,
     private storageService: StorageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     if (this.storageService.isLoggedIn()) {
@@ -87,6 +88,23 @@ export class Navbar implements OnInit, OnDestroy {
     }, 200);
   }
 
+  toggleSearchBar(): void {
+    this.showSearchBar = !this.showSearchBar;
+    if (this.showSearchBar) {
+      // Focus the search input when opened (small delay to ensure DOM is updated)
+      setTimeout(() => {
+        const searchInput = document.querySelector('.mobile-search-input') as HTMLInputElement;
+        if (searchInput) {
+          searchInput.focus();
+        }
+      }, 100);
+    } else {
+      this.searchQuery = '';
+      this.searchResults = [];
+      this.showResults = false;
+    }
+  }
+
   initCartCount(): void {
     this.cartService
       .getCart()
@@ -95,7 +113,7 @@ export class Navbar implements OnInit, OnDestroy {
         next: (response) => {
           this.cartService.updateCartCount(response.data.itemsCount);
         },
-        error: (err) => {}
+        error: (err) => { }
       });
   }
 
@@ -106,7 +124,7 @@ export class Navbar implements OnInit, OnDestroy {
         next: (count) => {
           this.cartItemsCount = count;
         },
-        error: (err) => {}
+        error: (err) => { }
       });
   }
 

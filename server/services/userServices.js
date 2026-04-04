@@ -104,7 +104,7 @@ const addToWishlist = async (userId, productId) => {
     userId,
     { $addToSet: { wishlist: productId } }, // $addToSet prevents duplicates
     { new: true },
-  ).populate('wishlist', 'name price images');
+  ).populate('wishlist', 'name price images stock');
   if (!user) throw new APIError('User not found', 404);
 
   return user.wishlist;
@@ -115,12 +115,12 @@ const removeFromWishlist = async (userId, productId) => {
     userId,
     { $pull: { wishlist: productId } },
     { new: true },
-  ).populate('wishlist', 'name price images');
+  ).populate('wishlist', 'name price images stock');
   return user.wishlist;
 };
 
 const getWishlist = async (userId) => {
-  const user = await User.findById(userId).populate('wishlist', 'name price images');
+  const user = await User.findById(userId).populate('wishlist', 'name price images stock');
   if (!user) throw new APIError('User not found', 404);
   return user.wishlist;
 };

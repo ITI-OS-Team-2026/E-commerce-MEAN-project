@@ -1,0 +1,28 @@
+/* Glass effect for navbar */
+.glass-nav {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+}
+
+/* Ensure touch-friendly button sizes on mobile */
+@media (max-width: 640px) {
+
+  button,
+  app-button ::ng-deep button {
+    min-height: 40px;
+    min-width: 40px;
+  }
+}
+
+/* Responsive text sizing */
+@media (max-width: 640px) {
+  header {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+}
+
+/* Smooth transitions */
+header {
+  transition: all 0.2s ease;
+}

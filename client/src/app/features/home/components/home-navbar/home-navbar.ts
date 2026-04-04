@@ -16,7 +16,7 @@ export class HomeNavbar {
   constructor(
     private router: Router,
     private storage: StorageService,
-  ) {}
+  ) { }
 
   get user(): LoginResponse['tokenUser'] | null {
     return this.storage.getUser();

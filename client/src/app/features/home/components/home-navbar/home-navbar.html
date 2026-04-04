@@ -1,9 +1,9 @@
-<header class="sticky top-0 z-50 glass-nav border-b border-outline-variant/20 px-6 lg:px-20 py-4">
-  <div class="max-w-360 mx-auto flex items-center justify-between whitespace-nowrap">
-    <div class="flex items-center gap-12">
+<header class="sticky top-0 z-50 glass-nav border-b border-outline-variant/20 px-3 sm:px-6 lg:px-20 py-3 sm:py-4">
+  <div class="max-w-360 mx-auto flex items-center justify-between gap-4 flex-wrap sm:flex-nowrap">
+    <div class="flex items-center gap-6 sm:gap-12 min-w-0">
       <app-logo></app-logo>
 
-      <!-- fetch the categories from the backend and loop through them here -->
+      <!-- Commented out categories navigation for future use -->
       <!-- <nav class="hidden md:flex items-center gap-8">
         <a
           class="text-on-surface-variant hover:text-primary text-sm font-semibold transition-colors"
@@ -27,30 +27,21 @@
         >
       </nav> -->
     </div>
-    <div class="flex items-center gap-6">
+
+    <div class="flex items-center gap-2 sm:gap-4">
       <ng-container *ngIf="!isLoggedIn; else authenticatedMenu">
-        <app-button
-          label="Sign Up"
-          variant="outlined"
-          route="/auth/register"
-          size="md"
-        ></app-button>
+        <app-button label="Sign Up" variant="outlined" route="/auth/register" size="md"
+          class="hidden sm:inline-block"></app-button>
         <app-button label="Sign In" variant="primary" route="/auth/login" size="md"></app-button>
       </ng-container>
 
       <ng-template #authenticatedMenu>
-        <span class="text-sm text-on-surface-variant">Hello, {{ user?.name || 'User' }}</span>
-        <app-button
-          label="My Dashboard"
-          variant="outlined"
-          [route]="profileRoute"
-          size="md"
-        ></app-button>
-        <button
-          type="button"
-          class="inline-flex items-center justify-center rounded-md font-label font-semibold transition-all duration-200 active:scale-95 px-5 py-2.5 text-sm sm:px-6 sm:py-3 bg-red-600 text-white border border-red-700 hover:bg-red-700"
-          (click)="logout()"
-        >
+        <span class="hidden sm:inline text-sm text-on-surface-variant">Hello, {{ user?.name || 'User' }}</span>
+        <app-button label="Dashboard" variant="outlined" [route]="profileRoute" size="md"
+          class="hidden sm:inline-block"></app-button>
+        <button type="button"
+          class="inline-flex items-center justify-center rounded-md font-label font-semibold transition-all duration-200 active:scale-95 px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm bg-red-600 text-white border border-red-700 hover:bg-red-700 whitespace-nowrap"
+          (click)="logout()">
           Logout
         </button>
       </ng-template>
