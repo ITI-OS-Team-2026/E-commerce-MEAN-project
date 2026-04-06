@@ -146,7 +146,12 @@
                   </td>
                   <td class="px-6 py-4 text-sm text-gray-700">{{ formatDate(order.createdAt) }}</td>
                   <td class="px-6 py-4 text-sm">
-                    <button (click)="viewOrder(order)" class="text-blue-600 hover:text-blue-900 font-medium">View</button>
+                    <button
+                      (click)="viewOrder(order)"
+                      class="text-blue-600 hover:text-blue-900 font-medium"
+                    >
+                      View
+                    </button>
                   </td>
                 </tr>
               }
@@ -155,7 +160,11 @@
         </table>
       </div>
       <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
-        <span class="text-sm text-gray-600">Showing {{ filteredOrders.length > 0 ? (currentPage() - 1) * pageSize() + 1 : 0 }} to {{ Math.min(currentPage() * pageSize(), filteredOrders.length) }} of {{ filteredOrders.length }} entries</span>
+        <span class="text-sm text-gray-600"
+          >Showing {{ filteredOrders.length > 0 ? (currentPage() - 1) * pageSize() + 1 : 0 }} to
+          {{ Math.min(currentPage() * pageSize(), filteredOrders.length) }} of
+          {{ filteredOrders.length }} entries</span
+        >
         <div class="flex gap-2">
           <button
             (click)="prevPage()"
@@ -187,7 +196,9 @@
         (click)="$event.stopPropagation()"
       >
         <!-- Modal Header -->
-        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white z-10">
+        <div
+          class="px-6 py-4 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white z-10"
+        >
           <div>
             <h2 class="text-2xl font-bold text-gray-900">Order Details</h2>
             <p class="text-sm text-gray-500">ID: {{ selectedOrder()?._id }}</p>
@@ -199,28 +210,38 @@
 
         <!-- Modal Body -->
         <div class="p-6 space-y-6">
-          
           <!-- Top Info Grid -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Customer Info -->
             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-              <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">Customer Information</h3>
-              <p class="text-gray-800 font-medium">{{ selectedOrder()?.user?.name || 'Unknown' }}</p>
+              <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
+                Customer Information
+              </h3>
+              <p class="text-gray-800 font-medium">
+                {{ selectedOrder()?.user?.name || 'Unknown' }}
+              </p>
               <p class="text-gray-600 text-sm mt-1">{{ selectedOrder()?.user?.email || 'N/A' }}</p>
             </div>
-            
+
             <!-- Order Summary -->
             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-              <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">Order Summary</h3>
+              <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
+                Order Summary
+              </h3>
               <div class="flex justify-between items-center mb-2">
                 <span class="text-gray-600 text-sm">Status:</span>
-                <span [ngClass]="getStatusColor(selectedOrder()?.status || '')" class="px-2 py-1 rounded-full text-xs font-medium">
+                <span
+                  [ngClass]="getStatusColor(selectedOrder()?.status || '')"
+                  class="px-2 py-1 rounded-full text-xs font-medium"
+                >
                   {{ selectedOrder()?.status }}
                 </span>
               </div>
               <div class="flex justify-between items-center mb-2">
                 <span class="text-gray-600 text-sm">Payment Method:</span>
-                <span class="text-gray-800 font-medium text-sm">{{ selectedOrder()?.paymentMethod }}</span>
+                <span class="text-gray-800 font-medium text-sm">{{
+                  selectedOrder()?.paymentMethod
+                }}</span>
               </div>
               <div class="flex justify-between items-center">
                 <span class="text-gray-600 text-sm">Total Amount:</span>
@@ -231,11 +252,17 @@
 
           <!-- Shipping Address -->
           <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-            <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">Shipping Address</h3>
+            <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
+              Shipping Address
+            </h3>
             @if (selectedOrder()?.shippingAddress) {
               <div class="text-gray-700 text-sm leading-relaxed">
                 <p>{{ selectedOrder()?.shippingAddress?.street }}</p>
-                <p>{{ selectedOrder()?.shippingAddress?.city }}, {{ selectedOrder()?.shippingAddress?.state || '' }} {{ selectedOrder()?.shippingAddress?.zip || '' }}</p>
+                <p>
+                  {{ selectedOrder()?.shippingAddress?.city }},
+                  {{ selectedOrder()?.shippingAddress?.state || '' }}
+                  {{ selectedOrder()?.shippingAddress?.zip || '' }}
+                </p>
                 <p class="font-medium mt-1">{{ selectedOrder()?.shippingAddress?.country }}</p>
               </div>
             } @else {
@@ -245,7 +272,9 @@
 
           <!-- Order Items -->
           <div>
-            <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">Order Items</h3>
+            <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
+              Order Items
+            </h3>
             <div class="border border-gray-200 rounded-lg overflow-hidden">
               <table class="w-full text-sm text-left text-gray-600">
                 <thead class="bg-gray-50 text-gray-700 border-b border-gray-200">
@@ -258,7 +287,9 @@
                 <tbody>
                   @for (item of selectedOrder()?.items; track $index) {
                     <tr class="border-b border-gray-200 last:border-0 hover:bg-gray-50 transition">
-                      <td class="px-4 py-3 text-gray-900 font-medium whitespace-nowrap">{{ item.product?.name || 'Unknown Product' }}</td>
+                      <td class="px-4 py-3 text-gray-900 font-medium whitespace-nowrap">
+                        {{ item.product.name || 'Unknown Product' }}
+                      </td>
                       <td class="px-4 py-3 text-center">{{ item.quantity }}</td>
                       <td class="px-4 py-3 text-right font-medium">${{ item.price }}</td>
                     </tr>
@@ -267,7 +298,6 @@
               </table>
             </div>
           </div>
-
         </div>
 
         <!-- Modal Footer -->
